@@ -31,8 +31,16 @@ export class Preloader extends Scene
     {
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
-
         this.load.image('logo', 'logo.png');
+
+        this.load.image('cruceta-left', 'left.png');
+        this.load.image('cruceta-right', 'right.png');
+
+        this.load.tilemapTiledJSON('map1', 'super-mario.json');
+        this.load.image('tiles1', 'super-mario.png');
+        this.load.spritesheet('mario-ss1', 'mario-ss1.png', {frameWidth: 16, frameHeight: 16});
+
+        this.load.audio('mario-tuberias', 'mario-tuberias.mp3');
     }
 
     create ()
