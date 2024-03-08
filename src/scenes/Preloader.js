@@ -40,6 +40,8 @@ export class Preloader extends Scene
         this.load.image('tiles1', 'super-mario.png');
         this.load.spritesheet('mario-ss1', 'mario-ss1.png', {frameWidth: 16, frameHeight: 16});
 
+        this.load.spritesheet('jugador', 'Ssheet_enemigo.png', {frameWidth: 80, frameHeight: 110});
+
         this.load.audio('mario-tuberias', 'mario-tuberias.mp3');
     }
 

@@ -47,3 +47,8 @@ export class CrucetaDireccion
     }
 }
 
+// ======================================================================
+export class BotonSalto extends CrucetaDireccion
+{
+
+}
