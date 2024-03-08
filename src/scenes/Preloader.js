@@ -35,6 +35,8 @@ export class Preloader extends Scene
 
         this.load.image('cruceta-left', 'left.png');
         this.load.image('cruceta-right', 'right.png');
+        this.load.image('boton-salto-joystick', 'boton-salto32x32.png');
+        this.load.image('boton-fire-joystick', 'boton-fire32x32.png');
 
         this.load.tilemapTiledJSON('map1', 'super-mario.json');
         this.load.image('tiles1', 'super-mario.png');

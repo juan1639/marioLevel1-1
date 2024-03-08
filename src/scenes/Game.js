@@ -14,15 +14,15 @@ export class Game extends Scene
     init() 
     {
         this.crucetaleft = new CrucetaDireccion(this, {
-            id: 'cruceta-left', press: false, x: 50, y: 220, ang: 0, scX: 0.5, scY: 0.5, alpha: 0.8
+            id: 'cruceta-left', press: false, x: 30, y: 260, ang: 0, scX: 0.7, scY: 0.6, alpha: 0.9
         });
 
         this.crucetaright = new CrucetaDireccion(this, {
-            id: 'cruceta-right', press: false, x: 150, y: 220, ang: 0, scX: 0.5, scY: 0.5, alpha: 0.8
+            id: 'cruceta-right', press: false, x: 90, y: 260, ang: 0, scX: 0.7, scY: 0.6, alpha: 0.9
         });
 
         this.botonsalto = new BotonSalto(this, {
-            id: 'cruceta-right', press: false, x: 200, y: 220, ang: 270, scX: 0.5, scY: 0.5, alpha: 0.8
+            id: 'boton-salto-joystick', press: false, x: 250, y: 265, ang: 0, scX: 2, scY: 1.5, alpha: 1
         });
 
         this.mario = new Mario(this);
@@ -45,6 +45,8 @@ export class Game extends Scene
         this.layer1.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
         this.set_cameras();
+        this.set_cameras_marcadores();
+        this.set_cameras_controles();
         // this.set_keyControlsCameras();
         
         this.mario.create();
@@ -76,9 +78,9 @@ export class Game extends Scene
     {
         // this.textoIMI.get().setX(this.cameras.main.scrollX + this.sys.game.config.width / 2);
         
-        this.crucetaleft.get().setX(this.cameras.main.scrollX + (this.crucetaleft.get().width / 2) * this.crucetaleft.get().scaleX);
-        this.crucetaright.get().setX(this.cameras.main.scrollX + (this.crucetaleft.get().width * 2) * this.crucetaleft.get().scaleX);
-        this.botonsalto.get().setX(this.cameras.main.scrollX + this.sys.game.config.width - (this.crucetaleft.get().width / 2) * this.crucetaleft.get().scaleX);
+        // this.crucetaleft.get().setX(this.cameras.main.scrollX + (this.crucetaleft.get().width / 2) * this.crucetaleft.get().scaleX);
+        // this.crucetaright.get().setX(this.cameras.main.scrollX + (this.crucetaleft.get().width * 2) * this.crucetaleft.get().scaleX);
+        // this.botonsalto.get().setX(this.cameras.main.scrollX + this.sys.game.config.width - (this.crucetaleft.get().width / 2) * this.crucetaleft.get().scaleX);
 
         this.mario.update();
 
@@ -98,6 +100,28 @@ export class Game extends Scene
             this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX) - this.sys.game.config.width,
             this.layer1.height * Settings.getLayer1().scaleY
         );
+    }
+
+    set_cameras_marcadores()
+    {
+        const { x, y, ancho, alto, scrollX, scrollY } = Settings.getCameraScores();
+        
+        this.mapa_scores = this.cameras.add(x, y, ancho, alto).setZoom(0.9).setName('view-scores').setAlpha(1).setOrigin(0, 0);
+        this.mapa_scores.scrollX = scrollX;
+        this.mapa_scores.scrollY = scrollY;
+        this.mapa_scores.setBackgroundColor(0x00aabb);
+        console.log(this.mapa_scores);
+    }
+    
+    set_cameras_controles()
+    {
+        const { x, y, ancho, alto, scrollX, scrollY } = Settings.getCameraControles();
+        
+        this.mapa_controles = this.cameras.add(x, y, ancho, alto).setZoom(0.9).setName('view-controls').setAlpha(1).setOrigin(0, 0);
+        this.mapa_controles.scrollX = scrollX;
+        this.mapa_controles.scrollY = scrollY;
+        // this.mapa_controles.setBackgroundColor(0xbb5500);
+        // console.log(this.mapa_controles);
     }
 
     set_keyControlsCameras()
