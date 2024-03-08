@@ -2,7 +2,6 @@ import { Settings } from "../scenes/settings";
 
 export class Mario 
 {
-
     constructor(scene) 
     {
         this.relatedScene = scene;
@@ -57,6 +56,7 @@ export class Mario
             this.mario.setVelocityX(this.mario.getData('acelera'));
             this.mario.anims.play('mario-andar', true);
             this.mario.setFlipX(true);
+            this.gestionar_saltarYmoverse();
             
         } else if (this.controles_mario.right.isDown || this.relatedScene.crucetaright.isDown) 
         {
@@ -64,7 +64,8 @@ export class Mario
             this.mario.setVelocityX(this.mario.getData('acelera'));
             this.mario.anims.play('mario-andar', true);
             this.mario.setFlipX(false);
-            
+            this.gestionar_saltarYmoverse();
+                        
         } else 
         {
             if (this.mario.getData('acelera') !== Settings.getVelScroll())
@@ -96,6 +97,14 @@ export class Mario
             {
                 this.mario.setData('acelera', this.mario.getData('acelera') - Settings.getAceleracion());
             }
+        }
+    }
+
+    gestionar_saltarYmoverse()
+    {
+        if (this.relatedScene.botonsalto.isDown && this.mario.body.velocity.y === 0)
+        {
+            this.mario.setVelocityY(-(Settings.getVelSalto() + Math.abs(this.mario.getData('acelera') * 0.3)));
         }
     }
 

@@ -77,15 +77,11 @@ export class Game extends Scene
     update() 
     {
         // this.textoIMI.get().setX(this.cameras.main.scrollX + this.sys.game.config.width / 2);
-        
-        // this.crucetaleft.get().setX(this.cameras.main.scrollX + (this.crucetaleft.get().width / 2) * this.crucetaleft.get().scaleX);
-        // this.crucetaright.get().setX(this.cameras.main.scrollX + (this.crucetaleft.get().width * 2) * this.crucetaleft.get().scaleX);
-        // this.botonsalto.get().setX(this.cameras.main.scrollX + this.sys.game.config.width - (this.crucetaleft.get().width / 2) * this.crucetaleft.get().scaleX);
 
         this.mario.update();
 
         // this.controls.update(delta);
-}
+    }
 
     set_cameras()
     {
