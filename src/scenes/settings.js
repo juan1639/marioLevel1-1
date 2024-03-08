@@ -15,8 +15,12 @@ export class Settings {
         scaleY: 1
     };
 
-    static velScroll = 90;
-    static velSalto = -400;
+    static velScroll = 0;
+    static velSalto = 310;
+
+    static aceleracion = 3;
+    static maxVelScroll = 250;
+    static maxVelSalto = 500;
 
     // getters & setters
     static getVelScroll()
@@ -27,6 +31,21 @@ export class Settings {
     static getVelSalto()
     {
         return Settings.velSalto;
+    }
+
+    static getAceleracion()
+    {
+        return this.aceleracion;
+    }
+
+    static getMaxVelScroll()
+    {
+        return Settings.maxVelScroll;
+    }
+
+    static getMaxVelSalto()
+    {
+        return Settings.maxVelSalto;
     }
 
     static getLayer1()
