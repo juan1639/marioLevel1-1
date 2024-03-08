@@ -32,17 +32,10 @@ export class Preloader extends Scene
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
         this.load.image('logo', 'logo.png');
-
-        this.load.image('cruceta-left', 'left.png');
-        this.load.image('cruceta-right', 'right.png');
-        this.load.image('boton-salto-joystick', 'boton-salto32x32.png');
-        this.load.image('boton-fire-joystick', 'boton-fire32x32.png');
-
+        
         this.load.tilemapTiledJSON('map1', 'super-mario.json');
         this.load.image('tiles1', 'super-mario.png');
         this.load.spritesheet('mario-ss1', 'mario-ss1.png', {frameWidth: 16, frameHeight: 16});
-
-        this.load.spritesheet('jugador', 'Ssheet_enemigo.png', {frameWidth: 80, frameHeight: 110});
 
         // Plugin Joystick mobile
         const url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';

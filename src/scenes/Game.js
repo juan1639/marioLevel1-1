@@ -1,6 +1,5 @@
 import { Scene } from 'phaser';
 import { Mario } from '../components/mario.js';
-import { BotonSalto, CrucetaDireccion } from '../components/botonycruceta.js';
 import { Textos } from '../components/textos.js';
 import { Settings } from './settings.js';
 
@@ -13,18 +12,6 @@ export class Game extends Scene
 
     init() 
     {
-        /* this.crucetaleft = new CrucetaDireccion(this, {
-            id: 'cruceta-left', press: false, x: 30, y: 260, ang: 0, scX: 0.7, scY: 0.6, alpha: 0.9
-        }); */
-
-        /* this.crucetaright = new CrucetaDireccion(this, {
-            id: 'cruceta-right', press: false, x: 90, y: 260, ang: 0, scX: 0.7, scY: 0.6, alpha: 0.9
-        }); */
-
-        this.botonsalto = new BotonSalto(this, {
-            id: 'boton-salto-joystick', press: false, x: 250, y: 265, ang: 0, scX: 2, scY: 1.5, alpha: 1
-        });
-
         this.mario = new Mario(this);
 
         this.textoIMI = new Textos(this);
@@ -46,8 +33,6 @@ export class Game extends Scene
 
         this.set_cameras();
         this.set_cameras_marcadores();
-        this.set_cameras_controles();
-        // this.set_keyControlsCameras();
         
         this.mario.create();
 
@@ -56,10 +41,6 @@ export class Game extends Scene
             strokeColor: '#ee9011', strokeSize: 4, ShadowColor: '#111111', bool1: false, bool2: true 
         }); */
 
-        // this.crucetaleft.create();
-        // this.crucetaright.create();
-        this.botonsalto.create();
-        
         this.cameras.main.startFollow(this.mario.get());
 
         map1.setCollisionBetween(14, 16);
@@ -109,17 +90,6 @@ export class Game extends Scene
         console.log(this.mapa_scores);
     }
     
-    set_cameras_controles()
-    {
-        const { x, y, ancho, alto, scrollX, scrollY } = Settings.getCameraControles();
-        
-        this.mapa_controles = this.cameras.add(x, y, ancho, alto).setZoom(0.9).setName('view-controls').setAlpha(1).setOrigin(0, 0);
-        this.mapa_controles.scrollX = scrollX;
-        this.mapa_controles.scrollY = scrollY;
-        // this.mapa_controles.setBackgroundColor(0xbb5500);
-        // console.log(this.mapa_controles);
-    }
-
     set_keyControlsCameras()
     {
         const cursores = this.input.keyboard.createCursorKeys();

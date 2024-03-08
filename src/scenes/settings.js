@@ -39,15 +39,6 @@ export class Settings
         scrollY: -30
     };
 
-    static cameraControles = {
-        x: 0,
-        y: 205,
-        ancho: 256,
-        alto: 40,
-        scrollX: 0,
-        scrollY: 240
-    };
-
     // getters & setters
     static getVelScroll()
     {
@@ -82,9 +73,5 @@ export class Settings
     static getCameraScores()
     {
         return Settings.cameraScores;
-    }
-
-    static getCameraControles() {
-        return Settings.cameraControles;
     }
 }

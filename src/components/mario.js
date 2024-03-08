@@ -44,6 +44,9 @@ export class Mario
             // base: this.add.image(0, 0, 'base-joystick').setScale(2),
             thumb: this.relatedScene.add.circle(0, 0, 10, 0xcccccc),
             // thumb: this.add.image(0, 0, 'base-joystick').setScale(1)
+            dir: '8dir',
+            fixed: true,
+            enable: true
         });
 
         this.controlJoy = this.joyStick.createCursorKeys();
@@ -56,7 +59,7 @@ export class Mario
     {
         console.log(this.mario.getData('acelera'));
 
-        if ((this.controles_mario.space.isDown || this.relatedScene.botonsalto.isDown) && this.mario.body.velocity.y === 0) 
+        if ((this.controles_mario.space.isDown || this.controlJoy.up.isDown) && this.mario.body.velocity.y === 0) 
         {
             this.mario.setVelocityY(-(Settings.getVelSalto() + Math.abs(this.mario.getData('acelera') * 0.3)));
         }
@@ -113,7 +116,7 @@ export class Mario
     {
         if (this.relatedScene.botonsalto.isDown && this.mario.body.velocity.y === 0)
         {
-            this.mario.setVelocityY(-(Settings.getVelSalto() + Math.abs(this.mario.getData('acelera') * 0.3)));
+            this.mario.setVelocityY(-(Settings.getVelSalto() + Math.abs(this.mario.getData('acelera') * 0.25)));
         }
     }
 
