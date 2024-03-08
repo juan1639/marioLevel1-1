@@ -44,6 +44,11 @@ export class Preloader extends Scene
 
         this.load.spritesheet('jugador', 'Ssheet_enemigo.png', {frameWidth: 80, frameHeight: 110});
 
+        // Plugin Joystick mobile
+        const url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
+        this.load.plugin('rexvirtualjoystickplugin', url, true);
+
+        // Audio & Musica
         this.load.audio('mario-tuberias', 'mario-tuberias.mp3');
     }
 

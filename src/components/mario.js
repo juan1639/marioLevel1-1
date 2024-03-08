@@ -36,6 +36,17 @@ export class Mario
             frameRate: 10,
         });
 
+        this.joyStick = this.relatedScene.plugins.get('rexvirtualjoystickplugin').add(this.relatedScene, {
+            x: 24,
+            y: this.relatedScene.sys.game.config.height - 24,
+            radius: 100,
+            base: this.relatedScene.add.circle(0, 0, 25, 0x888888, 0.6),
+            // base: this.add.image(0, 0, 'base-joystick').setScale(2),
+            thumb: this.relatedScene.add.circle(0, 0, 10, 0xcccccc),
+            // thumb: this.add.image(0, 0, 'base-joystick').setScale(1)
+        });
+
+        this.controlJoy = this.joyStick.createCursorKeys();
         this.controles_mario = this.relatedScene.input.keyboard.createCursorKeys();
 
         console.log(this.mario);
@@ -50,22 +61,20 @@ export class Mario
             this.mario.setVelocityY(-(Settings.getVelSalto() + Math.abs(this.mario.getData('acelera') * 0.3)));
         }
 
-        if (this.controles_mario.left.isDown || this.relatedScene.crucetaleft.isDown) 
+        if (this.controles_mario.left.isDown || this.controlJoy.left.isDown) 
         {
             this.gestionar_aceleracion(false);
             this.mario.setVelocityX(this.mario.getData('acelera'));
             this.mario.anims.play('mario-andar', true);
             this.mario.setFlipX(true);
-            this.gestionar_saltarYmoverse();
             
-        } else if (this.controles_mario.right.isDown || this.relatedScene.crucetaright.isDown) 
+        } else if (this.controles_mario.right.isDown || this.controlJoy.right.isDown) 
         {
             this.gestionar_aceleracion(true);
             this.mario.setVelocityX(this.mario.getData('acelera'));
             this.mario.anims.play('mario-andar', true);
             this.mario.setFlipX(false);
-            this.gestionar_saltarYmoverse();
-                        
+
         } else 
         {
             if (this.mario.getData('acelera') !== Settings.getVelScroll())

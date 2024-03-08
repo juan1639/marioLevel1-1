@@ -13,13 +13,13 @@ export class Game extends Scene
 
     init() 
     {
-        this.crucetaleft = new CrucetaDireccion(this, {
+        /* this.crucetaleft = new CrucetaDireccion(this, {
             id: 'cruceta-left', press: false, x: 30, y: 260, ang: 0, scX: 0.7, scY: 0.6, alpha: 0.9
-        });
+        }); */
 
-        this.crucetaright = new CrucetaDireccion(this, {
+        /* this.crucetaright = new CrucetaDireccion(this, {
             id: 'cruceta-right', press: false, x: 90, y: 260, ang: 0, scX: 0.7, scY: 0.6, alpha: 0.9
-        });
+        }); */
 
         this.botonsalto = new BotonSalto(this, {
             id: 'boton-salto-joystick', press: false, x: 250, y: 265, ang: 0, scX: 2, scY: 1.5, alpha: 1
@@ -56,8 +56,8 @@ export class Game extends Scene
             strokeColor: '#ee9011', strokeSize: 4, ShadowColor: '#111111', bool1: false, bool2: true 
         }); */
 
-        this.crucetaleft.create();
-        this.crucetaright.create();
+        // this.crucetaleft.create();
+        // this.crucetaright.create();
         this.botonsalto.create();
         
         this.cameras.main.startFollow(this.mario.get());
