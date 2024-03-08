@@ -48,7 +48,5 @@ export class CrucetaDireccion
 }
 
 // ======================================================================
-export class BotonSalto extends CrucetaDireccion
-{
+export class BotonSalto extends CrucetaDireccion {}
 
-}
