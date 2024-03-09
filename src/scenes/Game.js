@@ -2,6 +2,7 @@ import { Scene } from 'phaser';
 import { Mario } from '../components/mario.js';
 import { Textos } from '../components/textos.js';
 import { Settings } from './settings.js';
+import { play_sonidos } from '../utils/functions.js';
 
 export class Game extends Scene
 {
@@ -17,14 +18,14 @@ export class Game extends Scene
         this.textoIMI = new Textos(this);
 
         this.sonido_marioTuberias = this.sound.add('mario-tuberias');
+        this.sonido_jumpbros = this.sound.add('jumpbros');
     }
 
     preload() {}
 
     create ()
     {
-        this.sonido_marioTuberias.play();
-        this.sonido_marioTuberias.volume = 0.5;
+        play_sonidos(this.sonido_marioTuberias, false, 0.5);
 
         const map1 = this.make.tilemap({ key: 'map1' });
         const tileset1 = map1.addTilesetImage('tiles1-1', 'tiles1');
@@ -86,7 +87,7 @@ export class Game extends Scene
         this.mapa_scores = this.cameras.add(x, y, ancho, alto).setZoom(0.9).setName('view-scores').setAlpha(1).setOrigin(0, 0);
         this.mapa_scores.scrollX = scrollX;
         this.mapa_scores.scrollY = scrollY;
-        this.mapa_scores.setBackgroundColor(0x00aabb);
+        // this.mapa_scores.setBackgroundColor(0x00aabb);
         console.log(this.mapa_scores);
     }
     

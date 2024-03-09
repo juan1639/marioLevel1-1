@@ -1,4 +1,5 @@
 import { Settings } from "../scenes/settings";
+import { play_sonidos } from "../utils/functions";
 
 export class Mario 
 {
@@ -68,6 +69,7 @@ export class Mario
         {
             this.mario.setVelocityY(-(Settings.getVelSalto() + Math.abs(this.mario.getData('acelera') * 0.3)));
             this.mario.setData('allow-salto', this.relatedScene.time.now + this.mario.getData('cadencia-salto'));
+            play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.8);
         }
 
         if (this.controles_mario.left.isDown || this.controlJoy.left.isDown) 
@@ -117,7 +119,7 @@ export class Mario
             }
         }
     }
-    
+
     get() 
     {
         return this.mario;
