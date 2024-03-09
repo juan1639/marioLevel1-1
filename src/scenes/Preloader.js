@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { Textos } from '../components/textos';
 
 export class Preloader extends Scene
 {
@@ -10,20 +11,39 @@ export class Preloader extends Scene
     init ()
     {
         //  We loaded this image in our Boot Scene, so we can display it here
-        this.add.image(512, 384, 'background');
+        const widthScreen = this.sys.game.config.width;
+        const heightScreen = this.sys.game.config.height;
+
+        this.add.image(0, 0, 'background').setOrigin(0, 0);
+
+        this.txtcargando = new Textos(this);
+
+        this.txtcargando.create({
+            x: Math.floor(widthScreen / 2), y: Math.floor(heightScreen / 4), texto: ' Cargando... ',
+            size: 20, style: '', fll: '#ff0', family: 'verdana',
+            strokeColor: '#ee9011', strokeSize: 4, ShadowColor: '#111111', bool1: false, bool2: true 
+        });
 
         //  A simple progress bar. This is the outline of the bar.
-        this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
+        this.add.rectangle(
+            Math.floor(widthScreen / 2), Math.floor(heightScreen / 2),
+            Math.floor(widthScreen / 1.5), Math.floor(heightScreen / 12)
+        ).setStrokeStyle(1, 0xffee88);
 
         //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(512-230, 384, 4, 28, 0xffffff);
+        const bar = this.add.rectangle(
+            Math.floor(widthScreen / 2) - Math.floor(widthScreen / 3) + 4,
+            Math.floor(heightScreen / 2),
+            4,
+            Math.floor(heightScreen / 14),
+            0xff9911
+        );
 
         //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
         this.load.on('progress', (progress) => {
 
             //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
-            bar.width = 4 + (460 * progress);
-
+            bar.width = (Math.floor(widthScreen / 1.55) * progress);
         });
     }
 

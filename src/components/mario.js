@@ -21,6 +21,8 @@ export class Mario
 
         this.mario.setData('acelera', Settings.getVelScroll());
         // this.mario.setData('aceleraSalto', Settings.getVelSalto());
+        this.mario.setData('allow-salto', 0);
+        this.mario.setData('cadencia-salto', 99);
 
         this.relatedScene.anims.create({
             key: 'mario-andar', 
@@ -59,9 +61,13 @@ export class Mario
     {
         console.log(this.mario.getData('acelera'));
 
-        if ((this.controles_mario.space.isDown || this.controlJoy.up.isDown) && this.mario.body.velocity.y === 0) 
+        if ((this.controles_mario.space.isDown || this.controlJoy.up.isDown)
+            && this.mario.body.velocity.y === 0
+            && this.relatedScene.time.now > this.mario.getData('allow-salto')
+        ) 
         {
             this.mario.setVelocityY(-(Settings.getVelSalto() + Math.abs(this.mario.getData('acelera') * 0.3)));
+            this.mario.setData('allow-salto', this.relatedScene.time.now + this.mario.getData('cadencia-salto'));
         }
 
         if (this.controles_mario.left.isDown || this.controlJoy.left.isDown) 
@@ -111,15 +117,7 @@ export class Mario
             }
         }
     }
-
-    gestionar_saltarYmoverse()
-    {
-        if (this.relatedScene.botonsalto.isDown && this.mario.body.velocity.y === 0)
-        {
-            this.mario.setVelocityY(-(Settings.getVelSalto() + Math.abs(this.mario.getData('acelera') * 0.25)));
-        }
-    }
-
+    
     get() 
     {
         return this.mario;
