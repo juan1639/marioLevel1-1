@@ -34,9 +34,9 @@ export class Settings
         x: 0,
         y: 0,
         ancho: 256,
-        alto: 25,
+        alto: 32,
         scrollX: 0,
-        scrollY: -30
+        scrollY: -32
     };
 
     // getters & setters

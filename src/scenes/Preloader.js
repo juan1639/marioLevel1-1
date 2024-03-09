@@ -19,7 +19,8 @@ export class Preloader extends Scene
         this.txtcargando = new Textos(this);
 
         this.txtcargando.create({
-            x: Math.floor(widthScreen / 2), y: Math.floor(heightScreen / 4), texto: ' Cargando... ',
+            x: Math.floor(widthScreen / 2), y: Math.floor(heightScreen / 4),
+            origin: [0.5, 0], texto: ' Cargando... ',
             size: 20, style: '', fll: '#ff0', family: 'verdana',
             strokeColor: '#ee9011', strokeSize: 4, ShadowColor: '#111111', bool1: false, bool2: true 
         });
@@ -52,6 +53,7 @@ export class Preloader extends Scene
         //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
         this.load.image('logo', 'logo.png');
+        this.load.spritesheet('boton-fullscreen', 'boton-fullscreen.png', {frameWidth: 64, frameHeight: 64});
         
         this.load.tilemapTiledJSON('map1', 'super-mario.json');
         this.load.image('tiles1', 'super-mario.png');

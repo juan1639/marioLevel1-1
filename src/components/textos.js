@@ -10,7 +10,8 @@ export class Textos
     create(args) 
     {
         const {
-            x, y, texto, size,
+            x, y, origin,
+            texto, size,
             style, fll, family,
             strokeColor, strokeSize,
             shadowColor, bool1, bool2
@@ -28,7 +29,11 @@ export class Textos
         this.crear_tweens(texto);
 
         this.txt.setStroke(strokeColor, strokeSize).setShadow(2, 2, shadowColor, 2, bool1, bool2);
-        this.txt.setOrigin(0.5, 0).setX(this.relatedScene.sys.game.config.width / 2);
+        this.txt.setOrigin(origin[0], origin[1]);
+        // this.txt.setX(this.relatedScene.sys.game.config.width / 2);
+
+        // this.marcadorptos.setDepth(Settings.getDepth().textos);
+        // this.marcadorptos.setStroke('#ee9011', 16).setShadow(2, 2, '#111111', 2, false, true);
 
         console.log(this.txt);
     }

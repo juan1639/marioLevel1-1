@@ -60,7 +60,7 @@ export class Mario
 
     update()
     {
-        console.log(this.mario.getData('acelera'));
+        // console.log(this.mario.getData('acelera'));
 
         if ((this.controles_mario.space.isDown || this.controlJoy.up.isDown)
             && this.mario.body.velocity.y === 0

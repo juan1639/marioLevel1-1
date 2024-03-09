@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { Mario } from '../components/mario.js';
 import { Textos } from '../components/textos.js';
+import { BotonFullScreen } from '../components/botonesinteractivos.js';
 import { Settings } from './settings.js';
 import { play_sonidos } from '../utils/functions.js';
 
@@ -15,6 +16,13 @@ export class Game extends Scene
     {
         this.mario = new Mario(this);
 
+        this.botonfullscreen = new BotonFullScreen(this, {
+            id: 'boton-fullscreen', x: Math.floor(this.sys.game.config.width / 1), y: -64 * 0.4,
+            ang: 0, scX: 0.4, scY: 0.4, origin: [0, 0]
+        });
+        
+        this.marcadorptos = new Textos(this);
+        this.marcadorhi = new Textos(this);
         this.textoIMI = new Textos(this);
 
         this.sonido_marioTuberias = this.sound.add('mario-tuberias');
@@ -27,9 +35,9 @@ export class Game extends Scene
     {
         play_sonidos(this.sonido_marioTuberias, false, 0.5);
 
-        const map1 = this.make.tilemap({ key: 'map1' });
-        const tileset1 = map1.addTilesetImage('tiles1-1', 'tiles1');
-        this.layer1 = map1.createLayer('1-1', tileset1, 0, 0);
+        this.map1 = this.make.tilemap({ key: 'map1' });
+        this.tileset1 = this.map1.addTilesetImage('tiles1-1', 'tiles1');
+        this.layer1 = this.map1.createLayer('1-1', this.tileset1, 0, 0);
         this.layer1.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
         this.set_cameras();
@@ -37,29 +45,16 @@ export class Game extends Scene
         
         this.mario.create();
 
-        /* this.textoIMI.create({
-            x: 120, y: 0, texto: 'Centro IMI de Zalla', size: 20, style: '', fll: '#ff0', family: 'verdana',
-            strokeColor: '#ee9011', strokeSize: 4, ShadowColor: '#111111', bool1: false, bool2: true 
-        }); */
+        this.set_marcadores_txt();
+        this.botonfullscreen.create();
 
         this.cameras.main.startFollow(this.mario.get());
 
-        map1.setCollisionBetween(14, 16);
-        map1.setCollisionBetween(21, 22);
-        map1.setCollisionBetween(27, 28);
-        map1.setCollision(40);
-        // map1.setCollisionByExclusion([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        
-        this.physics.add.collider(this.mario.get(), this.layer1);
-
-        console.log(this.input.activePointer);
-        console.log(this.cameras.main);
+        this.set_colliders();
     }
 
     update() 
     {
-        // this.textoIMI.get().setX(this.cameras.main.scrollX + this.sys.game.config.width / 2);
-
         this.mario.update();
 
         // this.controls.update(delta);
@@ -103,5 +98,35 @@ export class Game extends Scene
         };
 
         this.controls = new Phaser.Cameras.Controls.FixedKeyControl(controlConfig);
+    }
+
+    set_colliders()
+    {
+        this.map1.setCollisionBetween(14, 16);
+        this.map1.setCollisionBetween(21, 22);
+        this.map1.setCollisionBetween(27, 28);
+        this.map1.setCollision(40);
+        // this.map1.setCollisionByExclusion([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        
+        this.physics.add.collider(this.mario.get(), this.layer1);
+    }
+
+    set_marcadores_txt()
+    {
+        this.marcadorptos.create({
+            x: 4, y: -40, origin: [0, 0],
+            texto: '0', size: 28, style: 'bold',  fll: '#ffa',
+            family: 'arial, sans-serif',
+            strokeColor: '#ee9011', strokeSize: 9, ShadowColor: '#111111',
+            bool1: false, bool2: true
+        });
+
+        this.marcadorhi.create({
+            x: this.sys.game.config.width / 1.4, y: -40, origin: [0.5, 0],
+            texto: 'Hi: 5000', size: 28, style: 'bold',  fll: '#ffa',
+            family: 'arial, sans-serif',
+            strokeColor: '#ee9011', strokeSize: 9, ShadowColor: '#111111',
+            bool1: true, bool2: true
+        });
     }
 }
