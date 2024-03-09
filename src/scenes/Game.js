@@ -23,8 +23,7 @@ export class Game extends Scene
         
         this.marcadorptos = new Textos(this);
         this.marcadorhi = new Textos(this);
-        this.textoIMI = new Textos(this);
-
+        
         this.sonido_marioTuberias = this.sound.add('mario-tuberias');
         this.sonido_jumpbros = this.sound.add('jumpbros');
     }

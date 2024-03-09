@@ -32,9 +32,6 @@ export class Textos
         this.txt.setOrigin(origin[0], origin[1]);
         // this.txt.setX(this.relatedScene.sys.game.config.width / 2);
 
-        // this.marcadorptos.setDepth(Settings.getDepth().textos);
-        // this.marcadorptos.setStroke('#ee9011', 16).setShadow(2, 2, '#111111', 2, false, true);
-
         console.log(this.txt);
     }
 
