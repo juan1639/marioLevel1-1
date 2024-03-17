@@ -35,8 +35,10 @@ export class Game extends Scene
         play_sonidos(this.sonido_marioTuberias, false, 0.5);
 
         this.map1 = this.make.tilemap({ key: 'map1' });
-        this.tileset1 = this.map1.addTilesetImage('tiles1-1', 'tiles1');
-        this.layer1 = this.map1.createLayer('1-1', this.tileset1, 0, 0);
+        // this.tileset1 = this.map1.addTilesetImage('tiles1-1', 'tiles1');
+        this.tileset1 = this.map1.addTilesetImage('tiles-ejemplo1', 'tiles1');
+        // this.layer1 = this.map1.createLayer('1-1', this.tileset1, 0, 0);
+        this.layer1 = this.map1.createLayer('pantalla-ejemplo1', this.tileset1, 0, 0);
         this.layer1.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
         this.set_cameras();
@@ -69,7 +71,7 @@ export class Game extends Scene
 
         this.physics.world.setBounds(
             this.sys.game.config.width / 4, 0,
-            this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX) - this.sys.game.config.width,
+            this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX),// - this.sys.game.config.width,
             this.layer1.height * Settings.getLayer1().scaleY
         );
     }

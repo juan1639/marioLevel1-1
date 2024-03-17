@@ -55,8 +55,11 @@ export class Preloader extends Scene
         this.load.image('logo', 'logo.png');
         this.load.spritesheet('boton-fullscreen', 'boton-fullscreen.png', {frameWidth: 64, frameHeight: 64});
         
-        this.load.tilemapTiledJSON('map1', 'super-mario.json');
-        this.load.image('tiles1', 'super-mario.png');
+        this.load.tilemapTiledJSON('map1', 'ejemplo2.json');
+        this.load.image('tiles1', 'tiles-suelo-metal64x64.png');
+
+        // this.load.tilemapTiledJSON('map1', 'super-mario.json');
+        // this.load.image('tiles1', 'super-mario.png');
         this.load.spritesheet('mario-ss1', 'mario-ss1.png', {frameWidth: 16, frameHeight: 16});
 
         // Plugin Joystick mobile
