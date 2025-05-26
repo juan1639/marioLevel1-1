@@ -13,13 +13,17 @@ export class Settings
     static screen =
     {
         width: 256,
-        height: 240
+        height: 240,
+        TILE_X: 16,
+        TILE_Y: 16
     };
 
     static layer1 =
     {
         scaleX: 2,
-        scaleY: 2
+        scaleY: 2,
+        top: 0,
+        left: 0
     };
 
     static MARIO =
@@ -28,7 +32,8 @@ export class Settings
         MAX_VEL_SCROLL: 250,
         VEL_SALTO: 400,
         MAX_VEL_SALTO: 670,
-        ACELERACION: 3
+        ACELERACION: 3,
+        DECELERACION: 9
     }
 
     static gameOver = false;

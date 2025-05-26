@@ -35,10 +35,15 @@ export class Game extends Scene
         play_sonidos(this.sonido_marioTuberias, false, 0.5);
 
         this.map1 = this.make.tilemap({ key: 'map1' });
-        // this.tileset1 = this.map1.addTilesetImage('tiles1-1', 'tiles1');
         this.tileset1 = this.map1.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
-        // this.layer1 = this.map1.createLayer('1-1', this.tileset1, 0, 0);
-        this.layer1 = this.map1.createLayer('World1', this.tileset1, 0, 0);
+
+        this.layer1 = this.map1.createLayer(
+            'World1',
+            this.tileset1,
+            (Settings.getLayer1().left * Settings.screen.TILE_X) * Settings.getLayer1().scaleX,
+            (Settings.getLayer1().top * Settings.screen.TILE_Y) * Settings.getLayer1().scaleY
+        );
+
         this.layer1.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
         this.set_cameras();
@@ -108,7 +113,7 @@ export class Game extends Scene
         this.map1.setCollisionBetween(21, 22);//    Tuberia
         this.map1.setCollisionBetween(27, 28);//    Tuberia
         this.map1.setCollision([40]);//             bloque (suelo)
-        
+
         // this.map1.setCollision([13, 14, 16, 40]);
         // this.map1.setCollisionByExclusion([1, 2, 3, 4, 5, 6, 7, 8, 9]);
         

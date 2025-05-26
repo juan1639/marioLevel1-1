@@ -15,9 +15,14 @@ export class Mario
         );
 
         this.mario.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
-        this.mario.setVisible(true).setFrame(0).setFlipX(false);
+
+        this.mario.setVisible(true);
+        this.mario.setFrame(0);
+        this.mario.setFlipX(false);
+
         this.mario.setCollideWorldBounds(true);
         this.mario.body.setAllowGravity(true);
+
         this.mario.setMaxVelocity(Settings.MARIO.MAX_VEL_SCROLL, Settings.MARIO.MAX_VEL_SALTO);
 
         this.mario.setData('acelera', Settings.MARIO.VEL_SCROLL);
@@ -40,12 +45,12 @@ export class Mario
         });
 
         this.joyStick = this.relatedScene.plugins.get('rexvirtualjoystickplugin').add(this.relatedScene, {
-            x: 24,
-            y: this.relatedScene.sys.game.config.height - 24,
-            radius: 100,
-            base: this.relatedScene.add.circle(0, 0, 25, 0x888888, 0.6),
+            x: 128,
+            y: this.relatedScene.sys.game.config.height - 96,
+            radius: 50,
+            base: this.relatedScene.add.circle(0, 0, 64, 0x888888, 0.6),
             // base: this.add.image(0, 0, 'base-joystick').setScale(2),
-            thumb: this.relatedScene.add.circle(0, 0, 10, 0xcccccc),
+            thumb: this.relatedScene.add.circle(0, 0, 28, 0xcccccc),
             // thumb: this.add.image(0, 0, 'base-joystick').setScale(1)
             dir: '8dir',
             fixed: true,
@@ -92,11 +97,11 @@ export class Mario
             {
                 if (this.mario.getData('acelera') > 0)
                 {
-                    this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.ACELERACION);
+                    this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.DECELERACION);
 
                 } else
                 {
-                    this.mario.setData('acelera', this.mario.getData('acelera') + Settings.MARIO.ACELERACION);
+                    this.mario.setData('acelera', this.mario.getData('acelera') + Settings.MARIO.DECELERACION);
                 }
                 this.mario.setVelocityX(this.mario.getData('acelera'));
 
