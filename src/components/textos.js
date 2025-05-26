@@ -1,7 +1,6 @@
 
 export class Textos 
 {
-
     constructor(scene) 
     {
         this.relatedScene = scene;

@@ -1,5 +1,4 @@
 
-// ==================================================================================
 export class BotonFullScreen
 {
     constructor(scene, direccion)
