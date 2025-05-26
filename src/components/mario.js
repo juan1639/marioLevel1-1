@@ -18,9 +18,9 @@ export class Mario
         this.mario.setVisible(true).setFrame(0).setFlipX(false);
         this.mario.setCollideWorldBounds(true);
         this.mario.body.setAllowGravity(true);
-        this.mario.setMaxVelocity(Settings.getMaxVelScroll(), Settings.getMaxVelSalto());
+        this.mario.setMaxVelocity(Settings.MARIO.MAX_VEL_SCROLL, Settings.MARIO.MAX_VEL_SALTO);
 
-        this.mario.setData('acelera', Settings.getVelScroll());
+        this.mario.setData('acelera', Settings.MARIO.VEL_SCROLL);
         // this.mario.setData('aceleraSalto', Settings.getVelSalto());
         this.mario.setData('allow-salto', 0);
         this.mario.setData('cadencia-salto', 99);
@@ -67,7 +67,7 @@ export class Mario
             && this.relatedScene.time.now > this.mario.getData('allow-salto')
         ) 
         {
-            this.mario.setVelocityY(-(Settings.getVelSalto() + Math.abs(this.mario.getData('acelera') * 0.3)));
+            this.mario.setVelocityY(-(Settings.MARIO.VEL_SALTO + Math.abs(this.mario.getData('acelera') * 0.3)));
             this.mario.setData('allow-salto', this.relatedScene.time.now + this.mario.getData('cadencia-salto'));
             play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.8);
         }
@@ -88,15 +88,15 @@ export class Mario
 
         } else 
         {
-            if (this.mario.getData('acelera') !== Settings.getVelScroll())
+            if (this.mario.getData('acelera') !== Settings.MARIO.VEL_SCROLL)
             {
                 if (this.mario.getData('acelera') > 0)
                 {
-                    this.mario.setData('acelera', this.mario.getData('acelera') - Settings.getAceleracion());
+                    this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.ACELERACION);
 
                 } else
                 {
-                    this.mario.setData('acelera', this.mario.getData('acelera') + Settings.getAceleracion());
+                    this.mario.setData('acelera', this.mario.getData('acelera') + Settings.MARIO.ACELERACION);
                 }
                 this.mario.setVelocityX(this.mario.getData('acelera'));
 
@@ -109,13 +109,14 @@ export class Mario
 
     gestionar_aceleracion(derecha) 
     {
-        if (Math.abs(this.mario.getData('acelera')) < Settings.getMaxVelScroll())
+        if (Math.abs(this.mario.getData('acelera')) < Settings.MARIO.MAX_VEL_SCROLL)
         {
-            if (derecha){
-                this.mario.setData('acelera', this.mario.getData('acelera') + Settings.getAceleracion());
+            if (derecha)
+            {
+                this.mario.setData('acelera', this.mario.getData('acelera') + Settings.MARIO.ACELERACION);
             } else
             {
-                this.mario.setData('acelera', this.mario.getData('acelera') - Settings.getAceleracion());
+                this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.ACELERACION);
             }
         }
     }

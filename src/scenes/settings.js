@@ -1,36 +1,47 @@
-// --- Elementos del mapa de tiles json ---
-// 1 cielo, 2 al 8 nube, 9 a 10 bandera, 11 moneda, 12 seta, 13 17 mastil
-// 14 interrogacion, 15 plataforma ladrillo, 16 tile piramides, 18 seta
-// 21 22 tuberia, 23 al 29 tile castillo, 30 ... montaña verde, 40 tile suelo
-
+// ===========================================================================
+//  ELEMENTOS DEL MAPA DE TILES (json)
+//  
+//  1.cielo                 | 1-3 5-7.nube              | 9-10.bandera
+//  11.moneda               | 12.seta(roja)             | 13,17.mastil
+//  14.bloque-interrog.     | 15.bloque-ladrillo        | 16.bloque-piramides
+//  18.seta(marron)         | 19.estrella               | 21-22, 27-28 tuberia
+//  23-25.bloque-castillo   | 30-32.montaña verde       | 36-38 matorral
+//  40.bloque-suelo
+// ---------------------------------------------------------------------------
 export class Settings
 {
-    static screen = {
+    static screen =
+    {
         width: 256,
         height: 240
     };
 
-    static layer1 = {
-        scaleX: 1,
-        scaleY: 1
+    static layer1 =
+    {
+        scaleX: 2,
+        scaleY: 2
     };
 
-    static velScroll = 0;
-    static velSalto = 310;
-
-    static aceleracion = 3;
-    static maxVelScroll = 250;
-    static maxVelSalto = 500;
+    static MARIO =
+    {
+        VEL_SCROLL: 0,
+        MAX_VEL_SCROLL: 250,
+        VEL_SALTO: 400,
+        MAX_VEL_SALTO: 670,
+        ACELERACION: 3
+    }
 
     static gameOver = false;
 
-    static marcadores = {
+    static marcadores =
+    {
         puntos: 0,
         nivel: 1,
         hi: 5000
     };
 
-    static cameraScores = {
+    static cameraScores =
+    {
         x: 0,
         y: 0,
         ancho: 256,
@@ -40,31 +51,6 @@ export class Settings
     };
 
     // getters & setters
-    static getVelScroll()
-    {
-        return Settings.velScroll;
-    }
-
-    static getVelSalto()
-    {
-        return Settings.velSalto;
-    }
-
-    static getAceleracion()
-    {
-        return this.aceleracion;
-    }
-
-    static getMaxVelScroll()
-    {
-        return Settings.maxVelScroll;
-    }
-
-    static getMaxVelSalto()
-    {
-        return Settings.maxVelSalto;
-    }
-
     static getLayer1()
     {
         return Settings.layer1;

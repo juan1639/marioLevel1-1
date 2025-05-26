@@ -36,9 +36,9 @@ export class Game extends Scene
 
         this.map1 = this.make.tilemap({ key: 'map1' });
         // this.tileset1 = this.map1.addTilesetImage('tiles1-1', 'tiles1');
-        this.tileset1 = this.map1.addTilesetImage('tiles-ejemplo1', 'tiles1');
+        this.tileset1 = this.map1.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
         // this.layer1 = this.map1.createLayer('1-1', this.tileset1, 0, 0);
-        this.layer1 = this.map1.createLayer('pantalla-ejemplo1', this.tileset1, 0, 0);
+        this.layer1 = this.map1.createLayer('World1', this.tileset1, 0, 0);
         this.layer1.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
         this.set_cameras();
@@ -57,6 +57,7 @@ export class Game extends Scene
     update() 
     {
         this.mario.update();
+        this.layer1.setY(this.layer1.y + 0);
 
         // this.controls.update(delta);
     }
@@ -103,10 +104,12 @@ export class Game extends Scene
 
     set_colliders()
     {
-        this.map1.setCollisionBetween(14, 16);
-        this.map1.setCollisionBetween(21, 22);
-        this.map1.setCollisionBetween(27, 28);
-        this.map1.setCollision(40);
+        this.map1.setCollisionBetween(14, 16);//    bloques (interr, ladrillo, piramide)
+        this.map1.setCollisionBetween(21, 22);//    Tuberia
+        this.map1.setCollisionBetween(27, 28);//    Tuberia
+        this.map1.setCollision([40]);//             bloque (suelo)
+        
+        // this.map1.setCollision([13, 14, 16, 40]);
         // this.map1.setCollisionByExclusion([1, 2, 3, 4, 5, 6, 7, 8, 9]);
         
         this.physics.add.collider(this.mario.get(), this.layer1);
