@@ -127,8 +127,10 @@ export class Game extends Scene
 
     set_marcadores_txt()
     {
+        const marcadoresCoorY = this.layer1.height * Settings.getLayer1().scaleY + 16;
+
         this.marcadorptos.create({
-            x: 4, y: this.layer1.height * Settings.getLayer1().scaleY,
+            x: 4, y: marcadoresCoorY,
             origin: [0, 0],
             texto: 'Puntos: ' + this.mario.get().x.toString(), size: 32, style: 'bold',  fll: '#ffa',
             family: 'arial, sans-serif',
@@ -137,9 +139,10 @@ export class Game extends Scene
         });
 
         this.marcadorhi.create({
-            x: this.sys.game.config.width / 1.4, y: -40,
+            x: this.sys.game.config.width / 1.4,
+            y: marcadoresCoorY,
             origin: [0.5, 0],
-            texto: 'Hi: 5000', size: 28, style: 'bold',  fll: '#ffa',
+            texto: 'Hi: 5000', size: 32, style: 'bold',  fll: '#ffa',
             family: 'arial, sans-serif',
             strokeColor: '#ee9011', strokeSize: 9, ShadowColor: '#111111',
             bool1: true, bool2: true
