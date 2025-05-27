@@ -30,20 +30,9 @@ export class Mario
         this.mario.setData('allow-salto', 0);
         this.mario.setData('cadencia-salto', 99);
 
-        this.relatedScene.anims.create({
-            key: 'mario-andar', 
-            frames: this.relatedScene.anims.generateFrameNumbers('mario-ss1', {frames: [1, 2]}),
-            frameRate: 10,
-            yoyo: true,
-            repeat: -1
-        });
+        this.animaciones_mario();
 
-        this.relatedScene.anims.create({
-            key: 'mario-quieto',
-            frames: [{key: 'mario-ss1', frame: 0}],
-            frameRate: 10,
-        });
-
+        // CONFIG Joystick rexvirtual-joystick-plugin:
         this.joyStick = this.relatedScene.plugins.get('rexvirtualjoystickplugin').add(this.relatedScene, {
             x: 128,
             y: this.relatedScene.sys.game.config.height - 96,
@@ -66,7 +55,12 @@ export class Mario
     update()
     {
         // console.log(this.mario.getData('acelera'));
+        this.salto();
+        this.direccion();
+    }
 
+    salto()
+    {
         if ((this.controles_mario.space.isDown || this.controlJoy.up.isDown)
             && this.mario.body.velocity.y === 0
             && this.relatedScene.time.now > this.mario.getData('allow-salto')
@@ -76,7 +70,10 @@ export class Mario
             this.mario.setData('allow-salto', this.relatedScene.time.now + this.mario.getData('cadencia-salto'));
             play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.6);
         }
+    }
 
+    direccion()
+    {
         if (this.controles_mario.left.isDown || this.controlJoy.left.isDown) 
         {
             this.gestionar_aceleracion(false);
@@ -127,6 +124,23 @@ export class Mario
                 this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.ACELERACION);
             }
         }
+    }
+
+    animaciones_mario()
+    {
+        this.relatedScene.anims.create({
+            key: 'mario-andar', 
+            frames: this.relatedScene.anims.generateFrameNumbers('mario-ss1', {frames: [1, 2]}),
+            frameRate: 10,
+            yoyo: true,
+            repeat: -1
+        });
+
+        this.relatedScene.anims.create({
+            key: 'mario-quieto',
+            frames: [{key: 'mario-ss1', frame: 0}],
+            frameRate: 10,
+        });
     }
 
     get() 
