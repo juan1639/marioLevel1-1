@@ -9,6 +9,7 @@ export function hitBrick(player, tile, context)
     // Bloques id:
     const BLOQUE_LADRILLO = 15;
     const BLOQUE_INTERROGACION = 14;
+    const CIELO_AZUL = 1;
 
     // ¿Está el jugador claramente por debajo del tile?
     //const touchingBottomOfTile = body.y <= tile.getBottom();
@@ -17,7 +18,17 @@ export function hitBrick(player, tile, context)
     // Confirmamos tile correcto y dirección de impacto
     if (tile.index === BLOQUE_LADRILLO && isBlockeUp)
     {
-        context.layer1.removeTileAt(tile.x, tile.y);
+        // context.layer1.removeTileAt(tile.x, tile.y);
+        context.layer1.putTileAt(CIELO_AZUL, tile.x, tile.y);
+
+        // Coordenadas del tile en píxeles
+        const worldX = tile.getCenterX();
+        const worldY = tile.getCenterY();
+
+        // Lanza partículas desde ese punto
+        // context.emisor.get().explode(6, worldX, worldY);
+        
+        context.emisor.create(worldX, worldY);
     }
 }
 

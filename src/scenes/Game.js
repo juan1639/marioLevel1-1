@@ -3,6 +3,7 @@ import { Mario } from '../components/mario.js';
 import { Textos } from '../components/textos.js';
 import { BotonFullScreen } from '../components/botonesinteractivos.js';
 import { Settings } from './settings.js';
+import { EmisorParticulas } from '../components/emisor-particulas.js';
 import
 {
     hitBrick,
@@ -29,7 +30,17 @@ export class Game extends Scene
             scX: 0.5, scY: 0.5,
             origin: [0, 0]
         });
-        
+
+        this.emisor = new EmisorParticulas(this, {
+            vel: [100, 200],
+            ang: [0, 360],
+            grav: 300,
+            lifeSp: 900,
+            cantidad: 35,
+            esc: [Phaser.Math.FloatBetween(0.8, 1.8), 0],
+            autoRun: false
+        });
+
         this.marcadorptos = new Textos(this);
         this.marcadorhi = new Textos(this);
         
@@ -43,6 +54,7 @@ export class Game extends Scene
     {
         //play_sonidos(this.sonido_marioTuberias, false, 0.5);
 
+        // CREACION del TILEmap:
         this.map1 = this.make.tilemap({ key: 'map1' });
         this.tileset1 = this.map1.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
 
@@ -55,16 +67,20 @@ export class Game extends Scene
 
         this.layer1.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
+        // Camaras:
         this.set_cameras();
         this.set_cameras_marcadores();
-        
+
+        // Sprites: llamar a su metodo create() para inicializarlos:
         this.mario.create();
 
         this.set_marcadores_txt();
         this.botonfullscreen.create();
 
+        // Camara-principal... sigue a personaje:
         this.cameras.main.startFollow(this.mario.get());
 
+        // Colisionadores:
         this.set_colliders();
     }
 

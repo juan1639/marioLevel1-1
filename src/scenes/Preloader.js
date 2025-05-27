@@ -54,6 +54,8 @@ export class Preloader extends Scene
         this.load.setPath('assets');
         this.load.image('logo', 'logo.png');
         this.load.spritesheet('boton-fullscreen', 'boton-fullscreen.png', {frameWidth: 64, frameHeight: 64});
+
+        this.load.image('brick-particle', 'particula-ladrillo-mario.png');
         
         this.load.tilemapTiledJSON('map1', 'mario-level-1-1.json');
         this.load.image('tiles1', 'super_mario.png');
