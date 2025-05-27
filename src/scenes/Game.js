@@ -67,6 +67,7 @@ export class Game extends Scene
         );
 
         this.layer1.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
+        this.ajustes_tiles();
 
         // Camaras:
         this.set_cameras();
@@ -149,6 +150,27 @@ export class Game extends Scene
         {
             hitBrick(player, tile, this);
         });
+    }
+
+    ajustes_tiles()
+    {
+        // Reemplazar MONEDAS por cielo-azul:
+        this.layer1.replaceByIndex(11, 1);
+        // Reemplazar SETAS por cielo-azul:
+        this.layer1.replaceByIndex(12, 1);
+        this.layer1.replaceByIndex(18, 1);
+
+        // -----------------------------------------
+        // tile.getLeft(), tile.getBottom()
+        //  
+        //  - SETA:
+        //  [672, 320], [2496, 320], [3488 , 192]
+        // -----------------------------------------
+        // - SETA 1up:
+        // [2048, 288]
+        // ----------------------------------------- 
+        //  - ESTRELLA:
+        // [3232, 320]
     }
 
     set_marcadores_txt()

@@ -59,6 +59,7 @@ export class Mario
         // console.log(this.mario.getData('acelera'));
         this.salto();
         this.direccion();
+        this.checkFallOutBounds(470);// 470px BOTTOM_WORLD_BOUNDS 
     }
 
     salto()
@@ -70,7 +71,7 @@ export class Mario
         {
             this.mario.setVelocityY(-(Settings.MARIO.VEL_SALTO + Math.abs(this.mario.getData('acelera') * 0.24)));
             this.mario.setData('allow-salto', this.relatedScene.time.now + this.mario.getData('cadencia-salto'));
-            play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.6);
+            play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.3);
         }
     }
 
@@ -125,6 +126,14 @@ export class Mario
             {
                 this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.ACELERACION);
             }
+        }
+    }
+
+    checkFallOutBounds(BOTTOM_BOUNDS)
+    {
+        if (this.mario.body.bottom >= BOTTOM_BOUNDS)
+        {
+            console.log(this.mario.body.bottom);
         }
     }
 

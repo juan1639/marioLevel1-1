@@ -13,7 +13,7 @@ export function hitBrick(player, tile, context)
 
     // ¿Está el jugador claramente por debajo del tile?
     //const touchingBottomOfTile = body.y <= tile.getBottom();
-    //console.log(body.y, tile.getBottom());
+    //console.log(tile.getLeft(), tile.getBottom());
 
     // Confirmamos tile correcto y dirección de impacto
     if (tile.index === BLOQUE_LADRILLO && isBlockeUp)
