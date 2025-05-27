@@ -3,7 +3,7 @@ import { Mario } from '../components/mario.js';
 import { Textos } from '../components/textos.js';
 import { BotonFullScreen } from '../components/botonesinteractivos.js';
 import { Settings } from './settings.js';
-import { play_sonidos } from '../utils/functions.js';
+import { hitBrick, play_sonidos } from '../utils/functions.js';
 
 export class Game extends Scene
 {
@@ -32,7 +32,7 @@ export class Game extends Scene
 
     create ()
     {
-        play_sonidos(this.sonido_marioTuberias, false, 0.5);
+        //play_sonidos(this.sonido_marioTuberias, false, 0.5);
 
         this.map1 = this.make.tilemap({ key: 'map1' });
         this.tileset1 = this.map1.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
@@ -70,15 +70,17 @@ export class Game extends Scene
     set_cameras()
     {
         this.cameras.main.setBounds(
-            0, 0,
+            0,
+            0,
             this.layer1.x + this.layer1.width * Settings.getLayer1().scaleX,
             this.layer1.height * Settings.getLayer1().scaleY
         );
 
         this.physics.world.setBounds(
-            this.sys.game.config.width / 4, 0,
-            this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX),// - this.sys.game.config.width,
-            this.layer1.height * Settings.getLayer1().scaleY
+            this.sys.game.config.width / 16,
+            -100,
+            this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX) - 300,// - this.sys.game.config.width,
+            this.layer1.height * Settings.getLayer1().scaleY + 100
         );
     }
 
@@ -109,29 +111,34 @@ export class Game extends Scene
 
     set_colliders()
     {
-        this.map1.setCollisionBetween(14, 16);//    bloques (interr, ladrillo, piramide)
-        this.map1.setCollisionBetween(21, 22);//    Tuberia
-        this.map1.setCollisionBetween(27, 28);//    Tuberia
-        this.map1.setCollision([40]);//             bloque (suelo)
+        this.layer1.setCollisionBetween(14, 16);//    bloques (interr, ladrillo, piramide)
+        this.layer1.setCollisionBetween(21, 22);//    Tuberia
+        this.layer1.setCollisionBetween(27, 28);//    Tuberia
+        this.layer1.setCollision([40]);//             bloque (suelo)
 
         // this.map1.setCollision([13, 14, 16, 40]);
         // this.map1.setCollisionByExclusion([1, 2, 3, 4, 5, 6, 7, 8, 9]);
         
-        this.physics.add.collider(this.mario.get(), this.layer1);
+        this.physics.add.collider(this.mario.get(), this.layer1, (player, tile) =>
+        {
+            hitBrick(player, tile, this);
+        });
     }
 
     set_marcadores_txt()
     {
         this.marcadorptos.create({
-            x: 4, y: -40, origin: [0, 0],
-            texto: '0', size: 28, style: 'bold',  fll: '#ffa',
+            x: 4, y: this.layer1.height * Settings.getLayer1().scaleY,
+            origin: [0, 0],
+            texto: 'Puntos: ' + this.mario.get().x.toString(), size: 32, style: 'bold',  fll: '#ffa',
             family: 'arial, sans-serif',
-            strokeColor: '#ee9011', strokeSize: 9, ShadowColor: '#111111',
+            strokeColor: '#ee9011', strokeSize: 6, ShadowColor: '#111111',
             bool1: false, bool2: true
         });
 
         this.marcadorhi.create({
-            x: this.sys.game.config.width / 1.4, y: -40, origin: [0.5, 0],
+            x: this.sys.game.config.width / 1.4, y: -40,
+            origin: [0.5, 0],
             texto: 'Hi: 5000', size: 28, style: 'bold',  fll: '#ffa',
             family: 'arial, sans-serif',
             strokeColor: '#ee9011', strokeSize: 9, ShadowColor: '#111111',

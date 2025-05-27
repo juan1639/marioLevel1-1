@@ -31,7 +31,7 @@ export class Settings
         VEL_SCROLL: 0,
         MAX_VEL_SCROLL: 380,
         VEL_SALTO: 445,
-        MAX_VEL_SALTO: 670,
+        MAX_VEL_SALTO: 580,
         ACELERACION: 9,
         DECELERACION: 15
     }

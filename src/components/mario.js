@@ -66,7 +66,7 @@ export class Mario
             && this.relatedScene.time.now > this.mario.getData('allow-salto')
         ) 
         {
-            this.mario.setVelocityY(-(Settings.MARIO.VEL_SALTO + Math.abs(this.mario.getData('acelera') * 0.3)));
+            this.mario.setVelocityY(-(Settings.MARIO.VEL_SALTO + Math.abs(this.mario.getData('acelera') * 0.24)));
             this.mario.setData('allow-salto', this.relatedScene.time.now + this.mario.getData('cadencia-salto'));
             play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.6);
         }
