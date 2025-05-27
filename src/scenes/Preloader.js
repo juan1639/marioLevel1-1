@@ -72,6 +72,7 @@ export class Preloader extends Scene
         this.load.audio('mario-tuberias', 'audio/mario-tuberias.mp3');
         this.load.audio('jumpbros', 'audio/jumpbros.ogg');
         this.load.audio('fireworks', 'audio/fireworks.mp3');
+        this.load.audio('bricks-fall', 'audio/bricks-fall.mp3');
     }
 
     create ()

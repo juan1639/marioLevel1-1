@@ -25,10 +25,10 @@ export function hitBrick(player, tile, context)
         const worldX = tile.getCenterX();
         const worldY = tile.getCenterY();
 
-        // Lanza partículas desde ese punto
-        // context.emisor.get().explode(6, worldX, worldY);
-        
+        // Lanza partículas desde ese punto        
         context.emisor.create(worldX, worldY);
+
+        play_sonidos(context.bricks_fall, false, 0.3);
     }
 }
 
