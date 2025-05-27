@@ -74,7 +74,7 @@ export class Mario
         {
             this.mario.setVelocityY(-(Settings.MARIO.VEL_SALTO + Math.abs(this.mario.getData('acelera') * 0.3)));
             this.mario.setData('allow-salto', this.relatedScene.time.now + this.mario.getData('cadencia-salto'));
-            play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.8);
+            play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.6);
         }
 
         if (this.controles_mario.left.isDown || this.controlJoy.left.isDown) 
@@ -98,10 +98,13 @@ export class Mario
                 if (this.mario.getData('acelera') > 0)
                 {
                     this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.DECELERACION);
+                    this.mario.setData('acelera', this.mario.getData('acelera') < 0 ? 0 : this.mario.getData('acelera'));
 
                 } else
                 {
                     this.mario.setData('acelera', this.mario.getData('acelera') + Settings.MARIO.DECELERACION);
+                    this.mario.setData('acelera', this.mario.getData('acelera') > 0 ? 0 : this.mario.getData('acelera'));
+
                 }
                 this.mario.setVelocityX(this.mario.getData('acelera'));
 

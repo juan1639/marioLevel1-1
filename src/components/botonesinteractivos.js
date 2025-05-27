@@ -16,17 +16,20 @@ export class BotonFullScreen
         this.boton.setAngle(ang).setFrame(0).setDepth(50);
         this.boton.setX(x).setY(y);
     
-        this.boton.on('pointerover', () => {
+        this.boton.on('pointerover', () =>
+        {
             // this.boton.setFrame(1);
             this.boton.setScale(scX + 0.1, scY + 0.1);
         });
         
-        this.boton.on('pointerout', () => {
+        this.boton.on('pointerout', () =>
+        {
             // this.boton.setFrame(0);
             this.boton.setScale(scX, scY);
         });
     
-        this.boton.on('pointerdown', () => {
+        this.boton.on('pointerdown', () =>
+        {
             if (!this.relatedScene.scale.isFullscreen)
             {
                 this.relatedScene.scale.startFullscreen();

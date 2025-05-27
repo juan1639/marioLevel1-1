@@ -42,7 +42,8 @@ export class Textos
             ' Fuera de aqui! \n cacho subnormal! '
         ];
 
-        array_tweens.forEach(tween => {
+        array_tweens.forEach(tween =>
+        {
 
             if (tween.slice(0, 5) === texto.slice(0, 5)) {
 
@@ -64,8 +65,8 @@ export class Textos
             ' Siguiente Nivel '
         ];
 
-        array_tweens2.forEach(tween => {
-
+        array_tweens2.forEach(tween =>
+        {
             if (tween === texto) {
 
                 this.relatedScene.tweens.add({
@@ -94,7 +95,8 @@ export class Textos
             ' Menu Config '
         ];
 
-        centrarTxt.forEach(centra => {
+        centrarTxt.forEach(centra =>
+        {
             if (texto.slice(0, 5) === centra.slice(0, 5)) this.txt.setX(centrar_txt(this.txt, screenWidth * multip));
         });
     }
