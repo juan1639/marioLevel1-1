@@ -133,7 +133,12 @@ export class Mario
     {
         if (this.mario.body.bottom >= BOTTOM_BOUNDS)
         {
-            console.log(this.mario.body.bottom);
+            console.log(this.mario.body.bottom, this.mario.visible);
+            
+            if (this.mario.visible)
+            {
+                this.mario.setVisible(false);
+            }
         }
     }
 

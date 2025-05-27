@@ -54,7 +54,7 @@ export class Game extends Scene
     create ()
     {
         //play_sonidos(this.sonido_marioTuberias, false, 0.5);
-
+        
         // CREACION del TILEmap:
         this.map1 = this.make.tilemap({ key: 'map1' });
         this.tileset1 = this.map1.addTilesetImage('SuperMarioBros-World1-1', 'tiles1');
@@ -107,7 +107,7 @@ export class Game extends Scene
             this.sys.game.config.width / 16,
             -100,
             this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX) - 300,// - this.sys.game.config.width,
-            this.layer1.height * Settings.getLayer1().scaleY + 100
+            this.layer1.height * Settings.getLayer1().scaleY + 150
         );
     }
 
