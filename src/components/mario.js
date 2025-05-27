@@ -16,6 +16,8 @@ export class Mario
 
         this.mario.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
+        this.mario.setSize(Phaser.Math.RoundTo(this.mario.width / 1.4, 0, 10), this.mario.body.height);
+
         this.mario.setVisible(true);
         this.mario.setFrame(0);
         this.mario.setFlipX(false);
