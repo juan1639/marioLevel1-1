@@ -3,7 +3,12 @@ import { Mario } from '../components/mario.js';
 import { Textos } from '../components/textos.js';
 import { BotonFullScreen } from '../components/botonesinteractivos.js';
 import { Settings } from './settings.js';
-import { hitBrick, play_sonidos } from '../utils/functions.js';
+import
+{
+    hitBrick,
+    config_marcadores_txt,
+    play_sonidos
+} from '../utils/functions.js';
 
 export class Game extends Scene
 {
@@ -18,7 +23,7 @@ export class Game extends Scene
 
         this.botonfullscreen = new BotonFullScreen(this, {
             id: 'boton-fullscreen',
-            x: Math.floor(this.sys.game.config.width / 1.3),
+            x: Math.floor(this.sys.game.config.width / 1.2),
             y: -64 * 0.5,
             ang: 0,
             scX: 0.5, scY: 0.5,
@@ -95,7 +100,7 @@ export class Game extends Scene
         this.mapa_scores = this.cameras.add(x, y, this.sys.game.config.width, alto).setZoom(1).setName('view-scores').setAlpha(1).setOrigin(0, 0);
         this.mapa_scores.scrollX = scrollX;
         this.mapa_scores.scrollY = scrollY;
-        this.mapa_scores.setBackgroundColor(0x00aabb);
+        // this.mapa_scores.setBackgroundColor(0x00aabb);
         console.log(this.mapa_scores);
     }
     
@@ -131,26 +136,6 @@ export class Game extends Scene
 
     set_marcadores_txt()
     {
-        // const marcadoresCoorY = this.layer1.height * Settings.getLayer1().scaleY + 16;
-        const marcadoresCoorY = -40;
-
-        this.marcadorptos.create({
-            x: this.mapa_scores.x + 8, y: marcadoresCoorY,
-            origin: [0, 0],
-            texto: 'Puntos: ' + this.mario.get().x.toString(), size: 32, style: 'bold',  fll: '#ffa',
-            family: 'arial, sans-serif',
-            strokeColor: '#ee9011', strokeSize: 8, ShadowColor: '#111111',
-            bool1: true, bool2: true
-        });
-
-        this.marcadorhi.create({
-            x: this.sys.game.config.width / 1.8,
-            y: marcadoresCoorY,
-            origin: [0.5, 0],
-            texto: 'Hi: 5000', size: 32, style: 'bold',  fll: '#ffa',
-            family: 'arial, sans-serif',
-            strokeColor: '#ee9011', strokeSize: 8, ShadowColor: '#111111',
-            bool1: true, bool2: true
-        });
+        config_marcadores_txt(this);
     }
 }

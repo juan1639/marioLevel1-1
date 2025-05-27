@@ -21,6 +21,30 @@ export function hitBrick(player, tile, context)
     }
 }
 
+export function config_marcadores_txt(context)
+{
+    const marcadoresCoorY = -40;
+
+    context.marcadorptos.create({
+        x: context.mapa_scores.x + 8, y: marcadoresCoorY,
+        origin: [0, 0],
+        texto: 'Puntos: ' + context.mario.get().x.toString(), size: 32, style: 'bold',  fll: '#ffa',
+        family: 'arial, sans-serif',
+        strokeColor: '#ee9011', strokeSize: 8, ShadowColor: '#111111',
+        bool1: true, bool2: true
+    });
+
+    context.marcadorhi.create({
+        x: context.sys.game.config.width / 1.8,
+        y: marcadoresCoorY,
+        origin: [0.5, 0],
+        texto: 'Hi: 5000', size: 32, style: 'bold',  fll: '#ffa',
+        family: 'arial, sans-serif',
+        strokeColor: '#ee9011', strokeSize: 8, ShadowColor: '#111111',
+        bool1: true, bool2: true
+    });
+}
+
 export function play_sonidos(id, loop, volumen)
 {
     id.volume = volumen;
