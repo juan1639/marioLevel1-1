@@ -29,11 +29,11 @@ export class Settings
     static MARIO =
     {
         VEL_SCROLL: 0,
-        MAX_VEL_SCROLL: 380,
+        MAX_VEL_SCROLL: 280,
         VEL_SALTO: 445,
-        MAX_VEL_SALTO: 580,
-        ACELERACION: 9,
-        DECELERACION: 15
+        MAX_VEL_SALTO: 500,
+        ACELERACION: 7,
+        DECELERACION: 14
     }
 
     static gameOver = false;

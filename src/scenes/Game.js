@@ -66,7 +66,7 @@ export class Game extends Scene
     update() 
     {
         this.mario.update();
-        this.layer1.setY(this.layer1.y + 0);
+        // this.layer1.setY(this.layer1.y + 0);
 
         // this.controls.update(delta);
     }
