@@ -74,12 +74,16 @@ export class Preloader extends Scene
         this.load.plugin('rexvirtualjoystickplugin', url, true);
 
         // Audio & Musica
-        this.load.audio('mario-tuberias', 'audio/mario-tuberias.mp3');
         this.load.audio('jumpbros', 'audio/jumpbros.ogg');
         this.load.audio('fireworks', 'audio/fireworks.mp3');
         this.load.audio('bricks-fall', 'audio/bricks-fall.mp3');
         this.load.audio('push-block', 'audio/wall.wav');
         this.load.audio('p-ping', 'audio/p-ping.mp3');
+        this.load.audio('oh-no', 'audio/oh-no.mp3');
+        this.load.audio('ough', 'audio/ough.mp3');
+        this.load.audio('mario-tuberias', 'audio/mario-tuberias.mp3');
+        this.load.audio('gameover', 'audio/gameover_mario.mp3');
+        this.load.audio('musica-principal', 'audio/musica-mario-bros.mp3');
     }
 
     create ()

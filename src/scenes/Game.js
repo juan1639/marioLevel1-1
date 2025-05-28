@@ -44,17 +44,18 @@ export class Game extends Scene
         this.marcadorptos = new Textos(this);
         this.marcadorhi = new Textos(this);
         
-        this.sonido_marioTuberias = this.sound.add('mario-tuberias');
         this.sonido_jumpbros = this.sound.add('jumpbros');
         this.bricks_fall = this.sound.add('bricks-fall');
         this.push_block = this.sound.add('push-block');
+        this.sonido_marioTuberias = this.sound.add('mario-tuberias');
+        this.musica_principal = this.sound.add('musica-principal');
     }
 
     preload() {}
 
     create ()
     {
-        //play_sonidos(this.sonido_marioTuberias, false, 0.5);
+        play_sonidos(this.musica_principal, true, 0.5);
         
         // CREACION del TILEmap:
         this.map1 = this.make.tilemap({ key: 'map1' });
