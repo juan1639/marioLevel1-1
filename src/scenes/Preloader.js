@@ -63,7 +63,9 @@ export class Preloader extends Scene
 
         // this.load.tilemapTiledJSON('map1', 'super-mario.json');
         // this.load.image('tiles1', 'super-mario.png');
+
         this.load.spritesheet('mario-ss1', 'mario-ss1.png', {frameWidth: 16, frameHeight: 16});
+        this.load.spritesheet('mario-ss1-grande', 'mario-ss1-grande.png', {frameWidth: 16, frameHeight: 32});
 
         // Plugin Joystick mobile
         const url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';

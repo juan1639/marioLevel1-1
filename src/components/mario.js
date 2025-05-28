@@ -10,8 +10,10 @@ export class Mario
 
     create()
     {
+        this.SPRITE_SHEET = 'mario-ss1';
+
         this.mario = this.relatedScene.physics.add.sprite(
-            this.relatedScene.sys.game.config.width / 2, 100, 'mario-ss1'
+            this.relatedScene.sys.game.config.width / 2, 100, this.SPRITE_SHEET
         );
 
         this.mario.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
@@ -146,7 +148,7 @@ export class Mario
     {
         this.relatedScene.anims.create({
             key: 'mario-andar', 
-            frames: this.relatedScene.anims.generateFrameNumbers('mario-ss1', {frames: [1, 2]}),
+            frames: this.relatedScene.anims.generateFrameNumbers(this.SPRITE_SHEET, {frames: [1, 2]}),
             frameRate: 10,
             yoyo: true,
             repeat: -1
@@ -154,7 +156,7 @@ export class Mario
 
         this.relatedScene.anims.create({
             key: 'mario-quieto',
-            frames: [{key: 'mario-ss1', frame: 0}],
+            frames: [{key: this.SPRITE_SHEET, frame: 0}],
             frameRate: 10,
         });
     }
