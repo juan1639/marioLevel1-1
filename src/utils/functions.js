@@ -50,7 +50,7 @@ export function hitBrick(player, tile, context)
 
         context.time.delayedCall(dura * 1.5, () => context.layer1.putTileAt(BLOQUE_INTERROGACION, tile.x, tile.y), null);
 
-        // play_sonidos(context.bricks_fall, false, 0.3);
+        play_sonidos(context.push_block, false, 0.8);
     }
 }
 

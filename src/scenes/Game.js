@@ -47,6 +47,7 @@ export class Game extends Scene
         this.sonido_marioTuberias = this.sound.add('mario-tuberias');
         this.sonido_jumpbros = this.sound.add('jumpbros');
         this.bricks_fall = this.sound.add('bricks-fall');
+        this.push_block = this.sound.add('push-block');
     }
 
     preload() {}

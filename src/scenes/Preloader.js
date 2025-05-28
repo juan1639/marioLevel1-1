@@ -78,6 +78,8 @@ export class Preloader extends Scene
         this.load.audio('jumpbros', 'audio/jumpbros.ogg');
         this.load.audio('fireworks', 'audio/fireworks.mp3');
         this.load.audio('bricks-fall', 'audio/bricks-fall.mp3');
+        this.load.audio('push-block', 'audio/wall.wav');
+        this.load.audio('p-ping', 'audio/p-ping.mp3');
     }
 
     create ()
