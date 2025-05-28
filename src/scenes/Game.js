@@ -108,7 +108,7 @@ export class Game extends Scene
             this.sys.game.config.width / 16,
             -100,
             this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX) - 300,// - this.sys.game.config.width,
-            this.layer1.height * Settings.getLayer1().scaleY + 150
+            this.layer1.height * Settings.getLayer1().scaleY + 200
         );
     }
 

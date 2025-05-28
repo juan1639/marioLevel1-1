@@ -33,7 +33,9 @@ export class Settings
         VEL_SALTO: 445,
         MAX_VEL_SALTO: 500,
         ACELERACION: 7,
-        DECELERACION: 14
+        DECELERACION: 14,
+        // X_INICIAL: Phaser.Game.sys.game.config.width / 2,
+        // Y_INICIAL: Phaser.Game.sys.game.config.height / 2
     }
 
     static gameOver = false;

@@ -11,10 +11,10 @@ export class Mario
     create()
     {
         this.SPRITE_SHEET = 'mario-ss1';
+        this.X_INICIAL = this.relatedScene.sys.game.config.width / 2;
+        this.Y_INICIAL = this.relatedScene.sys.game.config.height / 2;
 
-        this.mario = this.relatedScene.physics.add.sprite(
-            this.relatedScene.sys.game.config.width / 2, 100, this.SPRITE_SHEET
-        );
+        this.mario = this.relatedScene.physics.add.sprite(this.X_INICIAL, this.Y_INICIAL, this.SPRITE_SHEET);
 
         this.mario.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
@@ -61,7 +61,7 @@ export class Mario
         // console.log(this.mario.getData('acelera'));
         this.salto();
         this.direccion();
-        this.checkFallOutBounds(470);// 470px BOTTOM_WORLD_BOUNDS 
+        this.checkFallOutBounds(this.mario.body.world.bounds.bottom);// BOTTOM_WORLD_BOUNDS 
     }
 
     salto()
@@ -73,7 +73,7 @@ export class Mario
         {
             this.mario.setVelocityY(-(Settings.MARIO.VEL_SALTO + Math.abs(this.mario.getData('acelera') * 0.24)));
             this.mario.setData('allow-salto', this.relatedScene.time.now + this.mario.getData('cadencia-salto'));
-            play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.3);
+            play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.4);
         }
     }
 
@@ -137,10 +137,12 @@ export class Mario
         {
             console.log(this.mario.body.bottom, this.mario.visible);
             
-            if (this.mario.visible)
+            /* if (this.mario.visible)
             {
                 this.mario.setVisible(false);
-            }
+            } */
+
+            this.mario.setX(this.X_INICIAL).setY(this.Y_INICIAL);
         }
     }
 
