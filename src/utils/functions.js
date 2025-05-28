@@ -1,3 +1,4 @@
+import { AnimaBloques } from "../components/anima-bloques.js";
 
 export function hitBrick(player, tile, context)
 {
@@ -29,6 +30,27 @@ export function hitBrick(player, tile, context)
         context.emisor.create(worldX, worldY);
 
         play_sonidos(context.bricks_fall, false, 0.3);
+    }
+
+    if (tile.index === BLOQUE_INTERROGACION && isBlockeUp)
+    {
+        // context.layer1.removeTileAt(tile.x, tile.y);
+        context.layer1.putTileAt(CIELO_AZUL, tile.x, tile.y);
+
+        // Coordenadas del tile en píxeles
+        const worldX = tile.getCenterX();
+        const worldY = tile.getCenterY();
+
+        // Anima bloque-push:
+        const dura = 450;      
+        const animaBloque = new AnimaBloques(context, {
+            offsetY: -16, easeEtc: 'Sine.easeOut', duracion: dura, conYoyo: true
+        });
+        animaBloque.create(worldX, worldY);
+
+        context.time.delayedCall(dura * 1.5, () => context.layer1.putTileAt(BLOQUE_INTERROGACION, tile.x, tile.y), null);
+
+        // play_sonidos(context.bricks_fall, false, 0.3);
     }
 }
 

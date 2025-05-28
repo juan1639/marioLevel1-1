@@ -67,6 +67,8 @@ export class Preloader extends Scene
         this.load.spritesheet('mario-ss1', 'mario-ss1.png', {frameWidth: 16, frameHeight: 16});
         this.load.spritesheet('mario-ss1-grande', 'mario-ss1-grande.png', {frameWidth: 16, frameHeight: 32});
 
+        this.load.spritesheet('general-ssheet', 'super_mario.png', {frameWidth: 16, frameHeight: 16});
+
         // Plugin Joystick mobile
         const url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
         this.load.plugin('rexvirtualjoystickplugin', url, true);
