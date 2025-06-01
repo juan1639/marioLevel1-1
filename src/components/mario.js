@@ -150,7 +150,7 @@ export class Mario
     {
         this.relatedScene.anims.create({
             key: 'mario-andar', 
-            frames: this.relatedScene.anims.generateFrameNumbers(this.SPRITE_SHEET, {frames: [1, 2]}),
+            frames: this.relatedScene.anims.generateFrameNumbers(this.SPRITE_SHEET, {frames: [1, 2, 3]}),
             frameRate: 10,
             yoyo: true,
             repeat: -1
