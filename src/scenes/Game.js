@@ -108,7 +108,7 @@ export class Game extends Scene
         this.physics.world.setBounds(
             this.sys.game.config.width / 16,
             -100,
-            this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX) - 300,// - this.sys.game.config.width,
+            this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX) - 470,// - this.sys.game.config.width,
             this.layer1.height * Settings.getLayer1().scaleY + 200
         );
     }

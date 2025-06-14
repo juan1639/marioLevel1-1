@@ -30,8 +30,8 @@ export class Settings
     {
         VEL_SCROLL: 0,
         MAX_VEL_SCROLL: 280,
-        VEL_SALTO: 445,
-        MAX_VEL_SALTO: 500,
+        VEL_SALTO: 450,
+        MAX_VEL_SALTO: 640,
         ACELERACION: 7,
         DECELERACION: 14,
         // X_INICIAL: Phaser.Game.sys.game.config.width / 2,
