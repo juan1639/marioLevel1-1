@@ -38,6 +38,11 @@ export class Settings
         // Y_INICIAL: Phaser.Game.sys.game.config.height / 2
     }
 
+    static GOOMBA =
+    {
+        VEL_X: -60  
+    };
+
     static gameOver = false;
 
     static marcadores =

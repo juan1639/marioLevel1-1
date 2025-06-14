@@ -1,4 +1,5 @@
 import { AnimaBloques } from "../components/anima-bloques.js";
+import { Settings } from "../scenes/settings.js";
 
 export function hitBrick(player, tile, context)
 {
@@ -29,6 +30,8 @@ export function hitBrick(player, tile, context)
         // Lanza partículas desde ese punto        
         context.emisor.create(worldX, worldY);
 
+        sumar_puntos(0, 10, context);
+
         play_sonidos(context.bricks_fall, false, 0.3);
     }
 
@@ -54,29 +57,29 @@ export function hitBrick(player, tile, context)
     }
 }
 
-export function config_marcadores_txt(context)
+export function enemigos_hitBrick(enemigo, tile)
 {
-    const marcadoresCoorY = -40;
+    // Verificamos si hay bloqueo en la 'cabeza' del jugador:
+    const isBlockeLeft = enemigo.body.blocked.left;
+    const isBlockeRight = enemigo.body.blocked.right;
 
-    context.marcadorptos.create({
-        x: context.mapa_scores.x + 8,
-        y: marcadoresCoorY,
-        origin: [0, 0],
-        texto: 'Puntos: ' + context.mario.get().x.toString(), size: 32, style: 'bold',  fll: '#ffa',
-        family: 'arial, sans-serif',
-        strokeColor: '#ee9011', strokeSize: 8, ShadowColor: '#111111',
-        bool1: true, bool2: true
-    });
+    // Bloques id:
+    const ARRAY_BLOQUES_SOLIDOS = [14, 15, 16, 21, 22, 27, 28];
 
-    context.marcadorhi.create({
-        x: context.sys.game.config.width / 1.8,
-        y: marcadoresCoorY,
-        origin: [0.5, 0],
-        texto: 'Hi: 5000', size: 32, style: 'bold',  fll: '#ffa',
-        family: 'arial, sans-serif',
-        strokeColor: '#ee9011', strokeSize: 8, ShadowColor: '#111111',
-        bool1: true, bool2: true
-    });
+    if (ARRAY_BLOQUES_SOLIDOS.includes(tile.index) && isBlockeLeft)
+    {
+        enemigo.setVelocityX(-Settings.GOOMBA.VEL_X);
+    }
+    else if (ARRAY_BLOQUES_SOLIDOS.includes(tile.index) && isBlockeRight)
+    {
+        enemigo.setVelocityX(Settings.GOOMBA.VEL_X);
+    }
+}
+
+export function sumar_puntos(id, valor, context)
+{
+    Settings.marcadores.puntos += valor;
+    context.marcadores.update(id, Settings.marcadores.puntos);
 }
 
 export function play_sonidos(id, loop, volumen)

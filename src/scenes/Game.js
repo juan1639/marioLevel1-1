@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { Mario } from '../components/mario.js';
+import { Goomba } from '../components/goomba.js';
 // import { Textos } from '../components/textos.js';
 import { Marcadores } from '../components/marcadores.js';
 import { BotonFullScreen } from '../components/botonesinteractivos.js';
@@ -8,7 +9,7 @@ import { EmisorParticulas } from '../components/emisor-particulas.js';
 import
 {
     hitBrick,
-    config_marcadores_txt,
+    enemigos_hitBrick,
     play_sonidos
 } from '../utils/functions.js';
 
@@ -22,6 +23,7 @@ export class Game extends Scene
     init() 
     {
         this.mario = new Mario(this);
+        this.goomba = new Goomba(this);
 
         this.botonfullscreen = new BotonFullScreen(this, {
             id: 'boton-fullscreen',
@@ -77,6 +79,7 @@ export class Game extends Scene
 
         // Sprites: llamar a su metodo create() para inicializarlos:
         this.mario.create();
+        this.goomba.create();
 
         this.marcadores.create();
         this.botonfullscreen.create();
@@ -152,6 +155,11 @@ export class Game extends Scene
         {
             hitBrick(player, tile, this);
         });
+
+        this.physics.add.collider(this.goomba.get(), this.layer1, (goomba, tile) =>
+        {
+            enemigos_hitBrick(goomba, tile);
+        });
     }
 
     ajustes_tiles()
@@ -173,10 +181,5 @@ export class Game extends Scene
         // ----------------------------------------- 
         //  - ESTRELLA:
         // [3232, 320]
-    }
-
-    set_marcadores_txt()
-    {
-        config_marcadores_txt(this);
     }
 }
