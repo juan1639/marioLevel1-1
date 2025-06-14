@@ -59,7 +59,8 @@ export function config_marcadores_txt(context)
     const marcadoresCoorY = -40;
 
     context.marcadorptos.create({
-        x: context.mapa_scores.x + 8, y: marcadoresCoorY,
+        x: context.mapa_scores.x + 8,
+        y: marcadoresCoorY,
         origin: [0, 0],
         texto: 'Puntos: ' + context.mario.get().x.toString(), size: 32, style: 'bold',  fll: '#ffa',
         family: 'arial, sans-serif',

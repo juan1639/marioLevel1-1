@@ -33,6 +33,7 @@ export class Mario
         // this.mario.setData('aceleraSalto', Settings.getVelSalto());
         this.mario.setData('allow-salto', 0);
         this.mario.setData('cadencia-salto', 99);
+        this.mario.setData('jump-key-up', true);
 
         this.animaciones_mario();
 
@@ -61,19 +62,26 @@ export class Mario
         // console.log(this.mario.getData('acelera'));
         this.salto();
         this.direccion();
-        this.checkFallOutBounds(this.mario.body.world.bounds.bottom);// BOTTOM_WORLD_BOUNDS 
+        this.checkFallOutBounds(this.mario.body.world.bounds.bottom);// BOTTOM_WORLD_BOUNDS
     }
 
     salto()
     {
         if ((this.controles_mario.space.isDown || this.controlJoy.up.isDown)
             && this.mario.body.velocity.y === 0
-            && this.relatedScene.time.now > this.mario.getData('allow-salto')
+            && this.relatedScene.time.now > this.mario.getData('allow-salto') 
+            && this.mario.getData('jump-key-up')
         ) 
         {
-            this.mario.setVelocityY(-(Settings.MARIO.VEL_SALTO + Math.abs(this.mario.getData('acelera') * 0.45)));
+            this.mario.setVelocityY(-(Settings.MARIO.VEL_SALTO + Math.abs(this.mario.getData('acelera') * 0.52)));
             this.mario.setData('allow-salto', this.relatedScene.time.now + this.mario.getData('cadencia-salto'));
+            this.mario.setData('jump-key-up', false);
             play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.4);
+        }
+
+        if (this.controles_mario.space.isUp)
+        {
+            this.mario.setData('jump-key-up', true);
         }
     }
 

@@ -31,7 +31,7 @@ export class Textos
         this.txt.setOrigin(origin[0], origin[1]);
         // this.txt.setX(this.relatedScene.sys.game.config.width / 2);
 
-        console.log(this.txt);
+        console.log(this.txt._text);
     }
 
     crear_tweens(texto) 

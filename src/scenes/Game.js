@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { Mario } from '../components/mario.js';
-import { Textos } from '../components/textos.js';
+// import { Textos } from '../components/textos.js';
+import { Marcadores } from '../components/marcadores.js';
 import { BotonFullScreen } from '../components/botonesinteractivos.js';
 import { Settings } from './settings.js';
 import { EmisorParticulas } from '../components/emisor-particulas.js';
@@ -41,9 +42,8 @@ export class Game extends Scene
             autoRun: false
         });
 
-        this.marcadorptos = new Textos(this);
-        this.marcadorhi = new Textos(this);
-        
+        this.marcadores = new Marcadores(this);
+
         this.sonido_jumpbros = this.sound.add('jumpbros');
         this.bricks_fall = this.sound.add('bricks-fall');
         this.push_block = this.sound.add('push-block');
@@ -78,7 +78,7 @@ export class Game extends Scene
         // Sprites: llamar a su metodo create() para inicializarlos:
         this.mario.create();
 
-        this.set_marcadores_txt();
+        this.marcadores.create();
         this.botonfullscreen.create();
 
         // Camara-principal... sigue a personaje:
