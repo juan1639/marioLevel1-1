@@ -9,7 +9,6 @@ import { EmisorParticulas } from '../components/emisor-particulas.js';
 import
 {
     hitBrick,
-    enemigos_hitBrick,
     play_sonidos
 } from '../utils/functions.js';
 
@@ -157,10 +156,12 @@ export class Game extends Scene
             hitBrick(player, tile, this);
         });
 
-        this.physics.add.collider(this.goombas.get(), this.layer1, (goombas, tile) =>
+        /* this.physics.add.collider(this.goombas.get(), this.layer1, (goombas, tile) =>
         {
             enemigos_hitBrick(goombas, tile, this);
-        });
+        }); */
+
+        this.physics.add.collider(this.goombas.get(), this.layer1);
     }
 
     ajustes_tiles()

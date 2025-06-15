@@ -57,7 +57,7 @@ export function hitBrick(player, tile, context)
     }
 }
 
-export function enemigos_hitBrick(enemigos, tile, context)
+/* export function enemigos_hitBrick(enemigos, tile, context)
 {
     context.goombas.get().children.iterate(enemigo =>
     {
@@ -77,7 +77,7 @@ export function enemigos_hitBrick(enemigos, tile, context)
             enemigo.setVelocityX(Settings.GOOMBA.VEL_X);
         }
     });
-}
+} */
 
 export function sumar_puntos(id, valor, context)
 {

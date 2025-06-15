@@ -22,22 +22,6 @@ export class Goombas
                 this.SPRITE_SHEET
             );
 
-            goomba.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
-            // this.goomba.setSize(Phaser.Math.RoundTo(this.goomba.width / 1.4, 0, 10), this.goomba.body.height);
-
-            goomba.setVisible(true);
-            goomba.setFrame(0);
-
-            goomba.setCollideWorldBounds(true);
-            goomba.body.setAllowGravity(true);
-
-            // goomba.setData('vel_x', Settings.GOOMBA.VEL_X);
-            // goomba.setVelocityX(goomba.getData('vel_x'));
-            // goomba.setVelocityX(-60);
-
-            //this.animaciones_goomba();
-            goomba.anims.play('goomba-andar', true);
-
             this.goombas.add(goomba);
 
             console.log(goomba);
@@ -45,16 +29,49 @@ export class Goombas
 
         this.goombas.children.iterate(goomba =>
         {
-            goomba.setVelocityX(Settings.GOOMBA.VEL_X);
-
+            goomba.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
+            // this.goomba.setSize(Phaser.Math.RoundTo(this.goomba.width / 1.4, 0, 10), this.goomba.body.height);
+            goomba.setVisible(true);
+            goomba.setFrame(0);
+            goomba.body.setAllowGravity(true);
+            goomba.setCollideWorldBounds(true);
+            goomba.setData('quieto', true);
+            goomba.setVelocityX(0);
+            goomba.setBounce(1, 0);
+            goomba.anims.play('goomba-andar', true);
         });
+
+        this.DISTANCIA_ACTIVA_GOOMBAS = this.relatedScene.sys.game.config.width;
 
         console.log(this.goombas);
     }
 
     update()
     {
-        
+        this.goombas.children.iterate((goomba) =>
+        {
+            if (goomba.getData('quieto'))
+            {
+                const mario = this.relatedScene.mario.get();
+
+                if (!mario)
+                {
+                    console.warn("⚠️ Mario no está definido");
+                    return;
+                }
+
+                const distancia = Math.abs(mario.x - goomba.x);
+                //console.log(`Distancia Mario-Goomba: ${distancia}`);
+
+                if (distancia < this.DISTANCIA_ACTIVA_GOOMBAS)
+                {
+                    console.log("✅ Activando Goomba");
+                    goomba.setData('quieto', false);
+                    goomba.setVelocityX(Settings.GOOMBA.VEL_X);
+                }
+            }
+        });
+
         // Phaser.Actions.IncX(this.goombas.getChildren(), -0.5);
         //this.checkFallOutBounds(this.goomba.body.world.bounds.bottom);// BOTTOM_WORLD_BOUNDS
     }
