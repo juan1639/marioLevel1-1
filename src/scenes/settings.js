@@ -17,9 +17,7 @@ export class Settings
         TILE_X: 16,
         TILE_Y: 16
     };
-
-    static escala = 2;
-
+    
     static layer1 =
     {
         scaleX: 2,
