@@ -57,23 +57,26 @@ export function hitBrick(player, tile, context)
     }
 }
 
-export function enemigos_hitBrick(enemigo, tile)
+export function enemigos_hitBrick(enemigos, tile, context)
 {
-    // Verificamos si hay bloqueo en la 'cabeza' del jugador:
-    const isBlockeLeft = enemigo.body.blocked.left;
-    const isBlockeRight = enemigo.body.blocked.right;
-
-    // Bloques id:
-    const ARRAY_BLOQUES_SOLIDOS = [14, 15, 16, 21, 22, 27, 28];
-
-    if (ARRAY_BLOQUES_SOLIDOS.includes(tile.index) && isBlockeLeft)
+    context.goombas.get().children.iterate(enemigo =>
     {
-        enemigo.setVelocityX(-Settings.GOOMBA.VEL_X);
-    }
-    else if (ARRAY_BLOQUES_SOLIDOS.includes(tile.index) && isBlockeRight)
-    {
-        enemigo.setVelocityX(Settings.GOOMBA.VEL_X);
-    }
+        // Verificamos si hay bloqueo en la 'cabeza' del jugador:
+        const isBlockeLeft = enemigo.body.blocked.left;
+        const isBlockeRight = enemigo.body.blocked.right;
+
+        // Bloques id:
+        const ARRAY_BLOQUES_SOLIDOS = [14, 15, 16, 21, 22, 27, 28];
+
+        if (ARRAY_BLOQUES_SOLIDOS.includes(tile.index) && isBlockeLeft)
+        {
+            enemigo.setVelocityX(-Settings.GOOMBA.VEL_X);
+        }
+        else if (ARRAY_BLOQUES_SOLIDOS.includes(tile.index) && isBlockeRight)
+        {
+            enemigo.setVelocityX(Settings.GOOMBA.VEL_X);
+        }
+    });
 }
 
 export function sumar_puntos(id, valor, context)

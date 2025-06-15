@@ -18,6 +18,8 @@ export class Settings
         TILE_Y: 16
     };
 
+    static escala = 2;
+
     static layer1 =
     {
         scaleX: 2,
@@ -36,7 +38,16 @@ export class Settings
         DECELERACION: 14,
         // X_INICIAL: Phaser.Game.sys.game.config.width / 2,
         // Y_INICIAL: Phaser.Game.sys.game.config.height / 2
-    }
+    };
+
+    static ARRAY_GOOMBAS =
+    [
+        [24, 12],
+        [50, 12], [52, 12],
+        [83, 1], [85, 1],
+        [98, 12], [100, 12],
+        [124, 12], [126, 12],
+    ];
 
     static GOOMBA =
     {

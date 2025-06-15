@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import { Mario } from '../components/mario.js';
-import { Goomba } from '../components/goomba.js';
+import { Goombas } from '../components/goomba.js';
 // import { Textos } from '../components/textos.js';
 import { Marcadores } from '../components/marcadores.js';
 import { BotonFullScreen } from '../components/botonesinteractivos.js';
@@ -23,7 +23,7 @@ export class Game extends Scene
     init() 
     {
         this.mario = new Mario(this);
-        this.goomba = new Goomba(this);
+        this.goombas = new Goombas(this);
 
         this.botonfullscreen = new BotonFullScreen(this, {
             id: 'boton-fullscreen',
@@ -79,7 +79,7 @@ export class Game extends Scene
 
         // Sprites: llamar a su metodo create() para inicializarlos:
         this.mario.create();
-        this.goomba.create();
+        this.goombas.create();
 
         this.marcadores.create();
         this.botonfullscreen.create();
@@ -94,6 +94,7 @@ export class Game extends Scene
     update() 
     {
         this.mario.update();
+        this.goombas.update();
         // this.layer1.setY(this.layer1.y + 0);
 
         // this.controls.update(delta);
@@ -156,9 +157,9 @@ export class Game extends Scene
             hitBrick(player, tile, this);
         });
 
-        this.physics.add.collider(this.goomba.get(), this.layer1, (goomba, tile) =>
+        this.physics.add.collider(this.goombas.get(), this.layer1, (goombas, tile) =>
         {
-            enemigos_hitBrick(goomba, tile);
+            enemigos_hitBrick(goombas, tile, this);
         });
     }
 
