@@ -100,14 +100,14 @@ export class Mario
         {
             this.gestionar_aceleracion(false);
             this.mario.setVelocityX(this.mario.getData('acelera'));
-            this.mario.anims.play('mario-andar', true);
+            this.selecc_anima_salto_anima_suelo();
             this.mario.setFlipX(true);
             
         } else if (this.controles_mario.right.isDown || this.controlJoy.right.isDown) 
         {
             this.gestionar_aceleracion(true);
             this.mario.setVelocityX(this.mario.getData('acelera'));
-            this.mario.anims.play('mario-andar', true);
+            this.selecc_anima_salto_anima_suelo();
             this.mario.setFlipX(false);
 
         } else 
@@ -129,7 +129,14 @@ export class Mario
 
             } else
             {
-                this.mario.anims.play('mario-quieto', true);
+                if (this.mario.body.velocity.y === 0)
+                {
+                    this.mario.anims.play('mario-quieto', true);
+                }
+                else
+                {
+                    this.mario.anims.play('mario-saltando', true);
+                }
             }
         }
     }
@@ -145,6 +152,18 @@ export class Mario
             {
                 this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.ACELERACION);
             }
+        }
+    }
+
+    selecc_anima_salto_anima_suelo()
+    {
+        if (this.mario.body.velocity.y !== 0)
+        {
+            this.mario.anims.play('mario-saltando', true);
+        }
+        else
+        {
+            this.mario.anims.play('mario-andar', true);
         }
     }
 
@@ -194,6 +213,12 @@ export class Mario
         this.relatedScene.anims.create({
             key: 'mario-desliza-bandera',
             frames: [{key: this.SPRITE_SHEET, frame: 6}],
+            frameRate: 10,
+        });
+
+        this.relatedScene.anims.create({
+            key: 'mario-saltando',
+            frames: [{key: this.SPRITE_SHEET, frame: 5}],
             frameRate: 10,
         });
     }
