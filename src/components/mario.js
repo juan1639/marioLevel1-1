@@ -37,6 +37,7 @@ export class Mario
         this.mario.setData('allow-salto', 0);
         this.mario.setData('cadencia-salto', 99);
         this.mario.setData('jump-key-up', true);
+        this.mario.setData('level-up', false);
 
         this.animaciones_mario();
 
@@ -62,9 +63,14 @@ export class Mario
 
     update()
     {
-        // console.log(this.mario.getData('acelera'));
+        if (this.mario.getData('level-up'))
+        {
+            return;
+        }
+
         this.salto();
         this.direccion();
+        this.checkLevelUp(this.relatedScene.physics.world.bounds.width);// RIGHT_WORLD_BOUNDS (LEVEL-UP)
         this.checkFallOutBounds(this.mario.body.world.bounds.bottom);// BOTTOM_WORLD_BOUNDS
     }
 
@@ -142,6 +148,18 @@ export class Mario
         }
     }
 
+    checkLevelUp(RIGHT_BOUNDS)
+    {
+        const AJUSTE_MANUAL_X = (Settings.screen.TILE_X * Settings.getLayer1().scaleX) - 8;
+
+        if (this.mario.x >= RIGHT_BOUNDS + AJUSTE_MANUAL_X)
+        {
+            console.log('limite LEVEL-UP!');
+            this.mario.setData('level-up', true);
+            this.mario.anims.play('mario-desliza-bandera', true);
+        }
+    }
+
     checkFallOutBounds(BOTTOM_BOUNDS)
     {
         if (this.mario.body.bottom >= BOTTOM_BOUNDS)
@@ -170,6 +188,12 @@ export class Mario
         this.relatedScene.anims.create({
             key: 'mario-quieto',
             frames: [{key: this.SPRITE_SHEET, frame: 0}],
+            frameRate: 10,
+        });
+
+        this.relatedScene.anims.create({
+            key: 'mario-desliza-bandera',
+            frames: [{key: this.SPRITE_SHEET, frame: 6}],
             frameRate: 10,
         });
     }

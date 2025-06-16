@@ -121,6 +121,7 @@ export class Game extends Scene
             this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX) - 470,// - this.sys.game.config.width,
             this.layer1.height * Settings.getLayer1().scaleY + 200
         );
+        console.log(this.physics.world);
     }
 
     set_cameras_marcadores()
