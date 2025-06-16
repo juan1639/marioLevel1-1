@@ -164,9 +164,9 @@ export class Game extends Scene
             hitBrick(player, tile, this);
         });
 
-        this.physics.add.overlap(this.mario.get(), this.goombas.get(), (mario, goombas) =>
+        this.physics.add.overlap(this.mario.get(), this.goombas.get(), (mario, goomba) =>
         {
-            hitVsGoombas(mario, goombas, this);
+            hitVsGoombas(mario, goomba, this);
         });
 
         this.physics.add.collider(this.goombas.get(), this.layer1);

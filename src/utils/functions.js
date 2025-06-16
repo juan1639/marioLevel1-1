@@ -79,14 +79,49 @@ export function hitBrick(player, tile, context)
     });
 } */
 
-export function hitVsGoombas(mario, goombas, context)
+export function hitVsGoombas(mario, goomba, context)
 {
-    const mario_ini_pos = [
-        Settings.MARIO.X_INICIAL * (Settings.screen.TILE_X * Settings.getLayer1().scaleX),
-        Settings.MARIO.Y_INICIAL * (Settings.screen.TILE_Y * Settings.getLayer1().scaleY)
-    ];
+    const marioBody = mario.body;
+    const goombaBody = goomba.body;
 
-    context.mario.get().setX(mario_ini_pos[0]).setY(mario_ini_pos[1]);
+    // Valor 'validador' que indica Mario cae encima Goomba:
+    const VALOR_VALIDADOR = (Settings.screen.TILE_Y * Settings.getLayer1().scaleY) / 3;
+
+    // Verifica si Mario cae encima de Goomba
+    const pisando = marioBody.velocity.y > 0 && marioBody.bottom <= goombaBody.top + VALOR_VALIDADOR;
+
+    if (pisando)
+    {
+        // Goomba aplastado y Rebote de Mario sobre el Goomba:
+        goombaDeath(goomba, context);
+        marioBody.velocity.y = -Settings.MARIO.VEL_SALTO;
+    }
+    else
+    {
+        // Mario muere
+        const mario_ini_pos = [
+            Settings.MARIO.X_INICIAL * (Settings.screen.TILE_X * Settings.getLayer1().scaleX),
+            Settings.MARIO.Y_INICIAL * (Settings.screen.TILE_Y * Settings.getLayer1().scaleY)
+        ];
+
+        context.mario.get().setX(mario_ini_pos[0]).setY(mario_ini_pos[1]);
+        //marioDeath(mario, context);
+    }
+}
+
+export function goombaDeath(goomba, context)
+{
+    // Desactiva cuerpo
+    //goomba.disableBody(true, true);
+
+    // O animación de muerte si la tienes:
+    
+    goomba.anims.play('goomba-aplastado');
+    goomba.body.setVelocityX(0);
+    goomba.body.setEnable(false);
+
+    // O destruir tras retraso
+    context.time.delayedCall(1200, () => goomba.destroy());
 }
 
 export function sumar_puntos(id, valor, context)

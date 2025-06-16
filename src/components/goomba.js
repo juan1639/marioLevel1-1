@@ -67,8 +67,7 @@ export class Goombas
                 {
                     console.log("✅ Activando Goomba");
                     goomba.setData('quieto', false);
-                    // goomba.setVelocityX(Settings.GOOMBA.VEL_X);
-                    goomba.setVelocityX(0);
+                    goomba.setVelocityX(Settings.GOOMBA.VEL_X);
                 }
             }
         });
@@ -84,6 +83,12 @@ export class Goombas
             frameRate: 5,
             yoyo: true,
             repeat: -1
+        });
+
+        this.relatedScene.anims.create({
+            key: 'goomba-aplastado',
+            frames: [{key: this.SPRITE_SHEET, frame: 2}],
+            frameRate: 10,
         });
     }
 
