@@ -10,6 +10,11 @@
 // ---------------------------------------------------------------------------
 export class Settings
 {
+    static controls =
+    {
+        MOBILE: false
+    };
+
     static screen =
     {
         width: 256,

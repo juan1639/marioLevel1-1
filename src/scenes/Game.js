@@ -53,6 +53,7 @@ export class Game extends Scene
         this.sonido_jumpbros = this.sound.add('jumpbros');
         this.bricks_fall = this.sound.add('bricks-fall');
         this.push_block = this.sound.add('push-block');
+        this.goomba_aplastado = this.sound.add('goomba-aplastado');
         this.sonido_marioTuberias = this.sound.add('mario-tuberias');
         this.musica_principal = this.sound.add('musica-principal');
     }
@@ -87,8 +88,37 @@ export class Game extends Scene
 
         this.colisionadoresInvisibles.create(Settings.COLLIDERS_INVISIBLES);
 
+        // Scores:
         this.marcadores.create();
         this.botonfullscreen.create();
+
+        // Click-event:
+        this.input.on('pointerup', function (pointer)
+        {
+            if (Settings.controls.MOBILE)
+            {
+                return;
+            }
+
+            console.log(pointer);
+
+            var x = pointer.x;
+            var y = pointer.y;
+
+            if (x < this.sys.game.config.width / 3 && y > this.sys.game.config.height / 1.5)
+            {
+                Settings.controls.MOBILE = true;
+                this.mario.get_mobile_controls().get().setAlpha(0);
+                this.mario.get_joystick().y = this.sys.game.config.height - 96;
+            }
+
+            // Aquí puedes agregar la lógica que quieras ejecutar al hacer clic
+            console.log('Clic en:', x, y);
+            // Por ejemplo, mover un sprite a la posición del clic:
+            // this.player.x = x;
+            // this.player.y = y;
+
+        }, this);
 
         // Camara-principal... sigue a personaje:
         this.cameras.main.startFollow(this.mario.get());

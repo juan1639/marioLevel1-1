@@ -93,6 +93,7 @@ export function hitVsGoombas(mario, goomba, context)
     if (pisando)
     {
         // Goomba aplastado y Rebote de Mario sobre el Goomba:
+        play_sonidos(context.goomba_aplastado, false, 0.8);
         goombaDeath(goomba, context);
         marioBody.velocity.y = -Settings.MARIO.VEL_SALTO;
     }
@@ -113,9 +114,7 @@ export function goombaDeath(goomba, context)
 {
     // Desactiva cuerpo
     //goomba.disableBody(true, true);
-
-    // O animación de muerte si la tienes:
-    
+        
     goomba.anims.play('goomba-aplastado');
     goomba.body.setVelocityX(0);
     goomba.body.setEnable(false);

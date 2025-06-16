@@ -1,4 +1,5 @@
 import { Settings } from "../scenes/settings";
+import { Textos } from "./textos.js";
 import { play_sonidos } from "../utils/functions";
 
 export class Mario 
@@ -44,7 +45,8 @@ export class Mario
         // CONFIG Joystick rexvirtual-joystick-plugin:
         this.joyStick = this.relatedScene.plugins.get('rexvirtualjoystickplugin').add(this.relatedScene, {
             x: 128,
-            y: this.relatedScene.sys.game.config.height - 96,
+            y: -999,
+            // y: this.relatedScene.sys.game.config.height - 96,
             radius: 50,
             base: this.relatedScene.add.circle(0, 0, 64, 0x888888, 0.6),
             // base: this.add.image(0, 0, 'base-joystick').setScale(2),
@@ -54,6 +56,20 @@ export class Mario
             fixed: true,
             enable: true
         });
+
+        // SELECT - MOBILE-CONTROLS (rexvirtual-joystick-plugin):
+        this.mobile_controls_option = new Textos(this.relatedScene);
+        
+        this.mobile_controls_option.create({
+            x: 128,
+            y: this.relatedScene.sys.game.config.height - 96,
+            origin: [0.5, 0.5],
+            texto: '  Touch \n controls ', size: 28, style: 'bold',  fll: '#eea',
+            family: 'arial, sans-serif',
+            strokeColor: '#d71', strokeSize: 8, ShadowColor: '#111',
+            bool1: true, bool2: true
+        });
+        this.mobile_controls_option.get().setAlpha(0.7);
 
         this.controlJoy = this.joyStick.createCursorKeys();
         this.controles_mario = this.relatedScene.input.keyboard.createCursorKeys();
@@ -76,7 +92,9 @@ export class Mario
 
     salto()
     {
-        if ((this.controles_mario.space.isDown || this.controlJoy.up.isDown)
+        const CONTROLES_SALTO = Settings.controls.MOBILE ? this.controlJoy.up : this.controles_mario.space;
+
+        if ((CONTROLES_SALTO.isDown)
             && this.mario.body.velocity.y === 0
             && this.relatedScene.time.now > this.mario.getData('allow-salto') 
             && this.mario.getData('jump-key-up')
@@ -88,7 +106,7 @@ export class Mario
             play_sonidos(this.relatedScene.sonido_jumpbros, false, 0.4);
         }
 
-        if (this.controles_mario.space.isUp)
+        if (CONTROLES_SALTO.isUp)
         {
             this.mario.setData('jump-key-up', true);
         }
@@ -96,14 +114,16 @@ export class Mario
 
     direccion()
     {
-        if (this.controles_mario.left.isDown || this.controlJoy.left.isDown) 
+        const CONTROLES_DIR = Settings.controls.MOBILE ? this.controlJoy : this.controles_mario;
+
+        if (CONTROLES_DIR.left.isDown) 
         {
             this.gestionar_aceleracion(false);
             this.mario.setVelocityX(this.mario.getData('acelera'));
             this.selecc_anima_salto_anima_suelo();
             this.mario.setFlipX(true);
             
-        } else if (this.controles_mario.right.isDown || this.controlJoy.right.isDown) 
+        } else if (CONTROLES_DIR.right.isDown) 
         {
             this.gestionar_aceleracion(true);
             this.mario.setVelocityX(this.mario.getData('acelera'));
@@ -226,5 +246,15 @@ export class Mario
     get() 
     {
         return this.mario;
+    }
+
+    get_joystick()
+    {
+        return this.joyStick;
+    }
+
+    get_mobile_controls()
+    {
+        return this.mobile_controls_option;
     }
 }

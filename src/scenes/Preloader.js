@@ -83,6 +83,8 @@ export class Preloader extends Scene
         this.load.audio('p-ping', 'audio/p-ping.mp3');
         this.load.audio('oh-no', 'audio/oh-no.mp3');
         this.load.audio('ough', 'audio/ough.mp3');
+        this.load.audio('goomba-aplastado', 'audio/squit.mp3');
+        this.load.audio('dieThrow', 'audio/dieThrow2.ogg');
         this.load.audio('mario-tuberias', 'audio/mario-tuberias.mp3');
         this.load.audio('gameover', 'audio/gameover_mario.mp3');
         this.load.audio('musica-principal', 'audio/musica-mario-bros.mp3');
