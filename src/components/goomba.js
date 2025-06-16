@@ -67,7 +67,8 @@ export class Goombas
                 {
                     console.log("✅ Activando Goomba");
                     goomba.setData('quieto', false);
-                    goomba.setVelocityX(Settings.GOOMBA.VEL_X);
+                    // goomba.setVelocityX(Settings.GOOMBA.VEL_X);
+                    goomba.setVelocityX(0);
                 }
             }
         });
