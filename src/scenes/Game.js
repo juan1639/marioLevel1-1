@@ -24,7 +24,7 @@ export class Game extends Scene
 
     init() 
     {
-        this.mario = new Mario(this, {iniPosX: 2, iniPosY: 9});
+        this.mario = new Mario(this, {iniPosX: 7, iniPosY: 9});
 
         this.goombas = new Goombas(this);
         this.colisionadoresInvisibles = new ColisionadoresInvisibles(this);

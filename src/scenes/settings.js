@@ -39,7 +39,7 @@ export class Settings
         MAX_VEL_SALTO: 640,
         ACELERACION: 7,
         DECELERACION: 14,
-        X_INICIAL: 2,
+        X_INICIAL: 7,
         Y_INICIAL: 9
     };
 
