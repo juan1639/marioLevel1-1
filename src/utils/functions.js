@@ -79,6 +79,16 @@ export function hitBrick(player, tile, context)
     });
 } */
 
+export function hitVsGoombas(mario, goombas, context)
+{
+    const mario_ini_pos = [
+        Settings.MARIO.X_INICIAL * (Settings.screen.TILE_X * Settings.getLayer1().scaleX),
+        Settings.MARIO.Y_INICIAL * (Settings.screen.TILE_Y * Settings.getLayer1().scaleY)
+    ];
+
+    context.mario.get().setX(mario_ini_pos[0]).setY(mario_ini_pos[1]);
+}
+
 export function sumar_puntos(id, valor, context)
 {
     Settings.marcadores.puntos += valor;

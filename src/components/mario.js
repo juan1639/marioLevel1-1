@@ -13,8 +13,8 @@ export class Mario
     {
         const {iniPosX, iniPosY} = this.args;
 
-        this.X_INICIAL = iniPosX * Settings.getLayer1().scaleX;
-        this.Y_INICIAL = iniPosY * Settings.getLayer1().scaleY;
+        this.X_INICIAL = iniPosX * (Settings.screen.TILE_X * Settings.getLayer1().scaleX);
+        this.Y_INICIAL = iniPosY * (Settings.screen.TILE_Y * Settings.getLayer1().scaleY);
         this.SPRITE_SHEET = 'mario-ss1';
 
         this.mario = this.relatedScene.physics.add.sprite(this.X_INICIAL, this.Y_INICIAL, this.SPRITE_SHEET);

@@ -11,6 +11,7 @@ import { EmisorParticulas } from '../components/emisor-particulas.js';
 import
 {
     hitBrick,
+    hitVsGoombas,
     play_sonidos
 } from '../utils/functions.js';
 
@@ -23,7 +24,8 @@ export class Game extends Scene
 
     init() 
     {
-        this.mario = new Mario(this, {iniPosX: 9, iniPosY: 9});
+        this.mario = new Mario(this, {iniPosX: 2, iniPosY: 9});
+
         this.goombas = new Goombas(this);
         this.colisionadoresInvisibles = new ColisionadoresInvisibles(this);
 
@@ -161,14 +163,14 @@ export class Game extends Scene
             hitBrick(player, tile, this);
         });
 
-        /* this.physics.add.collider(this.goombas.get(), this.layer1, (goombas, tile) =>
+        this.physics.add.overlap(this.mario.get(), this.goombas.get(), (mario, goombas) =>
         {
-            enemigos_hitBrick(goombas, tile, this);
-        }); */
+            hitVsGoombas(mario, goombas, this);
+        });
 
         this.physics.add.collider(this.goombas.get(), this.layer1);
         this.physics.add.collider(this.goombas.get(), this.colisionadoresInvisibles.get());
-        // this.physics.add.collider(this.goombas.get(), this.collidersInvisibles.get());
+        // this.physics.add.collider(this.goombas.get(), ?);
     }
 
     ajustes_tiles()

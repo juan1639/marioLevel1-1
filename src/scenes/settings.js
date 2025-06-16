@@ -34,8 +34,8 @@ export class Settings
         MAX_VEL_SALTO: 640,
         ACELERACION: 7,
         DECELERACION: 14,
-        // X_INICIAL: Phaser.Game.sys.game.config.width / 2,
-        // Y_INICIAL: Phaser.Game.sys.game.config.height / 2
+        X_INICIAL: 2,
+        Y_INICIAL: 9
     };
 
     static ARRAY_GOOMBAS =
