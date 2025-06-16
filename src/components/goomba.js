@@ -73,22 +73,6 @@ export class Goombas
         });
 
         // Phaser.Actions.IncX(this.goombas.getChildren(), -0.5);
-        //this.checkFallOutBounds(this.goomba.body.world.bounds.bottom);// BOTTOM_WORLD_BOUNDS
-    }
-
-    checkFallOutBounds(BOTTOM_BOUNDS)
-    {
-        if (this.goomba.body.bottom >= BOTTOM_BOUNDS)
-        {
-            console.log(this.goomba.body.bottom, this.goomba.visible);
-            
-            /* if (this.mario.visible)
-            {
-                this.mario.setVisible(false);
-            } */
-
-            this.goomba.setX(400).setY(200);
-        }
     }
 
     animaciones_goomba()

@@ -1,11 +1,13 @@
 import { Scene } from 'phaser';
 import { Mario } from '../components/mario.js';
 import { Goombas } from '../components/goomba.js';
+import { CollidersInvisibles } from '../components/colliders-invisibles.js';
 // import { Textos } from '../components/textos.js';
 import { Marcadores } from '../components/marcadores.js';
 import { BotonFullScreen } from '../components/botonesinteractivos.js';
 import { Settings } from './settings.js';
 import { EmisorParticulas } from '../components/emisor-particulas.js';
+
 import
 {
     hitBrick,
@@ -23,6 +25,8 @@ export class Game extends Scene
     {
         this.mario = new Mario(this);
         this.goombas = new Goombas(this);
+
+        this.collidersInvisibles = new CollidersInvisibles(this);
 
         this.botonfullscreen = new BotonFullScreen(this, {
             id: 'boton-fullscreen',
@@ -79,6 +83,8 @@ export class Game extends Scene
         // Sprites: llamar a su metodo create() para inicializarlos:
         this.mario.create();
         this.goombas.create();
+
+        this.collidersInvisibles.create();
 
         this.marcadores.create();
         this.botonfullscreen.create();
@@ -162,6 +168,7 @@ export class Game extends Scene
         }); */
 
         this.physics.add.collider(this.goombas.get(), this.layer1);
+        this.physics.add.collider(this.goombas.get(), this.collidersInvisibles.get());
     }
 
     ajustes_tiles()

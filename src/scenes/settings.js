@@ -52,6 +52,13 @@ export class Settings
         VEL_X: -60  
     };
 
+    static COLLIDERS_INVISIBLES =
+    [
+        [69, 12, 2, 1],
+        [86, 12, 3, 1],
+        [153, 12, 3, 1],
+    ];
+
     static gameOver = false;
 
     static marcadores =
