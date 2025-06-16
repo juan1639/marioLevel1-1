@@ -1,44 +1,45 @@
-import { Settings } from '../scenes/settings.js';
+import { Settings } from "../scenes/settings.js";
 
-export class CollidersInvisibles
+export class ColisionadoresInvisibles
 {
-    constructor(scene) 
+    constructor(scene)
     {
         this.relatedScene = scene;
+        this.triggers = this.relatedScene.physics.add.staticGroup();
     }
 
-    create()
+    create(posiciones)
     {
-        this.collidersInvisibles = this.relatedScene.physics.add.staticGroup();
-
-        Settings.COLLIDERS_INVISIBLES.forEach(pos =>
+        posiciones.forEach(([x, y]) =>
         {
-            const collider = this.relatedScene.physics.add.sprite(
-                pos[0] * (Settings.screen.TILE_X * Settings.getLayer1().scaleX),
-                pos[1] * (Settings.screen.TILE_Y * Settings.getLayer1().scaleY),
-                'goomba-ss1'
-            ).setOrigin(0, 0).setData('ancho', pos[2]);
+            const TILE_X = Settings.screen.TILE_X * Settings.getLayer1().scaleX;
+            const TILE_Y = Settings.screen.TILE_Y * Settings.getLayer1().scaleY;
 
-            this.collidersInvisibles.add(collider);
+            const trigger = this.relatedScene.add.rectangle(
+                (x * TILE_X) + (TILE_X / 2),// BRRR tuve que poner +16 'a pelo'
+                (y * TILE_Y) + (TILE_Y / 2),
+                TILE_X,
+                TILE_Y
+            );
+
+            this.relatedScene.physics.add.existing(trigger, true); // true = estático
+            trigger.setVisible(false); // invisible
+            //trigger.setFillStyle(0xff0000, 0.5); // rojo semitransparente
+            this.triggers.add(trigger);
         });
+    
+        /* this.relatedScene.colisionadoresInvisibles.body.setCollider(this.relatedScene.goombas.get(), (goomba, trigger) => {
+            goomba.body.velocity.x *= -1; // invierte dirección
+        }); */
+    }
 
-        this.collidersInvisibles.children.iterate(collider =>
-        {
-            collider.setScale(Settings.getLayer1().scaleX * collider.getData('ancho'), Settings.getLayer1().scaleY);
-            //collider.setSize(Phaser.Math.RoundTo(this.goomba.width / 1.4, 0, 10), this.goomba.body.height);
-            // collider.setSize(0, 0, collider.getData('ancho') * Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
-            collider.setVisible(true);
-            collider.setFrame(0);
-            collider.body.setImmovable(true);
-            collider.body.setAllowGravity(false);
-            collider.refreshBody();
-        });
-
-        console.log(this.collidersInvisibles);
+    setColliders(goombas, callback)
+    {
+        this.scene.physics.add.collider(goombas, this.triggers, callback);
     }
 
     get()
     {
-        return this.collidersInvisibles;
+        return this.triggers;
     }
 }

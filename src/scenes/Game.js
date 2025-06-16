@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { Mario } from '../components/mario.js';
 import { Goombas } from '../components/goomba.js';
-import { CollidersInvisibles } from '../components/colliders-invisibles.js';
+import { ColisionadoresInvisibles } from '../components/colliders-invisibles.js';
 // import { Textos } from '../components/textos.js';
 import { Marcadores } from '../components/marcadores.js';
 import { BotonFullScreen } from '../components/botonesinteractivos.js';
@@ -23,10 +23,9 @@ export class Game extends Scene
 
     init() 
     {
-        this.mario = new Mario(this);
+        this.mario = new Mario(this, {iniPosX: 9, iniPosY: 9});
         this.goombas = new Goombas(this);
-
-        this.collidersInvisibles = new CollidersInvisibles(this);
+        this.colisionadoresInvisibles = new ColisionadoresInvisibles(this);
 
         this.botonfullscreen = new BotonFullScreen(this, {
             id: 'boton-fullscreen',
@@ -84,7 +83,7 @@ export class Game extends Scene
         this.mario.create();
         this.goombas.create();
 
-        this.collidersInvisibles.create();
+        this.colisionadoresInvisibles.create(Settings.COLLIDERS_INVISIBLES);
 
         this.marcadores.create();
         this.botonfullscreen.create();
@@ -168,7 +167,8 @@ export class Game extends Scene
         }); */
 
         this.physics.add.collider(this.goombas.get(), this.layer1);
-        this.physics.add.collider(this.goombas.get(), this.collidersInvisibles.get());
+        this.physics.add.collider(this.goombas.get(), this.colisionadoresInvisibles.get());
+        // this.physics.add.collider(this.goombas.get(), this.collidersInvisibles.get());
     }
 
     ajustes_tiles()

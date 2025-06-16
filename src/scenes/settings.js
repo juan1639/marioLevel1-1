@@ -54,9 +54,9 @@ export class Settings
 
     static COLLIDERS_INVISIBLES =
     [
-        [69, 12, 2, 1],
-        [86, 12, 3, 1],
-        [153, 12, 3, 1],
+        [69, 12], [70, 12],
+        [86, 12], [88, 12],
+        [153, 12], [154, 12],
     ];
 
     static gameOver = false;

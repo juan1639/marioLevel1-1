@@ -3,16 +3,19 @@ import { play_sonidos } from "../utils/functions";
 
 export class Mario 
 {
-    constructor(scene) 
+    constructor(scene, args) 
     {
         this.relatedScene = scene;
+        this.args = args;
     }
 
     create()
     {
+        const {iniPosX, iniPosY} = this.args;
+
+        this.X_INICIAL = iniPosX * Settings.getLayer1().scaleX;
+        this.Y_INICIAL = iniPosY * Settings.getLayer1().scaleY;
         this.SPRITE_SHEET = 'mario-ss1';
-        this.X_INICIAL = this.relatedScene.sys.game.config.width / 2;
-        this.Y_INICIAL = this.relatedScene.sys.game.config.height / 2;
 
         this.mario = this.relatedScene.physics.add.sprite(this.X_INICIAL, this.Y_INICIAL, this.SPRITE_SHEET);
 
