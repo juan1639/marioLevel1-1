@@ -37,7 +37,7 @@ export class Mario
         this.mario.setCollideWorldBounds(true);
         this.mario.body.setAllowGravity(true);
 
-        this.mario.setMaxVelocity(Settings.MARIO.MAX_VEL_SCROLL, Settings.MARIO.MAX_VEL_SALTO);
+        this.mario.setMaxVelocity(Settings.MARIO.MAX_VEL_CORRER, Settings.MARIO.MAX_VEL_SALTO);
 
         this.mario.setData('acelera', Settings.MARIO.VEL_SCROLL);
         // this.mario.setData('aceleraSalto', Settings.getVelSalto());
@@ -84,6 +84,7 @@ export class Mario
 
         this.controlJoy = this.joyStick.createCursorKeys();
         this.controles_mario = this.relatedScene.input.keyboard.createCursorKeys();
+        this.teclas_correr = this.relatedScene.input.keyboard.addKeys('SHIFT,Z');
 
         // Settings.controls.MOBILE se conserva al reiniciar la escena (tras perder una vida):
         if (Settings.controls.MOBILE)
@@ -131,6 +132,13 @@ export class Mario
 
         if (CONTROLES_SALTO.isUp)
         {
+            // Salto variable: si se suelta el boton mientras Mario aun sube, el salto se corta
+            // (toque corto = salto bajo, mantener pulsado = salto completo)
+            if (!this.mario.getData('jump-key-up') && this.mario.body.velocity.y < 0)
+            {
+                this.mario.setVelocityY(this.mario.body.velocity.y * Settings.MARIO.CORTE_SALTO);
+            }
+
             this.mario.setData('jump-key-up', true);
         }
     }
@@ -184,18 +192,39 @@ export class Mario
         }
     }
 
-    gestionar_aceleracion(derecha) 
+    // ¿Esta pulsado 'correr'? Teclado: SHIFT o Z. Movil: joystick empujado casi hasta el fondo.
+    corriendo()
     {
-        if (Math.abs(this.mario.getData('acelera')) < Settings.MARIO.MAX_VEL_SCROLL)
+        if (Settings.controls.MOBILE)
         {
-            if (derecha)
-            {
-                this.mario.setData('acelera', this.mario.getData('acelera') + Settings.MARIO.ACELERACION);
-            } else
-            {
-                this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.ACELERACION);
-            }
+            return this.joyStick.force >= this.joyStick.radius * Settings.MARIO.JOYSTICK_CORRER;
         }
+
+        return this.teclas_correr.SHIFT.isDown || this.teclas_correr.Z.isDown;
+    }
+
+    gestionar_aceleracion(derecha)
+    {
+        const MAX = this.corriendo() ? Settings.MARIO.MAX_VEL_CORRER : Settings.MARIO.MAX_VEL_ANDAR;
+        const sentido = derecha ? 1 : -1;
+
+        // Velocidad en el sentido en que se pulsa (negativa si aun va hacia el otro lado)
+        let vel = this.mario.getData('acelera') * sentido;
+
+        if (vel < MAX)
+        {
+            vel = Math.min(MAX, vel + Settings.MARIO.ACELERACION);
+        }
+        else if (vel > MAX)
+        {
+            // Ha dejado de correr: frena poco a poco hasta la velocidad de andar
+            vel = Math.max(MAX, vel - Settings.MARIO.DECELERACION);
+        }
+
+        this.mario.setData('acelera', vel * sentido);
+
+        // Las piernas se mueven mas rapido cuanto mas rapido va
+        this.mario.anims.timeScale = Math.max(1, Math.abs(vel) / Settings.MARIO.MAX_VEL_ANDAR);
     }
 
     selecc_anima_salto_anima_suelo()
@@ -382,6 +411,7 @@ export class Mario
         const scene = this.relatedScene;
 
         this.mario.setData('invulnerable', true);
+        play_sonidos(scene.sonido_encoger, false, 0.8);
 
         this.transformar(false, () =>
         {

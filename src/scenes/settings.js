@@ -34,7 +34,10 @@ export class Settings
     static MARIO =
     {
         VEL_SCROLL: 0,
-        MAX_VEL_SCROLL: 280,
+        MAX_VEL_ANDAR: 200,   // velocidad maxima andando
+        MAX_VEL_CORRER: 300,  // velocidad maxima corriendo (SHIFT / Z, o joystick al fondo)
+        CORTE_SALTO: 0.45,    // al soltar el salto mientras sube, la velocidad se multiplica por esto
+        JOYSTICK_CORRER: 0.85, // fraccion del radio del joystick a partir de la cual se corre
         VEL_SALTO: 455,
         MAX_VEL_SALTO: 640,
         ACELERACION: 7,
