@@ -174,7 +174,7 @@ export class Game extends Scene
         }
 
         Settings.marcadores.tiempo --;
-        this.marcadores.update(5, Settings.marcadores.tiempo);
+        this.marcadores.update('tiempo', Settings.marcadores.tiempo);
 
         // Poco tiempo: la musica se acelera
         if (Settings.marcadores.tiempo === Settings.TIEMPO.AVISO)

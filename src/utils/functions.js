@@ -38,7 +38,7 @@ export function hitBrick(player, tile, context)
             // Lanza partículas desde el centro del tile
             context.emisor.explotar(tile.getCenterX(), tile.getCenterY());
 
-            sumar_puntos(0, 10, context);
+            sumar_puntos(10, context);
 
             play_sonidos(context.bricks_fall, false, 0.3);
         }
@@ -66,7 +66,7 @@ export function hitBrick(player, tile, context)
         if (contenido === 'moneda')
         {
             context.monedas.sacar(worldX, worldTop);
-            sumar_puntos(0, Settings.MONEDA.PUNTOS, context);
+            sumar_puntos(Settings.MONEDA.PUNTOS, context);
             sumar_moneda(context);
             play_sonidos(context.sonido_moneda, false, 0.8);
         }
@@ -105,7 +105,7 @@ function golpearLadrilloMonedas(tile, clave, bloqueUsado, context)
 
     // Moneda:
     context.monedas.sacar(tile.getCenterX(), tile.getTop());
-    sumar_puntos(0, Settings.MONEDA.PUNTOS, context);
+    sumar_puntos(Settings.MONEDA.PUNTOS, context);
     sumar_moneda(context);
     play_sonidos(context.sonido_moneda, false, 0.8);
 
@@ -139,6 +139,12 @@ function rebotarBloque(tile, indiceTile, context, alTerminar)
     tile.rebotando = true;
     tile.setVisible(false);
 
+    // El cielo tambien son tiles: al ocultar el bloque se veria el fondo negro del canvas.
+    // Se tapa el hueco con un trozo de cielo (creado ANTES que el bloque animado, para quedar detras).
+    const TILE_CIELO = 1;
+    const cielo = context.add.image(tile.getCenterX(), tile.getCenterY(), 'general-ssheet', TILE_CIELO - 1);
+    cielo.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
+
     const animaBloque = new AnimaBloques(context, {
         offsetY: -16, easeEtc: 'Sine.easeOut', duracion: 450, conYoyo: true,
         frame: indiceTile - 1
@@ -146,6 +152,7 @@ function rebotarBloque(tile, indiceTile, context, alTerminar)
 
     animaBloque.create(tile.getCenterX(), tile.getCenterY(), () =>
     {
+        cielo.destroy();
         tile.setVisible(true);
         tile.rebotando = false;
 
@@ -200,7 +207,7 @@ export function hitVsGoombas(mario, goomba, context)
     {
         // Goomba aplastado y Rebote de Mario sobre el Goomba:
         play_sonidos(context.goomba_aplastado, false, 0.8);
-        sumar_puntos(0, Settings.GOOMBA.PUNTOS, context);
+        sumar_puntos(Settings.GOOMBA.PUNTOS, context);
         mostrar_puntos(context, Settings.GOOMBA.PUNTOS, goomba.x, goombaBody.top);
         goombaDeath(goomba, context);
         marioBody.velocity.y = -Settings.MARIO.VEL_SALTO;
@@ -227,12 +234,12 @@ export function cogerSeta(mario, seta, context)
 
     if (tipo === 'estrella')
     {
-        sumar_puntos(0, Settings.ESTRELLA.PUNTOS, context);
+        sumar_puntos(Settings.ESTRELLA.PUNTOS, context);
         context.mario.activarEstrella();
         return;
     }
 
-    sumar_puntos(0, Settings.SETA.PUNTOS, context);
+    sumar_puntos(Settings.SETA.PUNTOS, context);
     context.mario.crecer();
 }
 
@@ -265,7 +272,7 @@ export function goombaDerrotado(goomba, context)
     goomba.setFlipY(true);
 
     play_sonidos(context.goomba_aplastado, false, 0.8);
-    sumar_puntos(0, Settings.GOOMBA.PUNTOS, context);
+    sumar_puntos(Settings.GOOMBA.PUNTOS, context);
     mostrar_puntos(context, Settings.GOOMBA.PUNTOS, goomba.x, goomba.y - TILE);
 
     context.tweens.chain({
@@ -307,19 +314,19 @@ export function sumar_moneda(context)
         play_sonidos(context.sonido_powerup, false, 0.8);
     }
 
-    context.marcadores.update(4, Settings.marcadores.monedas);
+    context.marcadores.update('monedas', Settings.marcadores.monedas);
 }
 
 export function sumar_vida(context)
 {
     Settings.marcadores.vidas ++;
-    context.marcadores.update(3, Settings.marcadores.vidas);
+    context.marcadores.update('vidas', Settings.marcadores.vidas);
 }
 
-export function sumar_puntos(id, valor, context)
+export function sumar_puntos(valor, context)
 {
     Settings.marcadores.puntos += valor;
-    context.marcadores.update(id, Settings.marcadores.puntos);
+    context.marcadores.update('puntos', Settings.marcadores.puntos);
 }
 
 // Crea una animacion solo si no existe ya. Las animaciones son GLOBALES (del juego, no de la escena),

@@ -10,62 +10,68 @@ export class Marcadores
 
     create()
     {
-        this.marcadores = this.relatedScene.add.group();
-
         // Centro vertical de la franja de marcadores (la camara 'view-scores' ve de y=-32 a y=0):
         const posY = -16;
 
-        // Posiciones X fijas, medidas para un canvas de 768 px de ancho (Arial Bold + borde de 8):
-        //   Score (28px, hasta 6 cifras) 9-217 | monedas 222-297 | Level 305-409 | vidas 416-491
-        //   Hi (hasta 5 cifras) 494-613 | Time 616-734 | boton fullscreen 736-768
+        // Cada marcador se identifica por su clave, que es la misma que en Settings.marcadores
+        // (y la que se pasa a update(clave, valor)).
         //
-        // El indice de cada fila es el 'id' que se pasa a update(id, valor):
-        // 0 = puntos, 1 = nivel, 2 = hi, 3 = vidas, 4 = monedas, 5 = tiempo
-        // [texto, tamaño, color, colorBorde, x, y, valor]
-        this.args = [
-            [ ' Score: ', 28, '#ff7', '#e91', 9, posY, Settings.marcadores.puntos],
-            [ ' Level: ', 24, '#ffb', '#e61', 305, posY, Settings.marcadores.nivel],
-            [ ' Hi: ', 24, '#ff7', '#e91', 494, posY, Settings.marcadores.hi],
-            [ 'x', 24, '#ffb', '#e61', 444, posY, Settings.marcadores.vidas],
-            [ 'x', 24, '#ff7', '#e91', 250, posY, Settings.marcadores.monedas],
-            [ 'Time: ', 24, '#ffb', '#e61', 616, posY, Settings.marcadores.tiempo]
-        ];
+        // Posiciones X fijas, medidas para un canvas de 768 px de ancho (Arial Bold + borde de 8):
+        //   Score 9-243 | monedas 262-335 | vidas 356-430 | Hi 450-582
+        //   Time 592-710 | boton fullscreen 736-768
+        //
+        // 'icono': [textura, frame, escala] dibujado justo a la izquierda del texto
+        this.config = {
+            puntos:  { prefijo: ' Score: ', size: 32, color: '#ff7', borde: '#e91', x: 9 },
+            monedas: { prefijo: 'x', size: 24, color: '#ff7', borde: '#e91', x: 288, icono: ['moneda', 0, 0.75] },
+            vidas:   { prefijo: 'x', size: 24, color: '#ffb', borde: '#e61', x: 382, icono: ['mario-ss1', 0, 1.5] },
+            hi:      { prefijo: ' Hi: ', size: 24, color: '#ff7', borde: '#e91', x: 450 },
+            tiempo:  { prefijo: 'Time: ', size: 24, color: '#ffb', borde: '#e61', x: 592 }
+        };
 
-        this.args.forEach((arg, id) =>
+        this.textos = {};
+
+        Object.entries(this.config).forEach(([clave, cfg]) =>
         {
-            let cadaMarcador = new Textos(this.relatedScene);
+            const texto = new Textos(this.relatedScene);
 
-            cadaMarcador.create({
-                x: arg[4],
-                y: arg[5],
+            texto.create({
+                x: cfg.x,
+                y: posY,
                 origin: [0, 0.5],
-                texto: arg[0] + this.formatear(id, arg[6]), size: arg[1], style: 'bold',  fll: arg[2],
+                texto: cfg.prefijo + this.formatear(clave, Settings.marcadores[clave]),
+                size: cfg.size, style: 'bold', fll: cfg.color,
                 family: 'arial, sans-serif',
-                strokeColor: arg[3], strokeSize: 8, ShadowColor: '#111',
+                strokeColor: cfg.borde, strokeSize: 8, ShadowColor: '#111',
                 bool1: true, bool2: true
             });
 
-            this.marcadores.add(cadaMarcador.get());
+            this.textos[clave] = texto.get();
+
+            if (cfg.icono)
+            {
+                const [textura, frame, escala] = cfg.icono;
+                this.relatedScene.add.image(cfg.x - 14, posY, textura, frame).setScale(escala);
+            }
         });
-
-        // Iconos delante de los contadores de vidas y monedas:
-        this.relatedScene.add.image(this.args[3][4] - 14, posY, 'mario-ss1', 0).setScale(1.5);
-        this.relatedScene.add.image(this.args[4][4] - 14, posY, 'moneda', 0).setScale(0.75);
     }
 
-    update(id, valor)
+    // clave: 'puntos', 'monedas', 'vidas', 'hi' o 'tiempo'
+    update(clave, valor)
     {
-        this.marcadores.getChildren()[id].setText(this.args[id][0] + this.formatear(id, valor));
+        this.textos[clave].setText(this.config[clave].prefijo + this.formatear(clave, valor));
     }
 
-    // Las monedas se muestran siempre con 2 cifras (x05)
-    formatear(id, valor)
+    // Score y Hi siempre con 6 cifras (000400) y monedas con 2 (x05)
+    formatear(clave, valor)
     {
-        return id === 4 ? String(valor).padStart(2, '0') : valor;
+        const CIFRAS = { puntos: 6, hi: 6, monedas: 2 };
+
+        return CIFRAS[clave] ? String(valor).padStart(CIFRAS[clave], '0') : valor;
     }
 
     get()
     {
-        return this.marcadores;
+        return this.textos;
     }
 }

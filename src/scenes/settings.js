@@ -138,7 +138,6 @@ export class Settings
     static marcadores =
     {
         puntos: 0,
-        nivel: 1,
         hi: 5000,
         vidas: Settings.VIDAS_INICIALES,
         monedas: 0,
@@ -189,7 +188,6 @@ export class Settings
     {
         Settings.marcadores.puntos = 0;
         Settings.marcadores.vidas = Settings.VIDAS_INICIALES;
-        Settings.marcadores.nivel = 1;
         Settings.marcadores.monedas = 0;
         Settings.recordEnPartida = false;
     }

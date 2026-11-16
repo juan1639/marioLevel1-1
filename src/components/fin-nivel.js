@@ -92,7 +92,7 @@ export class FinNivel
         // Puntos segun la altura:
         const altura = (this.BASE_TOP - (mario.y + mitadAlto)) / this.TILE;
         const [, puntos] = Settings.FIN_NIVEL.PUNTOS.find(([minima]) => altura >= minima);
-        sumar_puntos(0, puntos, scene);
+        sumar_puntos(puntos, scene);
         mostrar_puntos(scene, puntos, mario.x + this.TILE, mario.y);
 
         // Mario y bandera bajan a la vez:
@@ -183,8 +183,8 @@ export class FinNivel
                 callback: () =>
                 {
                     Settings.marcadores.tiempo --;
-                    scene.marcadores.update(5, Settings.marcadores.tiempo);
-                    sumar_puntos(0, Settings.TIEMPO.PUNTOS_POR_UNIDAD, scene);
+                    scene.marcadores.update('tiempo', Settings.marcadores.tiempo);
+                    sumar_puntos(Settings.TIEMPO.PUNTOS_POR_UNIDAD, scene);
                 }
             });
         }
@@ -194,17 +194,16 @@ export class FinNivel
             // Al completar el nivel tambien se guarda el record (por si luego se cierra la pagina)
             if (Settings.actualizarRecord())
             {
-                scene.marcadores.update(2, Settings.marcadores.hi);
+                scene.marcadores.update('hi', Settings.marcadores.hi);
             }
 
-            // Siguiente nivel: el mismo mapa con el contador de nivel +1 (se conservan puntos y vidas).
+            // Siguiente nivel: se vuelve a jugar el mismo mapa (se conservan puntos, monedas y vidas).
             // Se espera como minimo a que termine la musica de 'level-up' (al reiniciar se cortaria):
             const espera = Math.max(Settings.FIN_NIVEL.ESPERA_SIGUIENTE - duracionRecuento,
                                     ms_restantes(scene.sonido_level_up) + 300, 1000);
 
             scene.time.delayedCall(espera, () =>
             {
-                Settings.marcadores.nivel ++;
                 scene.scene.restart();
             });
         });
