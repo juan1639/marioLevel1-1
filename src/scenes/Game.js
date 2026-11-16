@@ -216,6 +216,7 @@ export class Game extends Scene
         this.layer1.setCollisionBetween(21, 22);//    Tuberia
         this.layer1.setCollisionBetween(27, 28);//    Tuberia
         this.layer1.setCollision([40]);//             bloque (suelo)
+        this.layer1.setCollision([41]);//             bloque '?' ya usado
 
         // this.map1.setCollision([13, 14, 16, 40]);
         // this.map1.setCollisionByExclusion([1, 2, 3, 4, 5, 6, 7, 8, 9]);

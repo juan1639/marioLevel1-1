@@ -9,7 +9,7 @@ export function hitBrick(player, tile, context)
     // Bloques id:
     const BLOQUE_LADRILLO = 15;
     const BLOQUE_INTERROGACION = 14;
-    const BLOQUE_USADO = 16; // El tileset no tiene bloque 'vacio': se usa el bloque-piramide
+    const BLOQUE_USADO = 41; // bloque '?' ya golpeado (tile propio para que no se pueda volver a golpear)
     const CIELO_AZUL = 1;
 
     // ¿Está el jugador claramente por debajo del tile?

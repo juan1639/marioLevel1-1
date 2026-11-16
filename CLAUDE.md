@@ -37,7 +37,7 @@ There are no tests and no linter.
 - Tapping the bottom-left third of the screen switches to mobile (joystick) controls.
 
 **Collision logic** lives in `src/utils/functions.js`:
-- `hitBrick`: big Mario breaks bricks (particles and points), small Mario only bumps them. A question block becomes tile 16, which serves as the "used" block, and releases its contents after the bump.
+- `hitBrick`: big Mario breaks bricks (particles and points), small Mario only bumps them. A question block becomes tile 41 (the "used" question block, solid but not hittable again) and releases its contents after the bump.
 - Block contents: in the Tiled map, mushroom tiles (12 = red, 18 = 1up) are drawn directly above their `?` block. `Game.ajustes_tiles()` records them in `this.contenidoBloques` (keyed `"x,y"` of the block), then replaces them with sky. `Setas` spawns them.
 - `hitVsGoombas`: stomping a goomba squashes it and bounces Mario. Any other contact calls `mario.recibirGolpe()`: big Mario shrinks and is invulnerable for a short time, small Mario dies.
 

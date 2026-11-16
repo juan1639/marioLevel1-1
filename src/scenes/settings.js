@@ -6,7 +6,7 @@
 //  14.bloque-interrog.     | 15.bloque-ladrillo        | 16.bloque-piramides
 //  18.seta(marron)         | 19.estrella               | 21-22, 27-28 tuberia
 //  23-25.bloque-castillo   | 30-32.montaña verde       | 36-38 matorral
-//  40.bloque-suelo
+//  40.bloque-suelo         | 41.bloque-interrog. ya usado
 // ---------------------------------------------------------------------------
 export class Settings
 {
