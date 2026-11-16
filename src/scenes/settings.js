@@ -40,7 +40,8 @@ export class Settings
         ACELERACION: 7,
         DECELERACION: 14,
         X_INICIAL: 7,
-        Y_INICIAL: 9
+        Y_INICIAL: 9,
+        PAUSA_MUERTE: 600 // ms de pausa antes/despues de la animacion de muerte
     };
 
     static ARRAY_GOOMBAS =
@@ -69,12 +70,23 @@ export class Settings
 
     static gameOver = false;
 
+    static VIDAS_INICIALES = 3;
+
     static marcadores =
     {
         puntos: 0,
         nivel: 1,
-        hi: 5000
+        hi: 5000,
+        vidas: Settings.VIDAS_INICIALES
     };
+
+    // Reinicia los valores que NO deben conservarse entre partidas
+    // (al reiniciar la escena tras perder una vida, los puntos SI se conservan)
+    static nuevaPartida()
+    {
+        Settings.marcadores.puntos = 0;
+        Settings.marcadores.vidas = Settings.VIDAS_INICIALES;
+    }
 
     static cameraScores =
     {

@@ -102,8 +102,7 @@ export function hitVsGoombas(mario, goomba, context)
     else
     {
         // Mario muere
-        context.mario.respawn();
-        //marioDeath(mario, context);
+        context.mario.morir(true);
     }
 }
 
@@ -124,6 +123,16 @@ export function sumar_puntos(id, valor, context)
 {
     Settings.marcadores.puntos += valor;
     context.marcadores.update(id, Settings.marcadores.puntos);
+}
+
+// Crea una animacion solo si no existe ya. Las animaciones son GLOBALES (del juego, no de la escena),
+// asi que al reiniciar la escena Game ya existen y anims.create() daria un aviso por clave duplicada.
+export function crear_animacion(scene, config)
+{
+    if (!scene.anims.exists(config.key))
+    {
+        scene.anims.create(config);
+    }
 }
 
 export function play_sonidos(id, loop, volumen)

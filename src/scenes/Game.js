@@ -55,6 +55,15 @@ export class Game extends Scene
         this.goomba_aplastado = this.sound.add('goomba-aplastado');
         this.sonido_marioTuberias = this.sound.add('mario-tuberias');
         this.musica_principal = this.sound.add('musica-principal');
+        this.sonido_muerte = this.sound.add('dieThrow');
+
+        // Los sonidos son globales (no de la escena): hay que destruirlos al salir/reiniciar
+        // la escena, o se acumularian (y la musica sonaria duplicada) en cada vida perdida.
+        const sonidos = [
+            this.sonido_jumpbros, this.bricks_fall, this.push_block, this.goomba_aplastado,
+            this.sonido_marioTuberias, this.musica_principal, this.sonido_muerte
+        ];
+        this.events.once('shutdown', () => sonidos.forEach(sonido => sonido.destroy()));
     }
 
     preload() {}
@@ -100,24 +109,13 @@ export class Game extends Scene
                 return;
             }
 
-            console.log(pointer);
-
-            var x = pointer.x;
-            var y = pointer.y;
+            const x = pointer.x;
+            const y = pointer.y;
 
             if (x < this.sys.game.config.width / 3 && y > this.sys.game.config.height / 1.5)
             {
-                Settings.controls.MOBILE = true;
-                this.mario.get_mobile_controls().get().setAlpha(0);
-                this.mario.get_joystick().y = this.sys.game.config.height - 96;
+                this.mario.activar_controles_moviles();
             }
-
-            // Aquí puedes agregar la lógica que quieras ejecutar al hacer clic
-            console.log('Clic en:', x, y);
-            // Por ejemplo, mover un sprite a la posición del clic:
-            // this.player.x = x;
-            // this.player.y = y;
-
         }, this);
 
         // Camara-principal... sigue a personaje:
@@ -134,6 +132,22 @@ export class Game extends Scene
         // this.layer1.setY(this.layer1.y + 0);
 
         // this.controls.update(delta);
+    }
+
+    // Se llama al terminar la animacion de muerte de Mario
+    perder_vida()
+    {
+        Settings.marcadores.vidas --;
+
+        if (Settings.marcadores.vidas > 0)
+        {
+            // Reinicia el nivel (goombas, bloques...). Los puntos se conservan.
+            this.scene.restart();
+        }
+        else
+        {
+            this.scene.start('GameOver');
+        }
     }
 
     set_cameras()

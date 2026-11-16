@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import { Settings } from './settings.js';
 
 export class MainMenu extends Scene
 {
@@ -9,6 +10,9 @@ export class MainMenu extends Scene
 
     create ()
     {
+        // Cada vez que se pasa por el menu empieza una partida nueva (puntos a 0, vidas iniciales):
+        Settings.nuevaPartida();
+
         this.add.image(512, 384, 'background');
 
         this.add.image(512, 300, 'logo');

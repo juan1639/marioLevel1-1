@@ -1,6 +1,6 @@
 import { Settings } from "../scenes/settings";
 import { Textos } from "./textos.js";
-import { play_sonidos } from "../utils/functions";
+import { play_sonidos, crear_animacion } from "../utils/functions";
 
 export class Mario 
 {
@@ -39,6 +39,7 @@ export class Mario
         this.mario.setData('cadencia-salto', 99);
         this.mario.setData('jump-key-up', true);
         this.mario.setData('level-up', false);
+        this.mario.setData('muerto', false);
 
         this.animaciones_mario();
 
@@ -74,12 +75,24 @@ export class Mario
         this.controlJoy = this.joyStick.createCursorKeys();
         this.controles_mario = this.relatedScene.input.keyboard.createCursorKeys();
 
-        console.log(this.mario);
+        // Settings.controls.MOBILE se conserva al reiniciar la escena (tras perder una vida):
+        if (Settings.controls.MOBILE)
+        {
+            this.activar_controles_moviles();
+        }
+    }
+
+    // Oculta el texto 'Touch controls' y coloca el joystick en pantalla
+    activar_controles_moviles()
+    {
+        Settings.controls.MOBILE = true;
+        this.mobile_controls_option.get().setAlpha(0);
+        this.joyStick.y = this.relatedScene.sys.game.config.height - 96;
     }
 
     update()
     {
-        if (this.mario.getData('level-up'))
+        if (this.mario.getData('level-up') || this.mario.getData('muerto'))
         {
             return;
         }
@@ -203,7 +216,8 @@ export class Mario
     {
         if (this.mario.body.bottom >= BOTTOM_BOUNDS)
         {
-            this.respawn();
+            // Ya esta fuera de la pantalla: sin animacion de salto
+            this.morir(false);
         }
     }
 
@@ -213,40 +227,86 @@ export class Mario
         return this.mario.body.blocked.down || this.mario.body.touching.down;
     }
 
-    // Vuelve a la posicion inicial, parado (sin conservar velocidad ni aceleracion)
-    respawn()
+    // Muerte de Mario: se congela el juego, Mario salta y cae fuera de la pantalla,
+    // y despues la escena Game decide (perder_vida) si se reinicia el nivel o es Game Over.
+    morir(conAnimacion)
     {
-        this.mario.setPosition(this.X_INICIAL, this.Y_INICIAL);
-        this.mario.setVelocity(0, 0);
-        this.mario.setData('acelera', Settings.MARIO.VEL_SCROLL);
-        this.mario.anims.play('mario-quieto', true);
+        if (this.mario.getData('muerto'))
+        {
+            return;
+        }
+
+        const scene = this.relatedScene;
+
+        this.mario.setData('muerto', true);
+
+        // Congela todas las fisicas (Mario y goombas). Tweens y timers siguen funcionando:
+        scene.physics.pause();
+        scene.cameras.main.stopFollow();
+
+        scene.musica_principal.stop();
+        play_sonidos(scene.sonido_muerte, false, 0.7);
+
+        if (!conAnimacion)
+        {
+            scene.time.delayedCall(Settings.MARIO.PAUSA_MUERTE * 2, () => scene.perder_vida());
+            return;
+        }
+
+        this.mario.anims.play('mario-muere');
+
+        scene.tweens.chain({
+            targets: this.mario,
+            tweens: [
+                {
+                    // Pausa y salto hacia arriba
+                    y: this.mario.y - (Settings.screen.TILE_Y * Settings.getLayer1().scaleY) * 3,
+                    delay: Settings.MARIO.PAUSA_MUERTE,
+                    duration: 400,
+                    ease: 'Quad.easeOut'
+                },
+                {
+                    // Caida hasta salir por debajo de la pantalla
+                    y: scene.cameras.main.worldView.bottom + 64,
+                    duration: 900,
+                    ease: 'Quad.easeIn'
+                }
+            ],
+            onComplete: () => scene.time.delayedCall(Settings.MARIO.PAUSA_MUERTE, () => scene.perder_vida())
+        });
     }
 
     animaciones_mario()
     {
-        this.relatedScene.anims.create({
-            key: 'mario-andar', 
+        crear_animacion(this.relatedScene, {
+            key: 'mario-andar',
             frames: this.relatedScene.anims.generateFrameNumbers(this.SPRITE_SHEET, {frames: [1, 2, 3]}),
             frameRate: 10,
             yoyo: true,
             repeat: -1
         });
 
-        this.relatedScene.anims.create({
+        crear_animacion(this.relatedScene, {
             key: 'mario-quieto',
             frames: [{key: this.SPRITE_SHEET, frame: 0}],
             frameRate: 10,
         });
 
-        this.relatedScene.anims.create({
+        crear_animacion(this.relatedScene, {
             key: 'mario-desliza-bandera',
             frames: [{key: this.SPRITE_SHEET, frame: 6}],
             frameRate: 10,
         });
 
-        this.relatedScene.anims.create({
+        crear_animacion(this.relatedScene, {
             key: 'mario-saltando',
             frames: [{key: this.SPRITE_SHEET, frame: 5}],
+            frameRate: 10,
+        });
+
+        crear_animacion(this.relatedScene, {
+            key: 'mario-muere',
+            frames: [{key: this.SPRITE_SHEET, frame: 7}],
             frameRate: 10,
         });
     }

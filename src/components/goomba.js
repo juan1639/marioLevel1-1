@@ -1,4 +1,5 @@
 import { Settings } from "../scenes/settings";
+import { crear_animacion } from "../utils/functions.js";
 
 export class Goombas
 {
@@ -77,7 +78,7 @@ export class Goombas
 
     animaciones_goomba()
     {
-        this.relatedScene.anims.create({
+        crear_animacion(this.relatedScene, {
             key: 'goomba-andar', 
             frames: this.relatedScene.anims.generateFrameNumbers(this.SPRITE_SHEET, {frames: [0, 1]}),
             frameRate: 5,
@@ -85,7 +86,7 @@ export class Goombas
             repeat: -1
         });
 
-        this.relatedScene.anims.create({
+        crear_animacion(this.relatedScene, {
             key: 'goomba-aplastado',
             frames: [{key: this.SPRITE_SHEET, frame: 2}],
             frameRate: 10,
