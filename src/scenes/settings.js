@@ -76,7 +76,6 @@ export class Settings
         VEL_X: 130,
         VEL_SALTO: 420,       // la estrella va dando saltos
         PUNTOS: 1000,
-        PUNTOS_ENEMIGO: 100,  // por cada goomba eliminado con la estrella
         COLORES: [0xff5555, 0xffffff, 0x55ff55, 0xffee55] // parpadeo de Mario invencible
     };
 
@@ -101,7 +100,8 @@ export class Settings
 
     static GOOMBA =
     {
-        VEL_X: -60  
+        VEL_X: -60,
+        PUNTOS: 100 // al aplastarlo, golpearlo desde abajo o con la estrella
     };
 
     static COLLIDERS_INVISIBLES =
@@ -126,12 +126,51 @@ export class Settings
 
     // Reinicia los valores que NO deben conservarse entre partidas
     // (al reiniciar la escena tras perder una vida, los puntos SI se conservan)
+    // Record (Hi) guardado en el navegador, para que no se pierda al recargar la pagina
+    static CLAVE_RECORD = 'marioLevel1-1.hi';
+    static recordEnPartida = false; // ¿se ha batido el record en la partida actual?
+
+    static cargarRecord()
+    {
+        try
+        {
+            const guardado = parseInt(localStorage.getItem(Settings.CLAVE_RECORD), 10);
+
+            if (guardado > Settings.marcadores.hi)
+            {
+                Settings.marcadores.hi = guardado;
+            }
+        }
+        catch (e) {} // localStorage no disponible (p.ej. modo privado): se usa el valor por defecto
+    }
+
+    // Si los puntos actuales superan el record, lo actualiza y lo guarda. Devuelve true si hay nuevo record.
+    static actualizarRecord()
+    {
+        if (Settings.marcadores.puntos <= Settings.marcadores.hi)
+        {
+            return false;
+        }
+
+        Settings.marcadores.hi = Settings.marcadores.puntos;
+        Settings.recordEnPartida = true;
+
+        try
+        {
+            localStorage.setItem(Settings.CLAVE_RECORD, String(Settings.marcadores.hi));
+        }
+        catch (e) {}
+
+        return true;
+    }
+
     static nuevaPartida()
     {
         Settings.marcadores.puntos = 0;
         Settings.marcadores.vidas = Settings.VIDAS_INICIALES;
         Settings.marcadores.nivel = 1;
         Settings.marcadores.monedas = 0;
+        Settings.recordEnPartida = false;
     }
 
     static cameraScores =

@@ -240,6 +240,7 @@ export class Game extends Scene
         });
 
         this.physics.add.collider(this.goombas.get(), this.layer1);
+        this.physics.add.collider(this.goombas.get(), this.goombas.get()); // chocan entre si y se dan la vuelta
         this.physics.add.collider(this.goombas.get(), this.colisionadoresInvisibles.get());
 
         this.physics.add.collider(this.setas.get(), this.layer1);

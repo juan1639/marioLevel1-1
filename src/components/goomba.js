@@ -43,33 +43,28 @@ export class Goombas
         });
 
         this.DISTANCIA_ACTIVA_GOOMBAS = this.relatedScene.sys.game.config.width;
-
-        console.log(this.goombas);
     }
 
     update()
     {
-        this.goombas.children.iterate((goomba) =>
+        const mario = this.relatedScene.mario.get();
+        const LIMITE_Y = this.relatedScene.layer1.height * Settings.getLayer1().scaleY;
+
+        // Se recorre una copia: no se puede destruir mientras se itera el propio grupo
+        this.goombas.getChildren().slice().forEach(goomba =>
         {
-            if (goomba.getData('quieto'))
+            // Goomba que ha caido por un agujero
+            if (goomba.y > LIMITE_Y + 64)
             {
-                const mario = this.relatedScene.mario.get();
+                goomba.destroy();
+                return;
+            }
 
-                if (!mario)
-                {
-                    console.warn("⚠️ Mario no está definido");
-                    return;
-                }
-
-                const distancia = Math.abs(mario.x - goomba.x);
-                //console.log(`Distancia Mario-Goomba: ${distancia}`);
-
-                if (distancia < this.DISTANCIA_ACTIVA_GOOMBAS)
-                {
-                    console.log("✅ Activando Goomba");
-                    goomba.setData('quieto', false);
-                    goomba.setVelocityX(Settings.GOOMBA.VEL_X);
-                }
+            // Se activa (empieza a andar) cuando Mario esta a menos de una pantalla
+            if (goomba.getData('quieto') && Math.abs(mario.x - goomba.x) < this.DISTANCIA_ACTIVA_GOOMBAS)
+            {
+                goomba.setData('quieto', false);
+                goomba.setVelocityX(Settings.GOOMBA.VEL_X);
             }
         });
 

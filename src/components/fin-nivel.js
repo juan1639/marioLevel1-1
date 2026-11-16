@@ -163,6 +163,12 @@ export class FinNivel
         const alto = scene.sys.game.config.height;
 
         scene.mario.get().setVisible(false);
+
+        // Al completar el nivel tambien se guarda el record (por si luego se cierra la pagina)
+        if (Settings.actualizarRecord())
+        {
+            scene.marcadores.update(2, Settings.marcadores.hi);
+        }
         play_sonidos(scene.sonido_fuegos, false, 0.7);
 
         scene.add.text(ancho / 2, alto / 3, '¡Nivel superado!', {

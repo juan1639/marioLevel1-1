@@ -14,14 +14,11 @@ export class GameOver extends Scene
         const ancho = this.sys.game.config.width;
         const alto = this.sys.game.config.height;
 
-        // Nuevo record:
+        // Nuevo record (se guarda en el navegador):
         const { puntos } = Settings.marcadores;
-        const nuevoRecord = puntos > Settings.marcadores.hi;
-
-        if (nuevoRecord)
-        {
-            Settings.marcadores.hi = puntos;
-        }
+        // (puede haberse batido antes, al terminar un nivel: por eso se mira recordEnPartida)
+        Settings.actualizarRecord();
+        const nuevoRecord = Settings.recordEnPartida;
 
         this.cameras.main.setBackgroundColor(0x000000);
 

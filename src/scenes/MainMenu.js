@@ -12,6 +12,7 @@ export class MainMenu extends Scene
     {
         // Cada vez que se pasa por el menu empieza una partida nueva (puntos a 0, vidas iniciales):
         Settings.nuevaPartida();
+        Settings.cargarRecord();
 
         this.add.image(512, 384, 'background');
 

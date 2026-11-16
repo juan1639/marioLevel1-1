@@ -16,6 +16,12 @@ export function hitBrick(player, tile, context)
     //const touchingBottomOfTile = body.y <= tile.getBottom();
     //console.log(tile.getLeft(), tile.getBottom());
 
+    // Golpe desde abajo a un bloque: derrota a los goombas que tenga encima
+    if ((tile.index === BLOQUE_LADRILLO || tile.index === BLOQUE_INTERROGACION) && isBlockeUp)
+    {
+        golpearEnemigosEncima(tile.getLeft(), tile.getRight(), tile.getTop(), context);
+    }
+
     // Confirmamos tile correcto y dirección de impacto
     if (tile.index === BLOQUE_LADRILLO && isBlockeUp)
     {
@@ -135,7 +141,7 @@ export function hitVsGoombas(mario, goomba, context)
     // Con la estrella, cualquier contacto elimina al goomba
     if (context.mario.tieneEstrella())
     {
-        goombaMuereEstrella(goomba, context);
+        goombaDerrotado(goomba, context);
         return;
     }
 
@@ -146,6 +152,8 @@ export function hitVsGoombas(mario, goomba, context)
     {
         // Goomba aplastado y Rebote de Mario sobre el Goomba:
         play_sonidos(context.goomba_aplastado, false, 0.8);
+        sumar_puntos(0, Settings.GOOMBA.PUNTOS, context);
+        mostrar_puntos(context, Settings.GOOMBA.PUNTOS, goomba.x, goombaBody.top);
         goombaDeath(goomba, context);
         marioBody.velocity.y = -Settings.MARIO.VEL_SALTO;
     }
@@ -193,9 +201,15 @@ export function goombaDeath(goomba, context)
     context.time.delayedCall(1200, () => goomba.destroy());
 }
 
-// Goomba eliminado por Mario con estrella: sale despedido boca abajo y cae fuera de la pantalla
-export function goombaMuereEstrella(goomba, context)
+// Goomba derrotado por la estrella o por un golpe desde abajo:
+// sale despedido boca abajo y cae fuera de la pantalla
+export function goombaDerrotado(goomba, context)
 {
+    if (!goomba.body.enable)
+    {
+        return; // ya estaba muerto
+    }
+
     const TILE = Settings.screen.TILE_Y * Settings.getLayer1().scaleY;
 
     goomba.body.setEnable(false);
@@ -203,8 +217,8 @@ export function goombaMuereEstrella(goomba, context)
     goomba.setFlipY(true);
 
     play_sonidos(context.goomba_aplastado, false, 0.8);
-    sumar_puntos(0, Settings.ESTRELLA.PUNTOS_ENEMIGO, context);
-    mostrar_puntos(context, Settings.ESTRELLA.PUNTOS_ENEMIGO, goomba.x, goomba.y - TILE);
+    sumar_puntos(0, Settings.GOOMBA.PUNTOS, context);
+    mostrar_puntos(context, Settings.GOOMBA.PUNTOS, goomba.x, goomba.y - TILE);
 
     context.tweens.chain({
         targets: goomba,
@@ -213,6 +227,23 @@ export function goombaMuereEstrella(goomba, context)
             { y: context.cameras.main.worldView.bottom + TILE * 2, duration: 700, ease: 'Quad.easeIn' }
         ],
         onComplete: () => goomba.destroy()
+    });
+}
+
+// Al golpear un bloque desde abajo, los goombas que esten encima de el quedan derrotados
+// (izq, der, top = bordes del bloque en pixeles del mundo)
+function golpearEnemigosEncima(izq, der, top, context)
+{
+    const MARGEN = 6;
+
+    context.goombas.get().getChildren().slice().forEach(goomba =>
+    {
+        const body = goomba.body;
+
+        if (body.enable && body.right > izq && body.left < der && Math.abs(body.bottom - top) <= MARGEN)
+        {
+            goombaDerrotado(goomba, context);
+        }
     });
 }
 
