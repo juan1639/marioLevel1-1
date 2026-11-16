@@ -78,6 +78,7 @@ export class FinNivel
         mario.body.setEnable(false);
         mario.setDepth(1);
 
+        scene.mario.terminarEstrella(false);
         scene.musica_principal.stop();
         play_sonidos(scene.sonido_level_up, false, 0.7);
 

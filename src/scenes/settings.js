@@ -66,6 +66,16 @@ export class Settings
         PUNTOS: 200
     };
 
+    static ESTRELLA =
+    {
+        DURACION: 9700,       // ms de invencibilidad (lo que dura estrella.mp3)
+        VEL_X: 130,
+        VEL_SALTO: 420,       // la estrella va dando saltos
+        PUNTOS: 1000,
+        PUNTOS_ENEMIGO: 100,  // por cada goomba eliminado con la estrella
+        COLORES: [0xff5555, 0xffffff, 0x55ff55, 0xffee55] // parpadeo de Mario invencible
+    };
+
     static SETA =
     {
         VEL_X: 100,

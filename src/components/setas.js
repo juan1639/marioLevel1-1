@@ -1,12 +1,13 @@
 import { Settings } from "../scenes/settings.js";
 
-// Setas que salen de los bloques '?':
+// Setas (y estrella) que salen de los bloques '?':
 //  - 'seta' (roja): Mario pasa a ser grande
 //  - '1up' (verde): una vida extra
+//  - 'estrella': Mario invencible un rato (va dando saltos)
 export class Setas
 {
     // Frame de cada tipo de seta en 'general-ssheet' (= indice del tile - 1)
-    static FRAMES = { seta: 11, '1up': 17 };
+    static FRAMES = { seta: 11, '1up': 17, estrella: 18 };
 
     constructor(scene)
     {
@@ -55,7 +56,15 @@ export class Setas
                 this.setas.add(seta);
                 seta.body.setAllowGravity(true);
                 seta.body.setBounce(1, 0);
-                seta.body.setVelocityX(Settings.SETA.VEL_X);
+
+                if (tipo === 'estrella')
+                {
+                    seta.body.setVelocity(Settings.ESTRELLA.VEL_X, -Settings.ESTRELLA.VEL_SALTO);
+                }
+                else
+                {
+                    seta.body.setVelocityX(Settings.SETA.VEL_X);
+                }
             }
         });
     }
@@ -71,6 +80,13 @@ export class Setas
             if (seta.y > LIMITE_Y + 64)
             {
                 seta.destroy();
+                return;
+            }
+
+            // La estrella vuelve a saltar cada vez que toca el suelo
+            if (seta.getData('tipo') === 'estrella' && seta.body.blocked.down)
+            {
+                seta.body.setVelocityY(-Settings.ESTRELLA.VEL_SALTO);
             }
         });
     }

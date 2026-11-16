@@ -61,7 +61,7 @@ export function hitBrick(player, tile, context)
 
         rebotarBloque(bloqueUsado, BLOQUE_USADO, context, () =>
         {
-            if (contenido === 'seta' || contenido === '1up')
+            if (contenido === 'seta' || contenido === '1up' || contenido === 'estrella')
             {
                 context.setas.sacar(worldX, worldTop, contenido);
             }
@@ -131,6 +131,13 @@ export function hitVsGoombas(mario, goomba, context)
     // Valor 'validador' que indica Mario cae encima Goomba:
     const VALOR_VALIDADOR = (Settings.screen.TILE_Y * Settings.getLayer1().scaleY) / 3;
 
+    // Con la estrella, cualquier contacto elimina al goomba
+    if (context.mario.tieneEstrella())
+    {
+        goombaMuereEstrella(goomba, context);
+        return;
+    }
+
     // Verifica si Mario cae encima de Goomba
     const pisando = marioBody.velocity.y > 0 && marioBody.bottom <= goombaBody.top + VALOR_VALIDADOR;
 
@@ -162,6 +169,13 @@ export function cogerSeta(mario, seta, context)
         return;
     }
 
+    if (tipo === 'estrella')
+    {
+        sumar_puntos(0, Settings.ESTRELLA.PUNTOS, context);
+        context.mario.activarEstrella();
+        return;
+    }
+
     sumar_puntos(0, Settings.SETA.PUNTOS, context);
     context.mario.crecer();
 }
@@ -177,6 +191,29 @@ export function goombaDeath(goomba, context)
 
     // O destruir tras retraso
     context.time.delayedCall(1200, () => goomba.destroy());
+}
+
+// Goomba eliminado por Mario con estrella: sale despedido boca abajo y cae fuera de la pantalla
+export function goombaMuereEstrella(goomba, context)
+{
+    const TILE = Settings.screen.TILE_Y * Settings.getLayer1().scaleY;
+
+    goomba.body.setEnable(false);
+    goomba.anims.stop();
+    goomba.setFlipY(true);
+
+    play_sonidos(context.goomba_aplastado, false, 0.8);
+    sumar_puntos(0, Settings.ESTRELLA.PUNTOS_ENEMIGO, context);
+    mostrar_puntos(context, Settings.ESTRELLA.PUNTOS_ENEMIGO, goomba.x, goomba.y - TILE);
+
+    context.tweens.chain({
+        targets: goomba,
+        tweens: [
+            { y: goomba.y - TILE * 1.5, duration: 250, ease: 'Quad.easeOut' },
+            { y: context.cameras.main.worldView.bottom + TILE * 2, duration: 700, ease: 'Quad.easeIn' }
+        ],
+        onComplete: () => goomba.destroy()
+    });
 }
 
 export function sumar_puntos(id, valor, context)

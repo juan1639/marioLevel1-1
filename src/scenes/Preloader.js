@@ -87,6 +87,7 @@ export class Preloader extends Scene
         this.load.audio('lose-life', 'audio/mario-lose-life.mp3');
         this.load.audio('level-up', 'audio/level-up.mp3');
         this.load.audio('seta', 'audio/seta.mp3');
+        this.load.audio('estrella', 'audio/estrella.mp3');
     }
 
     create ()

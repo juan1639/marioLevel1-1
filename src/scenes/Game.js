@@ -66,6 +66,7 @@ export class Game extends Scene
         this.sonido_powerup = this.sound.add('seta');
         this.sonido_moneda = this.sound.add('p-ping');
         this.sonido_level_up = this.sound.add('level-up');
+        this.sonido_estrella = this.sound.add('estrella');
         this.sonido_fuegos = this.sound.add('fireworks');
 
         // Los sonidos son globales (no de la escena): hay que destruirlos al salir/reiniciar
@@ -73,7 +74,7 @@ export class Game extends Scene
         const sonidos = [
             this.sonido_jumpbros, this.bricks_fall, this.push_block, this.goomba_aplastado,
             this.sonido_marioTuberias, this.musica_principal, this.sonido_muerte, this.sonido_powerup,
-            this.sonido_moneda, this.sonido_level_up, this.sonido_fuegos
+            this.sonido_moneda, this.sonido_level_up, this.sonido_fuegos, this.sonido_estrella
         ];
         this.events.once('shutdown', () => sonidos.forEach(sonido => sonido.destroy()));
     }
@@ -251,7 +252,7 @@ export class Game extends Scene
     {
         // Contenido de los bloques '?': en el mapa, cada moneda/seta esta dibujada justo ENCIMA
         // de su bloque. Se guarda por coordenadas del bloque ('x,y') antes de borrarlas:
-        const CONTENIDOS = { 11: 'moneda', 12: 'seta', 18: '1up' };
+        const CONTENIDOS = { 11: 'moneda', 12: 'seta', 18: '1up', 19: 'estrella' };
         this.contenidoBloques = new Map();
 
         this.layer1.filterTiles(tile => CONTENIDOS[tile.index]).forEach(tile =>
@@ -264,6 +265,8 @@ export class Game extends Scene
         // Reemplazar SETAS por cielo-azul:
         this.layer1.replaceByIndex(12, 1);
         this.layer1.replaceByIndex(18, 1);
+        // Reemplazar ESTRELLA por cielo-azul:
+        this.layer1.replaceByIndex(19, 1);
 
         // -----------------------------------------
         // tile.getLeft(), tile.getBottom()

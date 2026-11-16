@@ -49,6 +49,7 @@ export class Mario
         this.mario.setData('grande', false);
         this.mario.setData('transformando', false);
         this.mario.setData('invulnerable', false);
+        this.mario.setData('estrella', false);
 
         this.animaciones_mario();
 
@@ -299,6 +300,71 @@ export class Mario
         this.transformar(true);
     }
 
+    tieneEstrella()
+    {
+        return this.mario.getData('estrella');
+    }
+
+    // Estrella cogida: invencible durante Settings.ESTRELLA.DURACION (si ya lo era, vuelve a empezar)
+    activarEstrella()
+    {
+        const scene = this.relatedScene;
+
+        this.terminarEstrella(false);
+        this.mario.setData('estrella', true);
+
+        scene.musica_principal.pause();
+        play_sonidos(scene.sonido_estrella, false, 0.7);
+
+        // Parpadeo de colores:
+        let color = 0;
+
+        this.timerColores = scene.time.addEvent({
+            delay: 70,
+            loop: true,
+            callback: () =>
+            {
+                this.mario.setTint(Settings.ESTRELLA.COLORES[color]);
+                color = (color + 1) % Settings.ESTRELLA.COLORES.length;
+            }
+        });
+
+        this.timerEstrella = scene.time.delayedCall(Settings.ESTRELLA.DURACION, () => this.terminarEstrella(true));
+    }
+
+    // Quita la invencibilidad. 'reanudarMusica' = false cuando se termina por otra razon
+    // (muerte, fin de nivel, otra estrella), en la que no debe volver la musica principal.
+    terminarEstrella(reanudarMusica)
+    {
+        const scene = this.relatedScene;
+
+        if (this.timerColores)
+        {
+            this.timerColores.remove();
+            this.timerColores = null;
+        }
+
+        if (this.timerEstrella)
+        {
+            this.timerEstrella.remove();
+            this.timerEstrella = null;
+        }
+
+        if (!this.tieneEstrella())
+        {
+            return;
+        }
+
+        this.mario.setData('estrella', false);
+        this.mario.clearTint();
+        scene.sonido_estrella.stop();
+
+        if (reanudarMusica)
+        {
+            scene.musica_principal.resume();
+        }
+    }
+
     // Golpe de un enemigo: si es grande encoge (y queda invulnerable un rato); si es pequeño, muere
     recibirGolpe()
     {
@@ -349,6 +415,7 @@ export class Mario
         const scene = this.relatedScene;
 
         this.mario.setData('muerto', true);
+        this.terminarEstrella(false);
 
         // Congela todas las fisicas (Mario y goombas). Tweens y timers siguen funcionando:
         scene.physics.pause();
