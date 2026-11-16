@@ -163,12 +163,6 @@ export class FinNivel
         const alto = scene.sys.game.config.height;
 
         scene.mario.get().setVisible(false);
-
-        // Al completar el nivel tambien se guarda el record (por si luego se cierra la pagina)
-        if (Settings.actualizarRecord())
-        {
-            scene.marcadores.update(2, Settings.marcadores.hi);
-        }
         play_sonidos(scene.sonido_fuegos, false, 0.7);
 
         scene.add.text(ancho / 2, alto / 3, '¡Nivel superado!', {
@@ -177,14 +171,42 @@ export class FinNivel
             align: 'center'
         }).setOrigin(0.5).setScrollFactor(0).setDepth(10);
 
-        // Siguiente nivel: el mismo mapa con el contador de nivel +1 (se conservan puntos y vidas).
-        // Se espera como minimo a que termine la musica de 'level-up' (al reiniciar se cortaria):
-        const espera = Math.max(Settings.FIN_NIVEL.ESPERA_SIGUIENTE, ms_restantes(scene.sonido_level_up) + 300);
+        // El tiempo que sobra se convierte en puntos (el contador baja rapido hasta 0)
+        const unidades = Settings.marcadores.tiempo;
+        const duracionRecuento = unidades * Settings.TIEMPO.MS_RECUENTO;
 
-        scene.time.delayedCall(espera, () =>
+        if (unidades > 0)
         {
-            Settings.marcadores.nivel ++;
-            scene.scene.restart();
+            scene.time.addEvent({
+                delay: Settings.TIEMPO.MS_RECUENTO,
+                repeat: unidades - 1,
+                callback: () =>
+                {
+                    Settings.marcadores.tiempo --;
+                    scene.marcadores.update(5, Settings.marcadores.tiempo);
+                    sumar_puntos(0, Settings.TIEMPO.PUNTOS_POR_UNIDAD, scene);
+                }
+            });
+        }
+
+        scene.time.delayedCall(duracionRecuento, () =>
+        {
+            // Al completar el nivel tambien se guarda el record (por si luego se cierra la pagina)
+            if (Settings.actualizarRecord())
+            {
+                scene.marcadores.update(2, Settings.marcadores.hi);
+            }
+
+            // Siguiente nivel: el mismo mapa con el contador de nivel +1 (se conservan puntos y vidas).
+            // Se espera como minimo a que termine la musica de 'level-up' (al reiniciar se cortaria):
+            const espera = Math.max(Settings.FIN_NIVEL.ESPERA_SIGUIENTE - duracionRecuento,
+                                    ms_restantes(scene.sonido_level_up) + 300, 1000);
+
+            scene.time.delayedCall(espera, () =>
+            {
+                Settings.marcadores.nivel ++;
+                scene.scene.restart();
+            });
         });
     }
 }

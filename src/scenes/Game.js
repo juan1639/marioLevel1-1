@@ -38,7 +38,7 @@ export class Game extends Scene
 
         this.botonfullscreen = new BotonFullScreen(this, {
             id: 'boton-fullscreen',
-            x: this.sys.game.config.width - 36, // esquina derecha (el marcador ocupa el resto)
+            x: this.sys.game.config.width - 32, // esquina derecha (el marcador ocupa el resto)
             y: -64 * 0.5,
             ang: 0,
             scX: 0.5, scY: 0.5,
@@ -116,7 +116,16 @@ export class Game extends Scene
         this.emisor.create();
 
         // Scores:
+        Settings.marcadores.tiempo = Settings.TIEMPO.INICIAL;
         this.marcadores.create();
+
+        // Cuenta atras del tiempo:
+        this.time.addEvent({
+            delay: Settings.TIEMPO.MS_POR_UNIDAD,
+            loop: true,
+            callback: this.tick_tiempo,
+            callbackScope: this
+        });
         this.botonfullscreen.create();
 
         // Click-event:
@@ -152,6 +161,32 @@ export class Game extends Scene
         // this.layer1.setY(this.layer1.y + 0);
 
         // this.controls.update(delta);
+    }
+
+    tick_tiempo()
+    {
+        const mario = this.mario.get();
+
+        // El tiempo se para al morir, al llegar al mastil y mientras Mario se transforma
+        if (mario.getData('muerto') || mario.getData('level-up') || mario.getData('transformando'))
+        {
+            return;
+        }
+
+        Settings.marcadores.tiempo --;
+        this.marcadores.update(5, Settings.marcadores.tiempo);
+
+        // Poco tiempo: la musica se acelera
+        if (Settings.marcadores.tiempo === Settings.TIEMPO.AVISO)
+        {
+            this.musica_principal.setRate(Settings.TIEMPO.VELOCIDAD_AVISO);
+        }
+
+        // Se acabo el tiempo: Mario muere (aunque sea grande o tenga la estrella)
+        if (Settings.marcadores.tiempo <= 0)
+        {
+            this.mario.morir(true);
+        }
     }
 
     // Se llama al terminar la animacion de muerte de Mario
@@ -201,7 +236,6 @@ export class Game extends Scene
         this.mapa_scores.scrollX = scrollX;
         this.mapa_scores.scrollY = scrollY;
         // this.mapa_scores.setBackgroundColor(0x00aabb);
-        console.log(this.mapa_scores);
     }
     
     set_keyControlsCameras()

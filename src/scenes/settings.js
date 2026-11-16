@@ -64,6 +64,16 @@ export class Settings
         ESPERA_SIGUIENTE: 3500 // ms desde que entra al castillo hasta empezar el siguiente nivel
     };
 
+    static TIEMPO =
+    {
+        INICIAL: 400,
+        MS_POR_UNIDAD: 400,    // ms reales que dura cada unidad de tiempo
+        AVISO: 100,            // al llegar aqui la musica se acelera
+        VELOCIDAD_AVISO: 1.3,  // velocidad de la musica a partir del aviso
+        PUNTOS_POR_UNIDAD: 50, // puntos por cada unidad que sobra al terminar el nivel
+        MS_RECUENTO: 10        // ms por unidad al convertir el tiempo sobrante en puntos
+    };
+
     static MONEDA =
     {
         PUNTOS: 200,
@@ -131,7 +141,8 @@ export class Settings
         nivel: 1,
         hi: 5000,
         vidas: Settings.VIDAS_INICIALES,
-        monedas: 0
+        monedas: 0,
+        tiempo: 400 // se reinicia a TIEMPO.INICIAL al empezar el nivel (y tras perder una vida)
     };
 
     // Reinicia los valores que NO deben conservarse entre partidas

@@ -37,8 +37,6 @@ export class CrucetaDireccion
         this.boton.on('pointerup', () => {
             this.isDown = false;
         });
-
-        console.log(this.boton);
     }
     
     get() 

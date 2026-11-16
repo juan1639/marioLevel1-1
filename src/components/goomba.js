@@ -24,8 +24,6 @@ export class Goombas
             );
 
             this.goombas.add(goomba);
-
-            console.log(goomba);
         });
 
         this.goombas.children.iterate(goomba =>

@@ -16,8 +16,6 @@ export class Textos
             ShadowColor: shadowColor, bool1, bool2
         } = args;
 
-        console.log(args);
-
         this.txt = this.relatedScene.add.text(x, y, texto, {
             fontSize: size + 'px',
             fontStyle: style,
@@ -30,8 +28,6 @@ export class Textos
         this.txt.setStroke(strokeColor, strokeSize).setShadow(2, 2, shadowColor, 2, bool1, bool2);
         this.txt.setOrigin(origin[0], origin[1]);
         // this.txt.setX(this.relatedScene.sys.game.config.width / 2);
-
-        console.log(this.txt._text);
     }
 
     crear_tweens(texto) 

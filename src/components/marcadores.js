@@ -16,18 +16,19 @@ export class Marcadores
         const posY = -16;
 
         // Posiciones X fijas, medidas para un canvas de 768 px de ancho (Arial Bold + borde de 8):
-        //   Score (32px, hasta 6 cifras) 9-243 | monedas 250-323 | Level 335-439 | vidas 450-523
-        //   Hi (hasta 5 cifras) 530-649 | boton fullscreen 732-764
+        //   Score (28px, hasta 6 cifras) 9-217 | monedas 222-297 | Level 305-409 | vidas 416-491
+        //   Hi (hasta 5 cifras) 494-613 | Time 616-734 | boton fullscreen 736-768
         //
         // El indice de cada fila es el 'id' que se pasa a update(id, valor):
-        // 0 = puntos, 1 = nivel, 2 = hi, 3 = vidas, 4 = monedas
+        // 0 = puntos, 1 = nivel, 2 = hi, 3 = vidas, 4 = monedas, 5 = tiempo
         // [texto, tamaño, color, colorBorde, x, y, valor]
         this.args = [
-            [ ' Score: ', 32, '#ff7', '#e91', 9, posY, Settings.marcadores.puntos],
-            [ ' Level: ', 24, '#ffb', '#e61', 335, posY, Settings.marcadores.nivel],
-            [ ' Hi: ', 24, '#ff7', '#e91', 530, posY, Settings.marcadores.hi],
-            [ 'x', 24, '#ffb', '#e61', 476, posY, Settings.marcadores.vidas],
-            [ 'x', 24, '#ff7', '#e91', 276, posY, Settings.marcadores.monedas]
+            [ ' Score: ', 28, '#ff7', '#e91', 9, posY, Settings.marcadores.puntos],
+            [ ' Level: ', 24, '#ffb', '#e61', 305, posY, Settings.marcadores.nivel],
+            [ ' Hi: ', 24, '#ff7', '#e91', 494, posY, Settings.marcadores.hi],
+            [ 'x', 24, '#ffb', '#e61', 444, posY, Settings.marcadores.vidas],
+            [ 'x', 24, '#ff7', '#e91', 250, posY, Settings.marcadores.monedas],
+            [ 'Time: ', 24, '#ffb', '#e61', 616, posY, Settings.marcadores.tiempo]
         ];
 
         this.args.forEach((arg, id) =>

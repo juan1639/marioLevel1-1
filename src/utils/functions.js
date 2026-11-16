@@ -12,10 +12,6 @@ export function hitBrick(player, tile, context)
     const BLOQUE_USADO = 41; // bloque '?' ya golpeado (tile propio para que no se pueda volver a golpear)
     const CIELO_AZUL = 1;
 
-    // ¿Está el jugador claramente por debajo del tile?
-    //const touchingBottomOfTile = body.y <= tile.getBottom();
-    //console.log(tile.getLeft(), tile.getBottom());
-
     // Golpe desde abajo a un bloque: derrota a los goombas que tenga encima
     if ((tile.index === BLOQUE_LADRILLO || tile.index === BLOQUE_INTERROGACION) && isBlockeUp)
     {
