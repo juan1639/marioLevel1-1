@@ -70,6 +70,16 @@ export class Settings
         PARA_VIDA: 100 // cada 100 monedas, una vida extra
     };
 
+    // Ladrillos que dan varias monedas (coordenadas en TILES). En el mapa pueden ser
+    // bloques '?' o ladrillos: al cargar el nivel se convierten en ladrillo.
+    static LADRILLOS_MONEDAS =
+    {
+        POSICIONES: [[94, 9]],
+        TIEMPO: 4000,  // ms desde el primer golpe; despues, el siguiente golpe da la ultima moneda
+        MAX: 10,       // monedas maximas por ladrillo
+        CADENCIA: 200  // ms minimos entre golpes que cuentan (evita contar 2 veces el mismo golpe)
+    };
+
     static ESTRELLA =
     {
         DURACION: 9700,       // ms de invencibilidad (lo que dura estrella.mp3)

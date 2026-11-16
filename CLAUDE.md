@@ -38,7 +38,7 @@ There are no tests and no linter.
 
 **Collision logic** lives in `src/utils/functions.js`:
 - `hitBrick`: big Mario breaks bricks (particles and points), small Mario only bumps them. A question block becomes tile 41 (the "used" question block, solid but not hittable again) and releases its contents after the bump.
-- Block contents: in the Tiled map, item tiles (11 = coin, 12 = red mushroom, 18 = 1up, 19 = star) are drawn directly above their `?` block. `Game.ajustes_tiles()` records them in `this.contenidoBloques` (keyed `"x,y"` of the block), then replaces them with sky. `Monedas` spawns coins as soon as the block is hit. `Setas` spawns mushrooms and the star after the bump; the star keeps bouncing.
+- Block contents: in the Tiled map, item tiles (11 = coin, 12 = red mushroom, 18 = 1up, 19 = star) are drawn directly above their `?` block. `Game.ajustes_tiles()` records them in `this.contenidoBloques` (keyed `"x,y"` of the block), then replaces them with sky. `Monedas` spawns coins as soon as the block is hit. `Setas` spawns mushrooms and the star after the bump; the star keeps bouncing. Multi-coin bricks aren't in the map: they come from `Settings.LADRILLOS_MONEDAS` and are tracked in `Game.ladrillosMonedas`.
 - `hitVsGoombas`: stomping a goomba squashes it and bounces Mario. With the star, any contact kills the goomba. Otherwise any other contact calls `mario.recibirGolpe()`: big Mario shrinks and is invulnerable for a short time, small Mario dies.
 
 Before restarting, the scene waits for long sounds to finish (death, level-up), because restarting destroys them (`ms_restantes()`).

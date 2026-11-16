@@ -263,6 +263,17 @@ export class Game extends Scene
             this.contenidoBloques.set(`${tile.x},${tile.y + 1}`, CONTENIDOS[tile.index]);
         });
 
+        // Ladrillos de varias monedas: se pone un ladrillo (aunque en el mapa sea un '?')
+        // y se quita el contenido que tuviera. Estado: monedas dadas y fin del tiempo.
+        this.ladrillosMonedas = new Map();
+
+        Settings.LADRILLOS_MONEDAS.POSICIONES.forEach(([x, y]) =>
+        {
+            this.layer1.putTileAt(15, x, y);
+            this.contenidoBloques.delete(`${x},${y}`);
+            this.ladrillosMonedas.set(`${x},${y}`, { monedas: 0, fin: null, ultimoGolpe: 0 });
+        });
+
         // Reemplazar MONEDAS por cielo-azul:
         this.layer1.replaceByIndex(11, 1);
         // Reemplazar SETAS por cielo-azul:

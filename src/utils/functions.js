@@ -22,6 +22,15 @@ export function hitBrick(player, tile, context)
         golpearEnemigosEncima(tile.getLeft(), tile.getRight(), tile.getTop(), context);
     }
 
+    // Ladrillo de varias monedas (no se rompe aunque Mario sea grande)
+    const claveLadrillo = `${tile.x},${tile.y}`;
+
+    if (tile.index === BLOQUE_LADRILLO && isBlockeUp && context.ladrillosMonedas.has(claveLadrillo))
+    {
+        golpearLadrilloMonedas(tile, claveLadrillo, BLOQUE_USADO, context);
+        return;
+    }
+
     // Confirmamos tile correcto y dirección de impacto
     if (tile.index === BLOQUE_LADRILLO && isBlockeUp)
     {
@@ -76,6 +85,49 @@ export function hitBrick(player, tile, context)
 
         play_sonidos(context.push_block, false, 0.8);
     }
+}
+
+// Cada golpe da una moneda. El tiempo empieza con el primer golpe; cuando se acaba (o se llega
+// al maximo), el siguiente golpe da la ultima moneda y el ladrillo pasa a ser un bloque usado.
+function golpearLadrilloMonedas(tile, clave, bloqueUsado, context)
+{
+    const CONFIG = Settings.LADRILLOS_MONEDAS;
+    const estado = context.ladrillosMonedas.get(clave);
+    const ahora = context.time.now;
+
+    if (ahora - estado.ultimoGolpe < CONFIG.CADENCIA)
+    {
+        return;
+    }
+
+    estado.ultimoGolpe = ahora;
+
+    if (estado.fin === null)
+    {
+        estado.fin = ahora + CONFIG.TIEMPO;
+    }
+
+    // Moneda:
+    context.monedas.sacar(tile.getCenterX(), tile.getTop());
+    sumar_puntos(0, Settings.MONEDA.PUNTOS, context);
+    sumar_moneda(context);
+    play_sonidos(context.sonido_moneda, false, 0.8);
+
+    estado.monedas ++;
+
+    if (ahora >= estado.fin || estado.monedas >= CONFIG.MAX)
+    {
+        // Ultima moneda: queda como bloque usado
+        context.ladrillosMonedas.delete(clave);
+        const usado = context.layer1.putTileAt(bloqueUsado, tile.x, tile.y);
+        rebotarBloque(usado, bloqueUsado, context);
+    }
+    else
+    {
+        rebotarBloque(tile, tile.index, context);
+    }
+
+    play_sonidos(context.push_block, false, 0.8);
 }
 
 // Animacion de 'rebote' de un bloque golpeado desde abajo. El tile se oculta mientras dura
