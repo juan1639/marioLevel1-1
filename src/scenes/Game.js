@@ -8,6 +8,7 @@ import { BotonFullScreen } from '../components/botonesinteractivos.js';
 import { Settings } from './settings.js';
 import { EmisorParticulas } from '../components/emisor-particulas.js';
 import { Setas } from '../components/setas.js';
+import { FinNivel } from '../components/fin-nivel.js';
 
 import
 {
@@ -30,6 +31,7 @@ export class Game extends Scene
 
         this.goombas = new Goombas(this);
         this.setas = new Setas(this);
+        this.finNivel = new FinNivel(this);
         this.colisionadoresInvisibles = new ColisionadoresInvisibles(this);
 
         this.botonfullscreen = new BotonFullScreen(this, {
@@ -60,12 +62,14 @@ export class Game extends Scene
         this.musica_principal = this.sound.add('musica-principal');
         this.sonido_muerte = this.sound.add('dieThrow');
         this.sonido_powerup = this.sound.add('p-ping');
+        this.sonido_fuegos = this.sound.add('fireworks');
 
         // Los sonidos son globales (no de la escena): hay que destruirlos al salir/reiniciar
         // la escena, o se acumularian (y la musica sonaria duplicada) en cada vida perdida.
         const sonidos = [
             this.sonido_jumpbros, this.bricks_fall, this.push_block, this.goomba_aplastado,
-            this.sonido_marioTuberias, this.musica_principal, this.sonido_muerte, this.sonido_powerup
+            this.sonido_marioTuberias, this.musica_principal, this.sonido_muerte, this.sonido_powerup,
+            this.sonido_fuegos
         ];
         this.events.once('shutdown', () => sonidos.forEach(sonido => sonido.destroy()));
     }
@@ -98,6 +102,7 @@ export class Game extends Scene
         this.mario.create();
         this.goombas.create();
         this.setas.create();
+        this.finNivel.create();
 
         this.colisionadoresInvisibles.create(Settings.COLLIDERS_INVISIBLES);
         this.emisor.create();
@@ -135,6 +140,7 @@ export class Game extends Scene
         this.mario.update();
         this.goombas.update();
         this.setas.update();
+        this.finNivel.update();
         // this.layer1.setY(this.layer1.y + 0);
 
         // this.controls.update(delta);
@@ -165,13 +171,18 @@ export class Game extends Scene
             this.layer1.height * Settings.getLayer1().scaleY
         );
 
+        // El limite derecho del mundo esta justo pasado el mastil: Mario no puede saltarlo
+        // y siempre acaba tocandolo (FinNivel detecta el contacto).
+        const TILE = Settings.screen.TILE_X * Settings.getLayer1().scaleX;
+        const LIMITE_IZQ = this.sys.game.config.width / 16;
+        const LIMITE_DER = (Settings.FIN_NIVEL.MASTIL_X + 0.5) * TILE + 10;
+
         this.physics.world.setBounds(
-            this.sys.game.config.width / 16,
+            LIMITE_IZQ,
             -100,
-            this.layer1.x + (this.layer1.width * Settings.getLayer1().scaleX) - 470,// - this.sys.game.config.width,
+            LIMITE_DER - LIMITE_IZQ,
             this.layer1.height * Settings.getLayer1().scaleY + 200
         );
-        console.log(this.physics.world);
     }
 
     set_cameras_marcadores()

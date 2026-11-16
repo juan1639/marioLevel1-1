@@ -108,7 +108,7 @@ export class Mario
 
         this.salto();
         this.direccion();
-        this.checkLevelUp(this.relatedScene.physics.world.bounds.width);// RIGHT_WORLD_BOUNDS (LEVEL-UP)
+        // (El fin de nivel, al tocar el mastil, lo comprueba FinNivel.update())
         this.checkFallOutBounds(this.mario.body.world.bounds.bottom);// BOTTOM_WORLD_BOUNDS
     }
 
@@ -209,17 +209,6 @@ export class Mario
         }
     }
 
-    checkLevelUp(RIGHT_BOUNDS)
-    {
-        const AJUSTE_MANUAL_X = (Settings.screen.TILE_X * Settings.getLayer1().scaleX) - 8;
-
-        if (this.mario.x >= RIGHT_BOUNDS + AJUSTE_MANUAL_X)
-        {
-            console.log('limite LEVEL-UP!');
-            this.mario.setData('level-up', true);
-            this.playAnim('desliza-bandera');
-        }
-    }
 
     checkFallOutBounds(BOTTOM_BOUNDS)
     {

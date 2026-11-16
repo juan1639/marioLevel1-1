@@ -45,6 +45,22 @@ export class Settings
         TIEMPO_INVULNERABLE: 2000 // ms sin poder recibir daño tras encoger
     };
 
+    // Fin de nivel (coordenadas en TILES del mapa)
+    static FIN_NIVEL =
+    {
+        MASTIL_X: 198,      // columna del mastil
+        BANDERA_Y: 3,       // fila de la bandera (tiles 9 y 10, a la izquierda y sobre el mastil)
+        MASTIL_TOP_Y: 4,    // primera fila del palo del mastil
+        BASE_Y: 12,         // fila del bloque base del mastil
+        PUERTA_X: 204,      // columna de la puerta del castillo
+        SUELO_Y: 13,        // fila del suelo
+        VEL_DESLIZA: 300,   // px/s bajando por el mastil
+        VEL_ANDAR: 160,     // px/s andando hacia el castillo
+        // Puntos segun la altura a la que se agarra al mastil (en tiles sobre la base): [altura minima, puntos]
+        PUNTOS: [[7, 5000], [5, 2000], [3, 800], [1, 400], [0, 100]],
+        ESPERA_SIGUIENTE: 3500 // ms desde que entra al castillo hasta empezar el siguiente nivel
+    };
+
     static SETA =
     {
         VEL_X: 100,
@@ -94,6 +110,7 @@ export class Settings
     {
         Settings.marcadores.puntos = 0;
         Settings.marcadores.vidas = Settings.VIDAS_INICIALES;
+        Settings.marcadores.nivel = 1;
     }
 
     static cameraScores =

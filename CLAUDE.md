@@ -33,7 +33,7 @@ There are no tests and no linter.
 - `ajustes_tiles()` replaces coin and mushroom tiles with sky after the map is created.
 - `set_colliders()` sets which tile indices are solid and registers the colliders and overlaps.
 - Two cameras: the main one follows Mario and is bounded to the map, and a second `view-scores` camera at the top renders the HUD. HUD objects are placed at negative Y (`scrollY: -32`) so only that camera sees them.
-- The physics world's right bound is intentionally shorter than the map. `Mario.checkLevelUp()` uses that bound as the flag/level-end trigger.
+- The physics world's right bound ends just past the flagpole (`Settings.FIN_NIVEL.MASTIL_X`), so Mario can't jump over it. `FinNivel` (`src/components/fin-nivel.js`) detects contact with the pole and runs the end-of-level sequence. During that sequence Mario's body is disabled and tweens move him. At the end it increments `Settings.marcadores.nivel` and restarts the scene.
 - Tapping the bottom-left third of the screen switches to mobile (joystick) controls.
 
 **Collision logic** lives in `src/utils/functions.js`:
