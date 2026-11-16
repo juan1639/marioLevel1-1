@@ -9,6 +9,7 @@ import { Settings } from './settings.js';
 import { EmisorParticulas } from '../components/emisor-particulas.js';
 import { Setas } from '../components/setas.js';
 import { FinNivel } from '../components/fin-nivel.js';
+import { Monedas } from '../components/monedas.js';
 
 import
 {
@@ -32,6 +33,7 @@ export class Game extends Scene
         this.goombas = new Goombas(this);
         this.setas = new Setas(this);
         this.finNivel = new FinNivel(this);
+        this.monedas = new Monedas(this);
         this.colisionadoresInvisibles = new ColisionadoresInvisibles(this);
 
         this.botonfullscreen = new BotonFullScreen(this, {
@@ -60,8 +62,10 @@ export class Game extends Scene
         this.goomba_aplastado = this.sound.add('goomba-aplastado');
         this.sonido_marioTuberias = this.sound.add('mario-tuberias');
         this.musica_principal = this.sound.add('musica-principal');
-        this.sonido_muerte = this.sound.add('dieThrow');
-        this.sonido_powerup = this.sound.add('p-ping');
+        this.sonido_muerte = this.sound.add('lose-life');
+        this.sonido_powerup = this.sound.add('seta');
+        this.sonido_moneda = this.sound.add('p-ping');
+        this.sonido_level_up = this.sound.add('level-up');
         this.sonido_fuegos = this.sound.add('fireworks');
 
         // Los sonidos son globales (no de la escena): hay que destruirlos al salir/reiniciar
@@ -69,7 +73,7 @@ export class Game extends Scene
         const sonidos = [
             this.sonido_jumpbros, this.bricks_fall, this.push_block, this.goomba_aplastado,
             this.sonido_marioTuberias, this.musica_principal, this.sonido_muerte, this.sonido_powerup,
-            this.sonido_fuegos
+            this.sonido_moneda, this.sonido_level_up, this.sonido_fuegos
         ];
         this.events.once('shutdown', () => sonidos.forEach(sonido => sonido.destroy()));
     }
@@ -103,6 +107,7 @@ export class Game extends Scene
         this.goombas.create();
         this.setas.create();
         this.finNivel.create();
+        this.monedas.create();
 
         this.colisionadoresInvisibles.create(Settings.COLLIDERS_INVISIBLES);
         this.emisor.create();
@@ -244,14 +249,14 @@ export class Game extends Scene
 
     ajustes_tiles()
     {
-        // Contenido de los bloques '?': en el mapa, cada seta esta dibujada justo ENCIMA
+        // Contenido de los bloques '?': en el mapa, cada moneda/seta esta dibujada justo ENCIMA
         // de su bloque. Se guarda por coordenadas del bloque ('x,y') antes de borrarlas:
-        const TIPOS_SETA = { 12: 'seta', 18: '1up' };
+        const CONTENIDOS = { 11: 'moneda', 12: 'seta', 18: '1up' };
         this.contenidoBloques = new Map();
 
-        this.layer1.filterTiles(tile => TIPOS_SETA[tile.index]).forEach(tile =>
+        this.layer1.filterTiles(tile => CONTENIDOS[tile.index]).forEach(tile =>
         {
-            this.contenidoBloques.set(`${tile.x},${tile.y + 1}`, TIPOS_SETA[tile.index]);
+            this.contenidoBloques.set(`${tile.x},${tile.y + 1}`, CONTENIDOS[tile.index]);
         });
 
         // Reemplazar MONEDAS por cielo-azul:

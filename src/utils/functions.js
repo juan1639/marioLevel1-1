@@ -51,10 +51,17 @@ export function hitBrick(player, tile, context)
         // El bloque pasa a ser un bloque 'usado' (solido, ya no se puede volver a golpear):
         const bloqueUsado = context.layer1.putTileAt(BLOQUE_USADO, tileX, tileY);
 
+        // La moneda sale al momento; las setas, al terminar el rebote del bloque
+        if (contenido === 'moneda')
+        {
+            context.monedas.sacar(worldX, worldTop);
+            sumar_puntos(0, Settings.MONEDA.PUNTOS, context);
+            play_sonidos(context.sonido_moneda, false, 0.8);
+        }
+
         rebotarBloque(bloqueUsado, BLOQUE_USADO, context, () =>
         {
-            // Al terminar el rebote sale la seta (si el bloque tenia una)
-            if (contenido)
+            if (contenido === 'seta' || contenido === '1up')
             {
                 context.setas.sacar(worldX, worldTop, contenido);
             }
@@ -186,6 +193,36 @@ export function crear_animacion(scene, config)
     {
         scene.anims.create(config);
     }
+}
+
+// Texto con unos puntos que sube y desaparece (x, y en coordenadas del mundo)
+export function mostrar_puntos(scene, puntos, x, y)
+{
+    const TILE = Settings.screen.TILE_Y * Settings.getLayer1().scaleY;
+
+    const txt = scene.add.text(x, y, `${puntos}`, {
+        fontFamily: 'arial, sans-serif', fontStyle: 'bold', fontSize: 22, color: '#fff',
+        stroke: '#111', strokeThickness: 4
+    }).setOrigin(0.5).setDepth(10);
+
+    scene.tweens.add({
+        targets: txt,
+        y: y - TILE * 2,
+        alpha: 0,
+        duration: 1200,
+        onComplete: () => txt.destroy()
+    });
+}
+
+// ms que faltan para que termine un sonido (0 si ya no esta sonando)
+export function ms_restantes(sonido)
+{
+    if (!sonido.isPlaying)
+    {
+        return 0;
+    }
+
+    return Math.max(0, (sonido.duration - sonido.seek) * 1000);
 }
 
 export function play_sonidos(id, loop, volumen)

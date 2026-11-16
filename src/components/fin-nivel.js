@@ -1,5 +1,5 @@
 import { Settings } from "../scenes/settings.js";
-import { play_sonidos, sumar_puntos } from "../utils/functions.js";
+import { play_sonidos, sumar_puntos, mostrar_puntos, ms_restantes } from "../utils/functions.js";
 
 // Secuencia de fin de nivel:
 //  1. Mario toca el mastil -> se agarra (puntos segun la altura)
@@ -79,6 +79,7 @@ export class FinNivel
         mario.setDepth(1);
 
         scene.musica_principal.stop();
+        play_sonidos(scene.sonido_level_up, false, 0.7);
 
         // Mario se agarra al mastil por la izquierda (dentro de los limites del palo):
         const mitadAlto = mario.displayHeight / 2;
@@ -91,7 +92,7 @@ export class FinNivel
         const altura = (this.BASE_TOP - (mario.y + mitadAlto)) / this.TILE;
         const [, puntos] = Settings.FIN_NIVEL.PUNTOS.find(([minima]) => altura >= minima);
         sumar_puntos(0, puntos, scene);
-        this.mostrar_puntos(puntos, mario.x + this.TILE, mario.y);
+        mostrar_puntos(scene, puntos, mario.x + this.TILE, mario.y);
 
         // Mario y bandera bajan a la vez:
         const yFinalMario = this.BASE_TOP - mitadAlto;
@@ -169,28 +170,14 @@ export class FinNivel
             align: 'center'
         }).setOrigin(0.5).setScrollFactor(0).setDepth(10);
 
-        // Siguiente nivel: el mismo mapa con el contador de nivel +1 (se conservan puntos y vidas)
-        scene.time.delayedCall(Settings.FIN_NIVEL.ESPERA_SIGUIENTE, () =>
+        // Siguiente nivel: el mismo mapa con el contador de nivel +1 (se conservan puntos y vidas).
+        // Se espera como minimo a que termine la musica de 'level-up' (al reiniciar se cortaria):
+        const espera = Math.max(Settings.FIN_NIVEL.ESPERA_SIGUIENTE, ms_restantes(scene.sonido_level_up) + 300);
+
+        scene.time.delayedCall(espera, () =>
         {
             Settings.marcadores.nivel ++;
             scene.scene.restart();
-        });
-    }
-
-    // Texto con los puntos que sube y desaparece
-    mostrar_puntos(puntos, x, y)
-    {
-        const txt = this.relatedScene.add.text(x, y, `${puntos}`, {
-            fontFamily: 'arial, sans-serif', fontStyle: 'bold', fontSize: 22, color: '#fff',
-            stroke: '#111', strokeThickness: 4
-        }).setOrigin(0, 0.5).setDepth(10);
-
-        this.relatedScene.tweens.add({
-            targets: txt,
-            y: y - this.TILE * 3,
-            alpha: 0,
-            duration: 1500,
-            onComplete: () => txt.destroy()
         });
     }
 }

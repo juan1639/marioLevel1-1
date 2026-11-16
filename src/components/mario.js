@@ -1,6 +1,6 @@
 import { Settings } from "../scenes/settings";
 import { Textos } from "./textos.js";
-import { play_sonidos, crear_animacion } from "../utils/functions";
+import { play_sonidos, crear_animacion, ms_restantes } from "../utils/functions";
 
 export class Mario 
 {
@@ -357,9 +357,15 @@ export class Mario
         scene.musica_principal.stop();
         play_sonidos(scene.sonido_muerte, false, 0.7);
 
+        // Al terminar, se espera a que acabe el sonido de 'perder vida' (al reiniciar se cortaria)
+        const terminar = () => scene.time.delayedCall(
+            Math.max(Settings.MARIO.PAUSA_MUERTE, ms_restantes(scene.sonido_muerte) + 200),
+            () => scene.perder_vida()
+        );
+
         if (!conAnimacion)
         {
-            scene.time.delayedCall(Settings.MARIO.PAUSA_MUERTE * 2, () => scene.perder_vida());
+            terminar();
             return;
         }
 
@@ -382,7 +388,7 @@ export class Mario
                     ease: 'Quad.easeIn'
                 }
             ],
-            onComplete: () => scene.time.delayedCall(Settings.MARIO.PAUSA_MUERTE, () => scene.perder_vida())
+            onComplete: terminar
         });
     }
 

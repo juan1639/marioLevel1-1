@@ -68,6 +68,7 @@ export class Preloader extends Scene
         this.load.spritesheet('mario-ss1-grande', 'mario-ss1-grande.png', {frameWidth: 16, frameHeight: 32});
 
         this.load.spritesheet('goomba-ss1', 'goomba-ss1.png', {frameWidth: 16, frameHeight: 16});
+        this.load.spritesheet('moneda', 'coin.png', {frameWidth: 32, frameHeight: 32});
 
         this.load.spritesheet('general-ssheet', 'super_mario.png', {frameWidth: 16, frameHeight: 16});
 
@@ -80,10 +81,12 @@ export class Preloader extends Scene
         this.load.audio('oh-no', 'audio/oh-no.mp3');
         this.load.audio('ough', 'audio/ough.mp3');
         this.load.audio('goomba-aplastado', 'audio/squit.mp3');
-        this.load.audio('dieThrow', 'audio/dieThrow2.ogg');
         this.load.audio('mario-tuberias', 'audio/mario-tuberias.mp3');
         this.load.audio('gameover', 'audio/gameover_mario.mp3');
         this.load.audio('musica-principal', 'audio/musica-mario-bros.mp3');
+        this.load.audio('lose-life', 'audio/mario-lose-life.mp3');
+        this.load.audio('level-up', 'audio/level-up.mp3');
+        this.load.audio('seta', 'audio/seta.mp3');
     }
 
     create ()

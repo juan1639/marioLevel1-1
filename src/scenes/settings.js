@@ -61,6 +61,11 @@ export class Settings
         ESPERA_SIGUIENTE: 3500 // ms desde que entra al castillo hasta empezar el siguiente nivel
     };
 
+    static MONEDA =
+    {
+        PUNTOS: 200
+    };
+
     static SETA =
     {
         VEL_X: 100,
