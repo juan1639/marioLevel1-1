@@ -71,10 +71,6 @@ export class Preloader extends Scene
 
         this.load.spritesheet('general-ssheet', 'super_mario.png', {frameWidth: 16, frameHeight: 16});
 
-        // Plugin Joystick mobile
-        const url = 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js';
-        this.load.plugin('rexvirtualjoystickplugin', url, true);
-
         // Audio & Musica
         this.load.audio('jumpbros', 'audio/jumpbros.ogg');
         this.load.audio('fireworks', 'audio/fireworks.mp3');

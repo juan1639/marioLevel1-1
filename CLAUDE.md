@@ -19,7 +19,7 @@ There are no tests and no linter.
 
 **Scene flow** (`src/main.js`): `Boot` → `Preloader` → `MainMenu` → `Game` (→ `GameOver`). The canvas is 768×480 with `Scale.FIT`, `pixelArt: true` and arcade gravity `y: 1100`.
 
-**Asset loading**: everything is loaded in `src/scenes/Preloader.js` from `public/assets/`. That includes the Tiled map (`mario-level-1-1.json`, layer `World1`, tileset `SuperMarioBros-World1-1` → image `super_mario.png`), the spritesheets and the audio. The virtual joystick plugin (`rexvirtualjoystickplugin`) is loaded **at runtime from a GitHub raw URL**, so mobile controls need network access.
+**Asset loading**: everything is loaded in `src/scenes/Preloader.js` from `public/assets/`. That includes the Tiled map (`mario-level-1-1.json`, layer `World1`, tileset `SuperMarioBros-World1-1` → image `super_mario.png`), the spritesheets and the audio. The virtual joystick (`phaser3-rex-plugins`) is registered as a global plugin in `src/main.js` under the key `rexvirtualjoystickplugin`. `import 'phaser'` must stay before the plugin import, because the plugin uses the global `Phaser` when its module is evaluated.
 
 **Central config: `src/scenes/settings.js`**. A static `Settings` class holds all tunables and shared mutable state:
 - The tile-index legend for the tilemap is in the header comment. Game logic hardcodes these indices, e.g. 14 = question block, 15 = brick, 16 = pyramid block, 21–22/27–28 = pipe, 40 = ground, 1 = sky.

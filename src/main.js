@@ -1,3 +1,7 @@
+// 'phaser' debe importarse ANTES que el plugin: el plugin usa la variable global Phaser al cargarse
+import 'phaser';
+import VirtualJoyStickPlugin from 'phaser3-rex-plugins/plugins/virtualjoystick-plugin.js';
+
 import { Boot } from './scenes/Boot';
 import { Game } from './scenes/Game';
 import { GameOver } from './scenes/GameOver';
@@ -19,6 +23,12 @@ const config = {
           gravity: {y: 1100},
           debug: false
         }
+    },
+    plugins: {
+        global: [
+            // Joystick virtual (controles tactiles). Se obtiene con plugins.get('rexvirtualjoystickplugin')
+            { key: 'rexvirtualjoystickplugin', plugin: VirtualJoyStickPlugin, start: true }
+        ]
     },
     scale: {
         mode: Phaser.Scale.FIT,
