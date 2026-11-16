@@ -382,7 +382,6 @@ export class Mario
         const scene = this.relatedScene;
 
         this.mario.setData('invulnerable', true);
-        play_sonidos(scene.sonido_marioTuberias, false, 0.7);
 
         this.transformar(false, () =>
         {

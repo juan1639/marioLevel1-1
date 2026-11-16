@@ -56,6 +56,7 @@ export function hitBrick(player, tile, context)
         {
             context.monedas.sacar(worldX, worldTop);
             sumar_puntos(0, Settings.MONEDA.PUNTOS, context);
+            sumar_moneda(context);
             play_sonidos(context.sonido_moneda, false, 0.8);
         }
 
@@ -164,8 +165,7 @@ export function cogerSeta(mario, seta, context)
 
     if (tipo === '1up')
     {
-        Settings.marcadores.vidas ++;
-        context.marcadores.update(3, Settings.marcadores.vidas);
+        sumar_vida(context);
         return;
     }
 
@@ -214,6 +214,27 @@ export function goombaMuereEstrella(goomba, context)
         ],
         onComplete: () => goomba.destroy()
     });
+}
+
+// Suma una moneda al contador; al llegar a Settings.MONEDA.PARA_VIDA, vida extra y vuelve a 0
+export function sumar_moneda(context)
+{
+    Settings.marcadores.monedas ++;
+
+    if (Settings.marcadores.monedas >= Settings.MONEDA.PARA_VIDA)
+    {
+        Settings.marcadores.monedas -= Settings.MONEDA.PARA_VIDA;
+        sumar_vida(context);
+        play_sonidos(context.sonido_powerup, false, 0.8);
+    }
+
+    context.marcadores.update(4, Settings.marcadores.monedas);
+}
+
+export function sumar_vida(context)
+{
+    Settings.marcadores.vidas ++;
+    context.marcadores.update(3, Settings.marcadores.vidas);
 }
 
 export function sumar_puntos(id, valor, context)

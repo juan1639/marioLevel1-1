@@ -63,7 +63,8 @@ export class Settings
 
     static MONEDA =
     {
-        PUNTOS: 200
+        PUNTOS: 200,
+        PARA_VIDA: 100 // cada 100 monedas, una vida extra
     };
 
     static ESTRELLA =
@@ -116,7 +117,8 @@ export class Settings
         puntos: 0,
         nivel: 1,
         hi: 5000,
-        vidas: Settings.VIDAS_INICIALES
+        vidas: Settings.VIDAS_INICIALES,
+        monedas: 0
     };
 
     // Reinicia los valores que NO deben conservarse entre partidas
@@ -126,6 +128,7 @@ export class Settings
         Settings.marcadores.puntos = 0;
         Settings.marcadores.vidas = Settings.VIDAS_INICIALES;
         Settings.marcadores.nivel = 1;
+        Settings.marcadores.monedas = 0;
     }
 
     static cameraScores =

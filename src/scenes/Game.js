@@ -38,7 +38,7 @@ export class Game extends Scene
 
         this.botonfullscreen = new BotonFullScreen(this, {
             id: 'boton-fullscreen',
-            x: Math.floor(this.sys.game.config.width / 1.2),
+            x: this.sys.game.config.width - 36, // esquina derecha (el marcador ocupa el resto)
             y: -64 * 0.5,
             ang: 0,
             scX: 0.5, scY: 0.5,
