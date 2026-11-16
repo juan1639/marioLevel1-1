@@ -41,7 +41,15 @@ export class Settings
         DECELERACION: 14,
         X_INICIAL: 7,
         Y_INICIAL: 9,
-        PAUSA_MUERTE: 600 // ms de pausa antes/despues de la animacion de muerte
+        PAUSA_MUERTE: 600, // ms de pausa antes/despues de la animacion de muerte
+        TIEMPO_INVULNERABLE: 2000 // ms sin poder recibir daño tras encoger
+    };
+
+    static SETA =
+    {
+        VEL_X: 100,
+        DURACION_SALIDA: 700, // ms que tarda en salir del bloque
+        PUNTOS: 1000
     };
 
     static ARRAY_GOOMBAS =

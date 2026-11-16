@@ -17,12 +17,18 @@ export class Mario
         this.X_INICIAL = iniPosX * (Settings.screen.TILE_X * Settings.getLayer1().scaleX);
         this.Y_INICIAL = iniPosY * (Settings.screen.TILE_Y * Settings.getLayer1().scaleY);
         this.SPRITE_SHEET = 'mario-ss1';
+        this.SPRITE_SHEET_GRANDE = 'mario-ss1-grande';
+
+        // Tamaño del cuerpo fisico, en pixeles del frame (sin escalar):
+        this.ANCHO_BODY = Math.round(Settings.screen.TILE_X / 1.4);
+        this.ALTO_BODY = Settings.screen.TILE_Y;
+        this.ALTO_BODY_GRANDE = Settings.screen.TILE_Y * 2;
 
         this.mario = this.relatedScene.physics.add.sprite(this.X_INICIAL, this.Y_INICIAL, this.SPRITE_SHEET);
 
         this.mario.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
-        this.mario.setSize(Phaser.Math.RoundTo(this.mario.width / 1.4, 0, 10), this.mario.body.height);
+        this.mario.body.setSize(this.ANCHO_BODY, this.ALTO_BODY, true);
 
         this.mario.setVisible(true);
         this.mario.setFrame(0);
@@ -40,6 +46,9 @@ export class Mario
         this.mario.setData('jump-key-up', true);
         this.mario.setData('level-up', false);
         this.mario.setData('muerto', false);
+        this.mario.setData('grande', false);
+        this.mario.setData('transformando', false);
+        this.mario.setData('invulnerable', false);
 
         this.animaciones_mario();
 
@@ -92,7 +101,7 @@ export class Mario
 
     update()
     {
-        if (this.mario.getData('level-up') || this.mario.getData('muerto'))
+        if (this.mario.getData('level-up') || this.mario.getData('muerto') || this.mario.getData('transformando'))
         {
             return;
         }
@@ -164,11 +173,11 @@ export class Mario
             {
                 if (this.enSuelo())
                 {
-                    this.mario.anims.play('mario-quieto', true);
+                    this.playAnim('quieto');
                 }
                 else
                 {
-                    this.mario.anims.play('mario-saltando', true);
+                    this.playAnim('saltando');
                 }
             }
         }
@@ -192,11 +201,11 @@ export class Mario
     {
         if (!this.enSuelo())
         {
-            this.mario.anims.play('mario-saltando', true);
+            this.playAnim('saltando');
         }
         else
         {
-            this.mario.anims.play('mario-andar', true);
+            this.playAnim('andar');
         }
     }
 
@@ -208,7 +217,7 @@ export class Mario
         {
             console.log('limite LEVEL-UP!');
             this.mario.setData('level-up', true);
-            this.mario.anims.play('mario-desliza-bandera', true);
+            this.playAnim('desliza-bandera');
         }
     }
 
@@ -225,6 +234,118 @@ export class Mario
     enSuelo()
     {
         return this.mario.body.blocked.down || this.mario.body.touching.down;
+    }
+
+    esGrande()
+    {
+        return this.mario.getData('grande');
+    }
+
+    // Reproduce la animacion de la accion ('andar', 'quieto'...) segun el tamaño de Mario
+    playAnim(accion)
+    {
+        const key = this.esGrande() ? `mario-grande-${accion}` : `mario-${accion}`;
+        this.mario.anims.play(key, true);
+    }
+
+    // Cambia el sprite y el cuerpo fisico entre Mario pequeño y grande, manteniendo los pies
+    // en el mismo sitio (el sprite crece/encoge desde su centro, asi que hay que mover 'y').
+    setGrande(grande)
+    {
+        if (grande === this.esGrande())
+        {
+            return;
+        }
+
+        const AJUSTE_Y = (Settings.screen.TILE_Y * Settings.getLayer1().scaleY) / 2;
+
+        this.mario.setData('grande', grande);
+        this.mario.anims.stop();
+        this.mario.setTexture(grande ? this.SPRITE_SHEET_GRANDE : this.SPRITE_SHEET, 0);
+        this.mario.y += grande ? -AJUSTE_Y : AJUSTE_Y;
+        this.mario.body.setSize(this.ANCHO_BODY, grande ? this.ALTO_BODY_GRANDE : this.ALTO_BODY, true);
+    }
+
+    // Transformacion con parpadeo (grande <-> pequeño). El juego se congela mientras dura.
+    transformar(grande, alTerminar)
+    {
+        const scene = this.relatedScene;
+        const CAMBIOS = 9; // impar: termina en el tamaño 'grande' pedido
+
+        this.mario.setData('transformando', true);
+        scene.physics.pause();
+
+        let cambio = 0;
+
+        scene.time.addEvent({
+            delay: 90,
+            repeat: CAMBIOS - 1,
+            callback: () =>
+            {
+                cambio ++;
+                this.setGrande(cambio % 2 === 1 ? grande : !grande);
+
+                if (cambio === CAMBIOS)
+                {
+                    scene.physics.resume();
+                    this.mario.setData('transformando', false);
+
+                    if (alTerminar)
+                    {
+                        alTerminar();
+                    }
+                }
+            }
+        });
+    }
+
+    // Seta roja cogida
+    crecer()
+    {
+        if (this.esGrande() || this.mario.getData('transformando'))
+        {
+            return;
+        }
+
+        this.transformar(true);
+    }
+
+    // Golpe de un enemigo: si es grande encoge (y queda invulnerable un rato); si es pequeño, muere
+    recibirGolpe()
+    {
+        if (this.mario.getData('invulnerable') || this.mario.getData('transformando'))
+        {
+            return;
+        }
+
+        if (!this.esGrande())
+        {
+            this.morir(true);
+            return;
+        }
+
+        const scene = this.relatedScene;
+
+        this.mario.setData('invulnerable', true);
+        play_sonidos(scene.sonido_marioTuberias, false, 0.7);
+
+        this.transformar(false, () =>
+        {
+            const parpadeo = scene.tweens.add({
+                targets: this.mario,
+                alpha: 0.3,
+                duration: 100,
+                yoyo: true,
+                repeat: -1
+            });
+
+            scene.time.delayedCall(Settings.MARIO.TIEMPO_INVULNERABLE, () =>
+            {
+                parpadeo.stop();
+                this.mario.setAlpha(1);
+                this.mario.setData('invulnerable', false);
+            });
+        });
     }
 
     // Muerte de Mario: se congela el juego, Mario salta y cae fuera de la pantalla,
@@ -307,6 +428,35 @@ export class Mario
         crear_animacion(this.relatedScene, {
             key: 'mario-muere',
             frames: [{key: this.SPRITE_SHEET, frame: 7}],
+            frameRate: 10,
+        });
+
+        // --- Mario grande ---
+        // El spritesheet grande solo tiene 3 frames dibujados (0 = quieto, 1-2 = andar),
+        // asi que 'saltando' y 'desliza-bandera' usan, de momento, frames provisionales:
+        crear_animacion(this.relatedScene, {
+            key: 'mario-grande-andar',
+            frames: this.relatedScene.anims.generateFrameNumbers(this.SPRITE_SHEET_GRANDE, {frames: [0, 1, 2]}),
+            frameRate: 10,
+            yoyo: true,
+            repeat: -1
+        });
+
+        crear_animacion(this.relatedScene, {
+            key: 'mario-grande-quieto',
+            frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 0}],
+            frameRate: 10,
+        });
+
+        crear_animacion(this.relatedScene, {
+            key: 'mario-grande-saltando',
+            frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 1}],
+            frameRate: 10,
+        });
+
+        crear_animacion(this.relatedScene, {
+            key: 'mario-grande-desliza-bandera',
+            frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 0}],
             frameRate: 10,
         });
     }

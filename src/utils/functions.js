@@ -3,8 +3,6 @@ import { Settings } from "../scenes/settings.js";
 
 export function hitBrick(player, tile, context)
 {
-    const body = player.body;
-
     // Verificamos si hay bloqueo en la 'cabeza' del jugador:
     const isBlockeUp = player.body.blocked.up;
 
@@ -21,42 +19,79 @@ export function hitBrick(player, tile, context)
     // Confirmamos tile correcto y dirección de impacto
     if (tile.index === BLOQUE_LADRILLO && isBlockeUp)
     {
-        // context.layer1.removeTileAt(tile.x, tile.y);
-        context.layer1.putTileAt(CIELO_AZUL, tile.x, tile.y);
+        if (context.mario.esGrande())
+        {
+            // Mario grande: rompe el ladrillo
+            context.layer1.putTileAt(CIELO_AZUL, tile.x, tile.y);
 
-        // Coordenadas del tile en píxeles
-        const worldX = tile.getCenterX();
-        const worldY = tile.getCenterY();
+            // Lanza partículas desde el centro del tile
+            context.emisor.explotar(tile.getCenterX(), tile.getCenterY());
 
-        // Lanza partículas desde ese punto
-        context.emisor.explotar(worldX, worldY);
+            sumar_puntos(0, 10, context);
 
-        sumar_puntos(0, 10, context);
-
-        play_sonidos(context.bricks_fall, false, 0.3);
+            play_sonidos(context.bricks_fall, false, 0.3);
+        }
+        else
+        {
+            // Mario pequeño: el ladrillo solo rebota
+            rebotarBloque(tile, BLOQUE_LADRILLO, context);
+            play_sonidos(context.push_block, false, 0.8);
+        }
     }
 
     if (tile.index === BLOQUE_INTERROGACION && isBlockeUp)
     {
-        // Coordenadas del tile en píxeles
+        // Datos del bloque ANTES de sustituirlo (putTileAt crea un tile nuevo)
+        const tileX = tile.x;
+        const tileY = tile.y;
         const worldX = tile.getCenterX();
-        const worldY = tile.getCenterY();
+        const worldTop = tile.getTop();
+        const contenido = context.contenidoBloques.get(`${tileX},${tileY}`);
 
-        // El bloque pasa a ser un bloque 'usado' (solido, ya no se puede volver a golpear).
-        // Se oculta mientras dura la animacion, pero sigue siendo solido:
-        const bloqueUsado = context.layer1.putTileAt(BLOQUE_USADO, tile.x, tile.y);
-        bloqueUsado.setVisible(false);
+        // El bloque pasa a ser un bloque 'usado' (solido, ya no se puede volver a golpear):
+        const bloqueUsado = context.layer1.putTileAt(BLOQUE_USADO, tileX, tileY);
 
-        // Anima bloque-push:
-        const dura = 450;
-        const animaBloque = new AnimaBloques(context, {
-            offsetY: -16, easeEtc: 'Sine.easeOut', duracion: dura, conYoyo: true,
-            frame: BLOQUE_USADO - 1
+        rebotarBloque(bloqueUsado, BLOQUE_USADO, context, () =>
+        {
+            // Al terminar el rebote sale la seta (si el bloque tenia una)
+            if (contenido)
+            {
+                context.setas.sacar(worldX, worldTop, contenido);
+            }
         });
-        animaBloque.create(worldX, worldY, () => bloqueUsado.setVisible(true));
 
         play_sonidos(context.push_block, false, 0.8);
     }
+}
+
+// Animacion de 'rebote' de un bloque golpeado desde abajo. El tile se oculta mientras dura
+// (lo sustituye un sprite que sube y baja), pero sigue siendo solido.
+function rebotarBloque(tile, indiceTile, context, alTerminar)
+{
+    // Evita lanzar otra animacion si el bloque ya esta rebotando
+    if (tile.rebotando)
+    {
+        return;
+    }
+
+    tile.rebotando = true;
+    tile.setVisible(false);
+
+    const animaBloque = new AnimaBloques(context, {
+        offsetY: -16, easeEtc: 'Sine.easeOut', duracion: 450, conYoyo: true,
+        frame: indiceTile - 1
+    });
+
+    animaBloque.create(tile.getCenterX(), tile.getCenterY(), () =>
+    {
+        tile.setVisible(true);
+        tile.rebotando = false;
+
+        if (alTerminar)
+        {
+            alTerminar();
+        }
+    });
 }
 
 /* export function enemigos_hitBrick(enemigos, tile, context)
@@ -101,9 +136,27 @@ export function hitVsGoombas(mario, goomba, context)
     }
     else
     {
-        // Mario muere
-        context.mario.morir(true);
+        // Mario grande encoge; Mario pequeño muere
+        context.mario.recibirGolpe();
     }
+}
+
+export function cogerSeta(mario, seta, context)
+{
+    const tipo = seta.getData('tipo');
+    seta.destroy();
+
+    play_sonidos(context.sonido_powerup, false, 0.8);
+
+    if (tipo === '1up')
+    {
+        Settings.marcadores.vidas ++;
+        context.marcadores.update(3, Settings.marcadores.vidas);
+        return;
+    }
+
+    sumar_puntos(0, Settings.SETA.PUNTOS, context);
+    context.mario.crecer();
 }
 
 export function goombaDeath(goomba, context)

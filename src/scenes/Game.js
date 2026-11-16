@@ -7,11 +7,13 @@ import { Marcadores } from '../components/marcadores.js';
 import { BotonFullScreen } from '../components/botonesinteractivos.js';
 import { Settings } from './settings.js';
 import { EmisorParticulas } from '../components/emisor-particulas.js';
+import { Setas } from '../components/setas.js';
 
 import
 {
     hitBrick,
     hitVsGoombas,
+    cogerSeta,
     play_sonidos
 } from '../utils/functions.js';
 
@@ -27,6 +29,7 @@ export class Game extends Scene
         this.mario = new Mario(this, {iniPosX: Settings.MARIO.X_INICIAL, iniPosY: Settings.MARIO.Y_INICIAL});
 
         this.goombas = new Goombas(this);
+        this.setas = new Setas(this);
         this.colisionadoresInvisibles = new ColisionadoresInvisibles(this);
 
         this.botonfullscreen = new BotonFullScreen(this, {
@@ -56,12 +59,13 @@ export class Game extends Scene
         this.sonido_marioTuberias = this.sound.add('mario-tuberias');
         this.musica_principal = this.sound.add('musica-principal');
         this.sonido_muerte = this.sound.add('dieThrow');
+        this.sonido_powerup = this.sound.add('p-ping');
 
         // Los sonidos son globales (no de la escena): hay que destruirlos al salir/reiniciar
         // la escena, o se acumularian (y la musica sonaria duplicada) en cada vida perdida.
         const sonidos = [
             this.sonido_jumpbros, this.bricks_fall, this.push_block, this.goomba_aplastado,
-            this.sonido_marioTuberias, this.musica_principal, this.sonido_muerte
+            this.sonido_marioTuberias, this.musica_principal, this.sonido_muerte, this.sonido_powerup
         ];
         this.events.once('shutdown', () => sonidos.forEach(sonido => sonido.destroy()));
     }
@@ -93,6 +97,7 @@ export class Game extends Scene
         // Sprites: llamar a su metodo create() para inicializarlos:
         this.mario.create();
         this.goombas.create();
+        this.setas.create();
 
         this.colisionadoresInvisibles.create(Settings.COLLIDERS_INVISIBLES);
         this.emisor.create();
@@ -129,6 +134,7 @@ export class Game extends Scene
     {
         this.mario.update();
         this.goombas.update();
+        this.setas.update();
         // this.layer1.setY(this.layer1.y + 0);
 
         // this.controls.update(delta);
@@ -215,11 +221,27 @@ export class Game extends Scene
 
         this.physics.add.collider(this.goombas.get(), this.layer1);
         this.physics.add.collider(this.goombas.get(), this.colisionadoresInvisibles.get());
+
+        this.physics.add.collider(this.setas.get(), this.layer1);
+        this.physics.add.overlap(this.mario.get(), this.setas.get(), (mario, seta) =>
+        {
+            cogerSeta(mario, seta, this);
+        });
         // this.physics.add.collider(this.goombas.get(), ?);
     }
 
     ajustes_tiles()
     {
+        // Contenido de los bloques '?': en el mapa, cada seta esta dibujada justo ENCIMA
+        // de su bloque. Se guarda por coordenadas del bloque ('x,y') antes de borrarlas:
+        const TIPOS_SETA = { 12: 'seta', 18: '1up' };
+        this.contenidoBloques = new Map();
+
+        this.layer1.filterTiles(tile => TIPOS_SETA[tile.index]).forEach(tile =>
+        {
+            this.contenidoBloques.set(`${tile.x},${tile.y + 1}`, TIPOS_SETA[tile.index]);
+        });
+
         // Reemplazar MONEDAS por cielo-azul:
         this.layer1.replaceByIndex(11, 1);
         // Reemplazar SETAS por cielo-azul:
