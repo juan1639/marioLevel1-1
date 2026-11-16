@@ -6,28 +6,34 @@ export class EmisorParticulas
         this.relatedScene = scene;
         this.config = config;
     }
-  
-    create(x, y)
-    {
-        const {vel, ang, grav, lifeSp, cantidad, esc, autoRun, duracion} = this.config;
 
-        // Crea un emitter que puedes reutilizar
-        this.emisor = this.relatedScene.add.particles(x, y, 'brick-particle', {
+    // Crea UN solo emisor (parado) que se reutiliza en cada explosion
+    create()
+    {
+        const {vel, ang, grav, lifeSp, esc} = this.config;
+
+        this.emisor = this.relatedScene.add.particles(0, 0, 'brick-particle', {
             speed: { min: vel[0], max: vel[1] },
             angle: { min: ang[0], max: ang[1] },
             gravityY: grav,
             lifespan: lifeSp,
-            quantity: cantidad,
-            scale: { start: esc[0], end: esc[1] },
-            on: autoRun // No emite automáticamente, lo activas manualmente
+            // Escala inicial aleatoria por particula (entre esc[0] y esc[1]), que baja hasta 0:
+            scale: {
+                onEmit: (particula) =>
+                {
+                    particula.escalaInicial = Phaser.Math.FloatBetween(esc[0], esc[1]);
+                    return particula.escalaInicial;
+                },
+                onUpdate: (particula, key, t) => particula.escalaInicial * (1 - t)
+            },
+            emitting: false // No emite automáticamente, se lanza con explotar()
         });
-
-        this.relatedScene.time.delayedCall(duracion, () => this.emisor.stop());
-
-        console.log(this.emisor);
     }
 
-    update() {}
+    explotar(x, y)
+    {
+        this.emisor.explode(this.config.cantidad, x, y);
+    }
 
     get()
     {

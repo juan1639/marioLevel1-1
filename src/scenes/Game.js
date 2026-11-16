@@ -24,7 +24,7 @@ export class Game extends Scene
 
     init() 
     {
-        this.mario = new Mario(this, {iniPosX: 7, iniPosY: 9});
+        this.mario = new Mario(this, {iniPosX: Settings.MARIO.X_INICIAL, iniPosY: Settings.MARIO.Y_INICIAL});
 
         this.goombas = new Goombas(this);
         this.colisionadoresInvisibles = new ColisionadoresInvisibles(this);
@@ -44,8 +44,7 @@ export class Game extends Scene
             grav: 300,
             lifeSp: 900,
             cantidad: 35,
-            esc: [Phaser.Math.FloatBetween(0.8, 1.8), 0],
-            autoRun: false
+            esc: [0.8, 1.8] // rango de escala inicial de cada particula
         });
 
         this.marcadores = new Marcadores(this);
@@ -87,6 +86,7 @@ export class Game extends Scene
         this.goombas.create();
 
         this.colisionadoresInvisibles.create(Settings.COLLIDERS_INVISIBLES);
+        this.emisor.create();
 
         // Scores:
         this.marcadores.create();

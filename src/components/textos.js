@@ -13,7 +13,7 @@ export class Textos
             texto, size,
             style, fll, family,
             strokeColor, strokeSize,
-            shadowColor, bool1, bool2
+            ShadowColor: shadowColor, bool1, bool2
         } = args;
 
         console.log(args);
@@ -36,29 +36,6 @@ export class Textos
 
     crear_tweens(texto) 
     {
-
-        const array_tweens = [
-            ' Ouch! ',
-            ' Fuera de aqui! \n cacho subnormal! '
-        ];
-
-        array_tweens.forEach(tween =>
-        {
-
-            if (tween.slice(0, 5) === texto.slice(0, 5)) {
-
-                this.relatedScene.tweens.add({
-                    targets: this.txt,
-                    y: this.relatedScene.sys.game.config.height * 3 - 200,
-                    x: this.relatedScene.jugador.get().x,
-                    scale: 1.2,
-                    ease: 'easeOut',
-                    duration: 1500
-                });
-            }
-        });
-
-        // ----------------------------------------------
         const array_tweens2 = [
             ' DonkeyJon ',
             ' Nivel Superado! ',
@@ -83,25 +60,7 @@ export class Textos
         });
     }
 
-    centrar(texto, screenWidth, multip) 
-    {
-
-        const centrarTxt = [
-            ' DonkeyJon ',
-            ' Nivel ',
-            ' Nivel Superado! ',
-            ' Game Over ',
-            ' Siguiente Nivel ',
-            ' Menu Config '
-        ];
-
-        centrarTxt.forEach(centra =>
-        {
-            if (texto.slice(0, 5) === centra.slice(0, 5)) this.txt.setX(centrar_txt(this.txt, screenWidth * multip));
-        });
-    }
-
-    get() 
+    get()
     {
         return this.txt;
     }

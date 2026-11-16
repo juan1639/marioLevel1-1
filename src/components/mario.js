@@ -95,7 +95,7 @@ export class Mario
         const CONTROLES_SALTO = Settings.controls.MOBILE ? this.controlJoy.up : this.controles_mario.space;
 
         if ((CONTROLES_SALTO.isDown)
-            && this.mario.body.velocity.y === 0
+            && this.enSuelo()
             && this.relatedScene.time.now > this.mario.getData('allow-salto') 
             && this.mario.getData('jump-key-up')
         ) 
@@ -149,7 +149,7 @@ export class Mario
 
             } else
             {
-                if (this.mario.body.velocity.y === 0)
+                if (this.enSuelo())
                 {
                     this.mario.anims.play('mario-quieto', true);
                 }
@@ -177,7 +177,7 @@ export class Mario
 
     selecc_anima_salto_anima_suelo()
     {
-        if (this.mario.body.velocity.y !== 0)
+        if (!this.enSuelo())
         {
             this.mario.anims.play('mario-saltando', true);
         }
@@ -203,15 +203,23 @@ export class Mario
     {
         if (this.mario.body.bottom >= BOTTOM_BOUNDS)
         {
-            console.log(this.mario.body.bottom, this.mario.visible);
-            
-            /* if (this.mario.visible)
-            {
-                this.mario.setVisible(false);
-            } */
-
-            this.mario.setX(this.X_INICIAL).setY(this.Y_INICIAL);
+            this.respawn();
         }
+    }
+
+    // Esta Mario apoyado en algo solido? (velocity.y === 0 tambien es cierto en lo alto del salto)
+    enSuelo()
+    {
+        return this.mario.body.blocked.down || this.mario.body.touching.down;
+    }
+
+    // Vuelve a la posicion inicial, parado (sin conservar velocidad ni aceleracion)
+    respawn()
+    {
+        this.mario.setPosition(this.X_INICIAL, this.Y_INICIAL);
+        this.mario.setVelocity(0, 0);
+        this.mario.setData('acelera', Settings.MARIO.VEL_SCROLL);
+        this.mario.anims.play('mario-quieto', true);
     }
 
     animaciones_mario()

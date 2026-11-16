@@ -11,6 +11,7 @@ export function hitBrick(player, tile, context)
     // Bloques id:
     const BLOQUE_LADRILLO = 15;
     const BLOQUE_INTERROGACION = 14;
+    const BLOQUE_USADO = 16; // El tileset no tiene bloque 'vacio': se usa el bloque-piramide
     const CIELO_AZUL = 1;
 
     // ¿Está el jugador claramente por debajo del tile?
@@ -27,8 +28,8 @@ export function hitBrick(player, tile, context)
         const worldX = tile.getCenterX();
         const worldY = tile.getCenterY();
 
-        // Lanza partículas desde ese punto        
-        context.emisor.create(worldX, worldY);
+        // Lanza partículas desde ese punto
+        context.emisor.explotar(worldX, worldY);
 
         sumar_puntos(0, 10, context);
 
@@ -37,21 +38,22 @@ export function hitBrick(player, tile, context)
 
     if (tile.index === BLOQUE_INTERROGACION && isBlockeUp)
     {
-        // context.layer1.removeTileAt(tile.x, tile.y);
-        context.layer1.putTileAt(CIELO_AZUL, tile.x, tile.y);
-
         // Coordenadas del tile en píxeles
         const worldX = tile.getCenterX();
         const worldY = tile.getCenterY();
 
-        // Anima bloque-push:
-        const dura = 450;      
-        const animaBloque = new AnimaBloques(context, {
-            offsetY: -16, easeEtc: 'Sine.easeOut', duracion: dura, conYoyo: true
-        });
-        animaBloque.create(worldX, worldY);
+        // El bloque pasa a ser un bloque 'usado' (solido, ya no se puede volver a golpear).
+        // Se oculta mientras dura la animacion, pero sigue siendo solido:
+        const bloqueUsado = context.layer1.putTileAt(BLOQUE_USADO, tile.x, tile.y);
+        bloqueUsado.setVisible(false);
 
-        context.time.delayedCall(dura * 1.5, () => context.layer1.putTileAt(BLOQUE_INTERROGACION, tile.x, tile.y), null);
+        // Anima bloque-push:
+        const dura = 450;
+        const animaBloque = new AnimaBloques(context, {
+            offsetY: -16, easeEtc: 'Sine.easeOut', duracion: dura, conYoyo: true,
+            frame: BLOQUE_USADO - 1
+        });
+        animaBloque.create(worldX, worldY, () => bloqueUsado.setVisible(true));
 
         play_sonidos(context.push_block, false, 0.8);
     }
@@ -100,12 +102,7 @@ export function hitVsGoombas(mario, goomba, context)
     else
     {
         // Mario muere
-        const mario_ini_pos = [
-            Settings.MARIO.X_INICIAL * (Settings.screen.TILE_X * Settings.getLayer1().scaleX),
-            Settings.MARIO.Y_INICIAL * (Settings.screen.TILE_Y * Settings.getLayer1().scaleY)
-        ];
-
-        context.mario.get().setX(mario_ini_pos[0]).setY(mario_ini_pos[1]);
+        context.mario.respawn();
         //marioDeath(mario, context);
     }
 }

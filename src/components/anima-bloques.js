@@ -8,11 +8,12 @@ export class AnimaBloques
         this.config = config;
     }
   
-    create(coorX, coorY)
+    create(coorX, coorY, alTerminar)
     {
-        const {offsetY, easeEtc, duracion, conYoyo} = this.config;
+        const {offsetY, easeEtc, duracion, conYoyo, frame = 13} = this.config;
 
-        this.bloque = this.relatedScene.physics.add.sprite(coorX, coorY, 'general-ssheet', 13);
+        // Sprite normal (sin fisicas): solo es decorativo, el tile de debajo es el que colisiona
+        this.bloque = this.relatedScene.add.sprite(coorX, coorY, 'general-ssheet', frame);
 
         this.bloque.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
@@ -22,21 +23,16 @@ export class AnimaBloques
             ease: easeEtc,
             duration: duracion,
             yoyo: conYoyo,
-            // delay: 100,
-            // repeat: -1,
-            // repeatDelay: frecuencia
-        });
-
-        const timeline = this.relatedScene.add.timeline([
+            onComplete: () =>
             {
-                at: duracion * 1.5,
-                run: () => this.bloque.setVisible(false)
+                this.bloque.destroy();
+
+                if (alTerminar)
+                {
+                    alTerminar();
+                }
             }
-        ]);
-
-        timeline.play();
-
-        console.log(this.bloque);
+        });
     }
 
     get()
