@@ -81,6 +81,7 @@ export class Preloader extends Scene
         this.load.audio('level-up', 'audio/level-up.mp3');
         this.load.audio('seta', 'audio/seta.mp3');
         this.load.audio('estrella', 'audio/estrella.mp3');
+        this.load.audio('extralive', 'audio/extralive.mp3');
     }
 
     create ()

@@ -214,14 +214,13 @@ export function cogerSeta(mario, seta, context)
     const yArriba = seta.y - seta.displayHeight;
     seta.destroy();
 
-    play_sonidos(context.sonido_powerup, false, 0.8);
-
     if (tipo === '1up')
     {
-        sumar_vida(context);
-        mostrar_puntos(context, '1up', x, yArriba);
+        sumar_vida(context, x, yArriba);
         return;
     }
+
+    play_sonidos(context.sonido_powerup, false, 0.8);
 
     if (tipo === 'estrella')
     {
@@ -320,17 +319,23 @@ export function sumar_moneda(context)
     if (Settings.marcadores.monedas >= Settings.MONEDA.PARA_VIDA)
     {
         Settings.marcadores.monedas -= Settings.MONEDA.PARA_VIDA;
-        sumar_vida(context);
-        play_sonidos(context.sonido_powerup, false, 0.8);
+
+        // El '1up' sale encima de la cabeza de Mario
+        const mario = context.mario.get();
+        sumar_vida(context, mario.x, mario.getTopCenter().y);
     }
 
     context.marcadores.update('monedas', Settings.marcadores.monedas);
 }
 
-export function sumar_vida(context)
+// Vida extra (seta verde o 100 monedas): marcador, sonido y texto '1up' que sube desde (x, y)
+export function sumar_vida(context, x, y)
 {
     Settings.marcadores.vidas ++;
     context.marcadores.update('vidas', Settings.marcadores.vidas);
+
+    play_sonidos(context.sonido_vida, false, 0.8);
+    mostrar_puntos(context, '1up', x, y);
 }
 
 export function sumar_puntos(valor, context)

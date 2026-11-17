@@ -71,6 +71,7 @@ export class Game extends Scene
         this.sonido_level_up = this.sound.add('level-up');
         this.sonido_estrella = this.sound.add('estrella');
         this.sonido_encoger = this.sound.add('ough');
+        this.sonido_vida = this.sound.add('extralive');
         this.sonido_fuegos = this.sound.add('fireworks');
 
         // Los sonidos son globales (no de la escena): hay que destruirlos al salir/reiniciar
@@ -79,7 +80,7 @@ export class Game extends Scene
             this.sonido_jumpbros, this.bricks_fall, this.push_block, this.goomba_aplastado,
             this.musica_principal, this.sonido_muerte, this.sonido_powerup,
             this.sonido_moneda, this.sonido_level_up, this.sonido_fuegos, this.sonido_estrella,
-            this.sonido_encoger
+            this.sonido_encoger, this.sonido_vida
         ];
         this.events.once('shutdown', () => sonidos.forEach(sonido => sonido.destroy()));
     }
