@@ -140,7 +140,7 @@ export class Settings
     static marcadores =
     {
         puntos: 0,
-        hi: 5000,
+        hi: 9000,
         hiNombre: '', // nombre de quien tiene el record ('' = sin nombre)
         vidas: Settings.VIDAS_INICIALES,
         monedas: 0,

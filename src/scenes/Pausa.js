@@ -17,7 +17,7 @@ export class Pausa extends Scene
         // Oscurece el juego que queda detras
         this.add.rectangle(0, 0, ancho, alto, 0x000000, 0.5).setOrigin(0, 0);
 
-        this.add.text(ancho / 2, alto / 2 - 30, 'PAUSA', {
+        this.add.text(ancho / 2, alto / 2 - 30, 'Pausa', {
             fontFamily: 'arial, sans-serif', fontStyle: 'bold', fontSize: 64, color: '#ff7',
             stroke: '#e91', strokeThickness: 10
         }).setOrigin(0.5);
