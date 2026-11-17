@@ -24,6 +24,9 @@ const config = {
           debug: false
         }
     },
+    input: {
+        activePointers: 3 // varios dedos a la vez: joystick + boton de salto
+    },
     plugins: {
         global: [
             // Joystick virtual (controles tactiles). Se obtiene con plugins.get('rexvirtualjoystickplugin')

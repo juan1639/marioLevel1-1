@@ -1,5 +1,6 @@
 import { Settings } from "../scenes/settings";
 import { Textos } from "./textos.js";
+import { BotonSalto } from "./botonycruceta.js";
 import { play_sonidos, crear_animacion, ms_restantes } from "../utils/functions";
 
 export class Mario 
@@ -63,7 +64,7 @@ export class Mario
             // base: this.add.image(0, 0, 'base-joystick').setScale(2),
             thumb: this.relatedScene.add.circle(0, 0, 28, 0xcccccc),
             // thumb: this.add.image(0, 0, 'base-joystick').setScale(1)
-            dir: '8dir',
+            dir: 'left&right', // solo izquierda/derecha: para saltar esta el boton 'A'
             fixed: true,
             enable: true
         });
@@ -83,6 +84,13 @@ export class Mario
         this.mobile_controls_option.get().setAlpha(0.7);
 
         this.controlJoy = this.joyStick.createCursorKeys();
+
+        // Boton de salto (controles tactiles), simetrico al joystick en la esquina derecha:
+        const ANCHO = this.relatedScene.sys.game.config.width;
+        const ALTO = this.relatedScene.sys.game.config.height;
+
+        this.botonSalto = new BotonSalto(this.relatedScene, { x: ANCHO - 128, y: ALTO - 96, radio: 50 });
+        this.botonSalto.create();
         this.controles_mario = this.relatedScene.input.keyboard.createCursorKeys();
         this.teclas_correr = this.relatedScene.input.keyboard.addKeys('SHIFT,Z');
 
@@ -93,12 +101,13 @@ export class Mario
         }
     }
 
-    // Oculta el texto 'Touch controls' y coloca el joystick en pantalla
+    // Oculta el texto 'Touch controls' y muestra el joystick y el boton de salto
     activar_controles_moviles()
     {
         Settings.controls.MOBILE = true;
         this.mobile_controls_option.get().setAlpha(0);
         this.joyStick.y = this.relatedScene.sys.game.config.height - 96;
+        this.botonSalto.mostrar(true);
     }
 
     update()
@@ -116,7 +125,7 @@ export class Mario
 
     salto()
     {
-        const CONTROLES_SALTO = Settings.controls.MOBILE ? this.controlJoy.up : this.controles_mario.space;
+        const CONTROLES_SALTO = Settings.controls.MOBILE ? this.botonSalto : this.controles_mario.space;
 
         if ((CONTROLES_SALTO.isDown)
             && this.enSuelo()
@@ -197,7 +206,7 @@ export class Mario
     {
         if (Settings.controls.MOBILE)
         {
-            return this.joyStick.force >= this.joyStick.radius * Settings.MARIO.JOYSTICK_CORRER;
+            return Math.abs(this.joyStick.forceX) >= this.joyStick.radius * Settings.MARIO.JOYSTICK_CORRER;
         }
 
         return this.teclas_correr.SHIFT.isDown || this.teclas_correr.Z.isDown;

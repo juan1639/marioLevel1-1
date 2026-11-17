@@ -34,7 +34,7 @@ There are no tests and no linter.
 - `set_colliders()` sets which tile indices are solid and registers the colliders and overlaps.
 - Two cameras: the main one follows Mario and is bounded to the map, and a second `view-scores` camera at the top renders the HUD. HUD objects are placed at negative Y (`scrollY: -32`) so only that camera sees them.
 - The physics world's right bound ends just past the flagpole (`Settings.FIN_NIVEL.MASTIL_X`), so Mario can't jump over it. `FinNivel` (`src/components/fin-nivel.js`) detects contact with the pole and runs the end-of-level sequence. During that sequence Mario's body is disabled and tweens move him. At the end it restarts the scene, keeping points, coins and lives.
-- Tapping the bottom-left third of the screen switches to mobile (joystick) controls.
+- Tapping the bottom-left third of the screen switches to mobile controls: a horizontal-only joystick (pushed near the edge = run) and a jump button `BotonSalto` (`botonycruceta.js`) that exposes `isDown`/`isUp` like a key. Multi-touch needs `input.activePointers` in `main.js`.
 
 **Collision logic** lives in `src/utils/functions.js`:
 - `hitBrick`: big Mario breaks bricks (particles and points), small Mario only bumps them. A question block becomes tile 41 (the "used" question block, solid but not hittable again) and releases its contents after the bump.
