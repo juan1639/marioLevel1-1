@@ -5,6 +5,17 @@ la librería Phaser.
 
 **Jugar:** https://juan1639.github.io/marioLevel1-1
 
+<table>
+  <tr>
+    <td><img src="docs/img-mario-clon-1.png" alt="Menú principal" width="100%"></td>
+    <td><img src="docs/img-mario-clon-2.png" alt="Seta saliendo de un bloque" width="100%"></td>
+  </tr>
+  <tr>
+    <td><img src="docs/img-mario-clon-3.png" alt="Estrella y goombas" width="100%"></td>
+    <td><img src="docs/img-mario-clon-4.png" alt="Fin de nivel: bandera y castillo" width="100%"></td>
+  </tr>
+</table>
+
 ## Controles
 
 | Acción | Teclado | Móvil / táctil |
@@ -59,6 +70,7 @@ src/
   components/      Objetos del juego: Mario, goombas, setas, monedas, marcadores, fin de nivel...
   utils/           Colisiones y funciones comunes
 public/assets/     Mapa de Tiled, imágenes y sonidos
+docs/              Capturas de pantalla del README (no se publican con el juego)
 ```
 
 ## Tecnologías
