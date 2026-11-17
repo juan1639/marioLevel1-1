@@ -118,6 +118,9 @@ export class Settings
         [173, 12], [175, 12],
     ];
 
+    // Duracion (ms) de la subida del bloque al golpearlo desde abajo (la bajada dura lo mismo)
+    static DURACION_REBOTE_BLOQUE = 225;
+
     static GOOMBA =
     {
         VEL_X: -60,

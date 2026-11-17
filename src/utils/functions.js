@@ -146,7 +146,7 @@ function rebotarBloque(tile, indiceTile, context, alTerminar)
     cielo.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
 
     const animaBloque = new AnimaBloques(context, {
-        offsetY: -16, easeEtc: 'Sine.easeOut', duracion: 450, conYoyo: true,
+        offsetY: -16, easeEtc: 'Sine.easeOut', duracion: Settings.DURACION_REBOTE_BLOQUE, conYoyo: true,
         frame: indiceTile - 1
     });
 

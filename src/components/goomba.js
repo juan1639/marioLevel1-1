@@ -59,14 +59,31 @@ export class Goombas
             }
 
             // Se activa (empieza a andar) cuando Mario esta a menos de una pantalla
-            if (goomba.getData('quieto') && Math.abs(mario.x - goomba.x) < this.DISTANCIA_ACTIVA_GOOMBAS)
+            if (goomba.getData('quieto'))
             {
-                goomba.setData('quieto', false);
-                goomba.setVelocityX(Settings.GOOMBA.VEL_X);
+                if (Math.abs(mario.x - goomba.x) < this.DISTANCIA_ACTIVA_GOOMBAS)
+                {
+                    goomba.setData('quieto', false);
+                    goomba.setData('dir', Math.sign(Settings.GOOMBA.VEL_X));
+                }
+                return;
             }
-        });
 
-        // Phaser.Actions.IncX(this.goombas.getChildren(), -0.5);
+            // Muerto (aplastado o derrotado): ya no se mueve
+            if (!goomba.body.enable)
+            {
+                return;
+            }
+
+            // Los choques (paredes, otros goombas) cambian su velocidad; aqui solo se recoge el
+            // sentido y se vuelve a poner la velocidad completa. Si un choque lo ha dejado parado
+            // del todo, se da la vuelta (antes se quedaba quieto para siempre, 'andando' en el sitio).
+            const vx = goomba.body.velocity.x;
+            const dir = vx !== 0 ? Math.sign(vx) : -goomba.getData('dir');
+
+            goomba.setData('dir', dir);
+            goomba.setVelocityX(dir * Math.abs(Settings.GOOMBA.VEL_X));
+        });
     }
 
     animaciones_goomba()
