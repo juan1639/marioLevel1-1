@@ -40,10 +40,12 @@ export class Settings
         JOYSTICK_CORRER: 0.85, // fraccion del radio del joystick a partir de la cual se corre
         VEL_SALTO: 455,
         MAX_VEL_SALTO: 640,
-        ACELERACION: 7,
-        DECELERACION: 14,
-        FRENADO_DERRAPE: 16,  // frenada al pulsar la direccion contraria (derrape)
-        VEL_MIN_DERRAPE: 40,  // por debajo de esta velocidad se da la vuelta sin derrapar
+        // Movimiento horizontal: ritmos en px/s por segundo (no dependen de los Hz del monitor)
+        ACELERACION: 600,      // al pulsar una direccion (0 -> andar en ~0.2 s, con el arranque)
+        DECELERACION: 1300,    // al soltar (o al dejar de correr)
+        FRENADO_DERRAPE: 1800, // al pulsar la direccion contraria (derrape)
+        VEL_ARRANQUE: 80,      // al empezar a moverse (o tras girar) sale ya con esta velocidad
+        VEL_MIN_DERRAPE: 80,   // por debajo de esta velocidad se da la vuelta al instante, sin derrapar
         X_INICIAL: 7,
         Y_INICIAL: 9,
         PAUSA_MUERTE: 600, // ms de pausa antes/despues de la animacion de muerte

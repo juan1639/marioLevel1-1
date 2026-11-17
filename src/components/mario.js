@@ -166,17 +166,14 @@ export class Mario
             this.orientar(false);
         } else
         {
-            if (this.mario.getData('acelera') !== Settings.MARIO.VEL_SCROLL)
+            const acelera = this.mario.getData('acelera');
+
+            if (acelera !== Settings.MARIO.VEL_SCROLL)
             {
-                if (this.mario.getData('acelera') > 0)
-                {
-                    this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.DECELERACION);
-                    this.mario.setData('acelera', this.mario.getData('acelera') < 0 ? 0 : this.mario.getData('acelera'));
-                } else
-                {
-                    this.mario.setData('acelera', this.mario.getData('acelera') + Settings.MARIO.DECELERACION);
-                    this.mario.setData('acelera', this.mario.getData('acelera') > 0 ? 0 : this.mario.getData('acelera'));
-                }
+                // Sin pulsar nada: frena hasta pararse
+                const restante = Math.max(0, Math.abs(acelera) - Settings.MARIO.DECELERACION * this.dt());
+
+                this.mario.setData('acelera', Math.sign(acelera) * restante);
                 this.mario.setVelocityX(this.mario.getData('acelera'));
             } else
             {
@@ -211,19 +208,33 @@ export class Mario
         // Velocidad en el sentido en que se pulsa (negativa si aun va hacia el otro lado)
         let vel = this.mario.getData('acelera') * sentido;
 
-        if (vel < 0)
+        const { ACELERACION, DECELERACION, FRENADO_DERRAPE, VEL_ARRANQUE, VEL_MIN_DERRAPE } = Settings.MARIO;
+        const dt = this.dt();
+
+        if (vel < -VEL_MIN_DERRAPE)
         {
-            // Aun va hacia el otro lado: derrapa (frena mas rapido que lo que acelera)
-            vel = Math.min(MAX, vel + Settings.MARIO.FRENADO_DERRAPE);
+            // Aun va rapido hacia el otro lado: derrapa (frena mucho mas rapido que lo que acelera)
+            vel += FRENADO_DERRAPE * dt;
+
+            // Al terminar el derrape sale ya con impulso hacia el nuevo lado
+            if (vel >= -VEL_MIN_DERRAPE)
+            {
+                vel = VEL_ARRANQUE;
+            }
+        }
+        else if (vel < VEL_ARRANQUE)
+        {
+            // Parado, casi parado o yendo despacio hacia el otro lado: arranca al momento
+            vel = VEL_ARRANQUE;
         }
         else if (vel < MAX)
         {
-            vel = Math.min(MAX, vel + Settings.MARIO.ACELERACION);
+            vel = Math.min(MAX, vel + ACELERACION * dt);
         }
         else if (vel > MAX)
         {
             // Ha dejado de correr: frena poco a poco hasta la velocidad de andar
-            vel = Math.max(MAX, vel - Settings.MARIO.DECELERACION);
+            vel = Math.max(MAX, vel - DECELERACION * dt);
         }
 
         this.mario.setData('acelera', vel * sentido);
@@ -233,6 +244,13 @@ export class Mario
 
         // Las piernas se mueven mas rapido cuanto mas rapido va
         this.mario.anims.timeScale = Math.max(1, Math.abs(vel) / Settings.MARIO.MAX_VEL_ANDAR);
+    }
+
+    // Segundos que han pasado desde el frame anterior (limitado, para que una pausa larga del
+    // navegador no provoque un salto brusco de velocidad)
+    dt()
+    {
+        return Math.min(this.relatedScene.game.loop.delta, 50) / 1000;
     }
 
     // Mira hacia la direccion pulsada. Todos los frames estan dibujados mirando a la derecha
