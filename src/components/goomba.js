@@ -63,8 +63,11 @@ export class Goombas
             {
                 if (Math.abs(mario.x - goomba.x) < this.DISTANCIA_ACTIVA_GOOMBAS)
                 {
+                    // Hay que darle ya la velocidad: si se quedara a 0, en el siguiente frame
+                    // se interpretaria como 'se ha quedado parado' y se daria la vuelta
                     goomba.setData('quieto', false);
                     goomba.setData('dir', Math.sign(Settings.GOOMBA.VEL_X));
+                    goomba.setVelocityX(Settings.GOOMBA.VEL_X);
                 }
                 return;
             }
