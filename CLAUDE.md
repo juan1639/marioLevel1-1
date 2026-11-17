@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-A Phaser 3 (arcade physics) + Vite browser platformer, built on the official Phaser Vite template. Deployed to GitHub Pages. Code identifiers, comments and commit messages are in **Spanish** (e.g. `salto`, `direccion`, `acelera`, `marcadores`). Keep that convention.
+A Phaser 3 (arcade physics) + Vite browser platformer, built on the official Phaser Vite template. Deployed to GitHub Pages through GitHub Actions. Code identifiers, comments and commit messages are in **Spanish** (e.g. `salto`, `direccion`, `acelera`, `marcadores`). Keep that convention.
 
 ## Commands
 
 - `npm install`: install dependencies
 - `npm run dev`: dev server with hot reload at http://localhost:8080 (`vite/config.dev.mjs`)
 - `npm run build`: production build to `dist/` (`vite/config.prod.mjs`)
-- `npm run deploy`: builds, then publishes `dist/` to GitHub Pages via `gh-pages`
+- Deployment: every push to `main` runs `.github/workflows/deploy.yml`, which builds and publishes `dist/` to GitHub Pages. There is no deploy script.
 
 There are no tests and no linter.
 
