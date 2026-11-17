@@ -1,12 +1,12 @@
 
-export class Textos 
+export class Textos
 {
-    constructor(scene) 
+    constructor(scene)
     {
         this.relatedScene = scene;
     }
 
-    create(args) 
+    create(args)
     {
         const {
             x, y, origin,
@@ -23,37 +23,8 @@ export class Textos
             fontFamily: family
         });
 
-        this.crear_tweens(texto);
-
         this.txt.setStroke(strokeColor, strokeSize).setShadow(2, 2, shadowColor, 2, bool1, bool2);
         this.txt.setOrigin(origin[0], origin[1]);
-        // this.txt.setX(this.relatedScene.sys.game.config.width / 2);
-    }
-
-    crear_tweens(texto) 
-    {
-        const array_tweens2 = [
-            ' DonkeyJon ',
-            ' Nivel Superado! ',
-            ' Siguiente Nivel '
-        ];
-
-        array_tweens2.forEach(tween =>
-        {
-            if (tween === texto) {
-
-                this.relatedScene.tweens.add({
-                    targets: this.txt,
-                    scale: 1.2,
-                    x: 24,
-                    ease: 'Ease',
-                    yoyo: true,
-                    hold: 900,
-                    duration: 2000,
-                    repeat: -1
-                });
-            }
-        });
     }
 
     get()

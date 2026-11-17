@@ -7,7 +7,7 @@ export class AnimaBloques
         this.relatedScene = scene;
         this.config = config;
     }
-  
+
     create(coorX, coorY, alTerminar)
     {
         const {offsetY, easeEtc, duracion, conYoyo, frame = 13} = this.config;

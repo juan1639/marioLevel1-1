@@ -22,7 +22,7 @@ export class Preloader extends Scene
             x: Math.floor(widthScreen / 2), y: Math.floor(heightScreen / 4),
             origin: [0.5, 0], texto: ' Cargando... ',
             size: 20, style: '', fll: '#ff0', family: 'verdana',
-            strokeColor: '#ee9011', strokeSize: 4, ShadowColor: '#111111', bool1: false, bool2: true 
+            strokeColor: '#ee9011', strokeSize: 4, ShadowColor: '#111111', bool1: false, bool2: true
         });
 
         //  A simple progress bar. This is the outline of the bar.
@@ -43,26 +43,20 @@ export class Preloader extends Scene
         //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
         this.load.on('progress', (progress) => {
 
-            //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
+            // Barra de progreso: crece segun el % cargado
             bar.width = (Math.floor(widthScreen / 1.55) * progress);
         });
     }
 
     preload ()
     {
-        //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
-        this.load.image('logo', 'logo.png');
-        // this.load.image('bg-black', 'bg-black.png');
         this.load.spritesheet('boton-fullscreen', 'boton-fullscreen.png', {frameWidth: 64, frameHeight: 64});
 
         this.load.image('brick-particle', 'particula-ladrillo-mario.png');
-        
+
         this.load.tilemapTiledJSON('map1', 'mario-level-1-1.json');
         this.load.image('tiles1', 'super_mario.png');
-
-        // this.load.tilemapTiledJSON('map1', 'super-mario.json');
-        // this.load.image('tiles1', 'super-mario.png');
 
         this.load.spritesheet('mario-ss1', 'mario-ss1.png', {frameWidth: 16, frameHeight: 16});
         this.load.spritesheet('mario-ss1-grande', 'mario-ss1-grande.png', {frameWidth: 16, frameHeight: 32});
@@ -78,10 +72,8 @@ export class Preloader extends Scene
         this.load.audio('bricks-fall', 'audio/bricks-fall.mp3');
         this.load.audio('push-block', 'audio/wall.wav');
         this.load.audio('p-ping', 'audio/p-ping.mp3');
-        this.load.audio('oh-no', 'audio/oh-no.mp3');
         this.load.audio('ough', 'audio/ough.mp3');
         this.load.audio('goomba-aplastado', 'audio/squit.mp3');
-        this.load.audio('mario-tuberias', 'audio/mario-tuberias.mp3');
         this.load.audio('gameover', 'audio/gameover_mario.mp3');
         this.load.audio('musica-principal', 'audio/musica-mario-bros.mp3');
         this.load.audio('lose-life', 'audio/mario-lose-life.mp3');
@@ -92,10 +84,6 @@ export class Preloader extends Scene
 
     create ()
     {
-        //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-        //  For example, you can define global animations here, so we can use them in other scenes.
-
-        //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
         this.scene.start('MainMenu');
     }
 }

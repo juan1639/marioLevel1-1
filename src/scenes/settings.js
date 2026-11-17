@@ -1,6 +1,6 @@
 // ===========================================================================
 //  ELEMENTOS DEL MAPA DE TILES (json)
-//  
+//
 //  1.cielo                 | 1-3 5-7.nube              | 9-10.bandera
 //  11.moneda               | 12.seta(roja)             | 13,17.mastil
 //  14.bloque-interrog.     | 15.bloque-ladrillo        | 16.bloque-piramides
@@ -22,7 +22,7 @@ export class Settings
         TILE_X: 16,
         TILE_Y: 16
     };
-    
+
     static layer1 =
     {
         scaleX: 2,
@@ -133,8 +133,6 @@ export class Settings
         [86, 12], [88, 12],
         [153, 12], [154, 12],
     ];
-
-    static gameOver = false;
 
     static VIDAS_INICIALES = 3;
 

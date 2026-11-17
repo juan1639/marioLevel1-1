@@ -24,15 +24,9 @@ export class ColisionadoresInvisibles
 
             this.relatedScene.physics.add.existing(trigger, true); // true = estático
             trigger.setVisible(false); // invisible
-            //trigger.setFillStyle(0xff0000, 0.5); // rojo semitransparente
             this.triggers.add(trigger);
         });
     }
-
-    /* setColliders(goombas, callback)
-    {
-        this.scene.physics.add.collider(goombas, this.triggers, callback);
-    } */
 
     get()
     {

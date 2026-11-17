@@ -3,9 +3,9 @@ import { Textos } from "./textos.js";
 import { BotonSalto } from "./botonycruceta.js";
 import { play_sonidos, crear_animacion, ms_restantes } from "../utils/functions";
 
-export class Mario 
+export class Mario
 {
-    constructor(scene, args) 
+    constructor(scene, args)
     {
         this.relatedScene = scene;
         this.args = args;
@@ -41,7 +41,6 @@ export class Mario
         this.mario.setMaxVelocity(Settings.MARIO.MAX_VEL_CORRER, Settings.MARIO.MAX_VEL_SALTO);
 
         this.mario.setData('acelera', Settings.MARIO.VEL_SCROLL);
-        // this.mario.setData('aceleraSalto', Settings.getVelSalto());
         this.mario.setData('allow-salto', 0);
         this.mario.setData('cadencia-salto', 99);
         this.mario.setData('jump-key-up', true);
@@ -58,12 +57,9 @@ export class Mario
         this.joyStick = this.relatedScene.plugins.get('rexvirtualjoystickplugin').add(this.relatedScene, {
             x: 128,
             y: -999,
-            // y: this.relatedScene.sys.game.config.height - 96,
             radius: 50,
             base: this.relatedScene.add.circle(0, 0, 64, 0x888888, 0.6),
-            // base: this.add.image(0, 0, 'base-joystick').setScale(2),
             thumb: this.relatedScene.add.circle(0, 0, 28, 0xcccccc),
-            // thumb: this.add.image(0, 0, 'base-joystick').setScale(1)
             dir: 'left&right', // solo izquierda/derecha: para saltar esta el boton 'A'
             fixed: true,
             enable: true
@@ -71,7 +67,7 @@ export class Mario
 
         // SELECT - MOBILE-CONTROLS (rexvirtual-joystick-plugin):
         this.mobile_controls_option = new Textos(this.relatedScene);
-        
+
         this.mobile_controls_option.create({
             x: 128,
             y: this.relatedScene.sys.game.config.height - 96,
@@ -129,9 +125,9 @@ export class Mario
 
         if ((CONTROLES_SALTO.isDown)
             && this.enSuelo()
-            && this.relatedScene.time.now > this.mario.getData('allow-salto') 
+            && this.relatedScene.time.now > this.mario.getData('allow-salto')
             && this.mario.getData('jump-key-up')
-        ) 
+        )
         {
             this.mario.setVelocityY(-(Settings.MARIO.VEL_SALTO + Math.abs(this.mario.getData('acelera') * 0.52)));
             this.mario.setData('allow-salto', this.relatedScene.time.now + this.mario.getData('cadencia-salto'));
@@ -156,21 +152,19 @@ export class Mario
     {
         const CONTROLES_DIR = Settings.controls.MOBILE ? this.controlJoy : this.controles_mario;
 
-        if (CONTROLES_DIR.left.isDown) 
+        if (CONTROLES_DIR.left.isDown)
         {
             this.gestionar_aceleracion(false);
             this.mario.setVelocityX(this.mario.getData('acelera'));
             this.selecc_anima_salto_anima_suelo();
             this.mario.setFlipX(true);
-            
-        } else if (CONTROLES_DIR.right.isDown) 
+        } else if (CONTROLES_DIR.right.isDown)
         {
             this.gestionar_aceleracion(true);
             this.mario.setVelocityX(this.mario.getData('acelera'));
             this.selecc_anima_salto_anima_suelo();
             this.mario.setFlipX(false);
-
-        } else 
+        } else
         {
             if (this.mario.getData('acelera') !== Settings.MARIO.VEL_SCROLL)
             {
@@ -178,15 +172,12 @@ export class Mario
                 {
                     this.mario.setData('acelera', this.mario.getData('acelera') - Settings.MARIO.DECELERACION);
                     this.mario.setData('acelera', this.mario.getData('acelera') < 0 ? 0 : this.mario.getData('acelera'));
-
                 } else
                 {
                     this.mario.setData('acelera', this.mario.getData('acelera') + Settings.MARIO.DECELERACION);
                     this.mario.setData('acelera', this.mario.getData('acelera') > 0 ? 0 : this.mario.getData('acelera'));
-
                 }
                 this.mario.setVelocityX(this.mario.getData('acelera'));
-
             } else
             {
                 if (this.enSuelo())
@@ -247,7 +238,6 @@ export class Mario
             this.playAnim('andar');
         }
     }
-
 
     checkFallOutBounds(BOTTOM_BOUNDS)
     {
@@ -561,18 +551,8 @@ export class Mario
         });
     }
 
-    get() 
+    get()
     {
         return this.mario;
-    }
-
-    get_joystick()
-    {
-        return this.joyStick;
-    }
-
-    get_mobile_controls()
-    {
-        return this.mobile_controls_option;
     }
 }

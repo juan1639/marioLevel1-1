@@ -3,7 +3,7 @@ import { crear_animacion } from "../utils/functions.js";
 
 export class Goombas
 {
-    constructor(scene) 
+    constructor(scene)
     {
         this.relatedScene = scene;
     }
@@ -29,7 +29,6 @@ export class Goombas
         this.goombas.children.iterate(goomba =>
         {
             goomba.setScale(Settings.getLayer1().scaleX, Settings.getLayer1().scaleY);
-            // this.goomba.setSize(Phaser.Math.RoundTo(this.goomba.width / 1.4, 0, 10), this.goomba.body.height);
             goomba.setVisible(true);
             goomba.setFrame(0);
             goomba.body.setAllowGravity(true);
@@ -92,7 +91,7 @@ export class Goombas
     animaciones_goomba()
     {
         crear_animacion(this.relatedScene, {
-            key: 'goomba-andar', 
+            key: 'goomba-andar',
             frames: this.relatedScene.anims.generateFrameNumbers(this.SPRITE_SHEET, {frames: [0, 1]}),
             frameRate: 5,
             yoyo: true,
@@ -106,7 +105,7 @@ export class Goombas
         });
     }
 
-    get() 
+    get()
     {
         return this.goombas;
     }
