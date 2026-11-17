@@ -42,10 +42,14 @@ export class Settings
         MAX_VEL_SALTO: 640,
         // Movimiento horizontal: ritmos en px/s por segundo (no dependen de los Hz del monitor)
         ACELERACION: 600,      // al pulsar una direccion (0 -> andar en ~0.2 s, con el arranque)
-        DECELERACION: 1300,    // al soltar (o al dejar de correr)
+        DECELERACION: 2000,    // al soltar (o al dejar de correr)
         FRENADO_DERRAPE: 1800, // al pulsar la direccion contraria (derrape)
         VEL_ARRANQUE: 80,      // al empezar a moverse (o tras girar) sale ya con esta velocidad
         VEL_MIN_DERRAPE: 80,   // por debajo de esta velocidad se da la vuelta al instante, sin derrapar
+        // En el aire el control es mas limitado (mismas unidades). Se conserva el impulso del salto:
+        AIRE_ACELERACION: 380,   // al pulsar una direccion
+        AIRE_FRENADO: 1100,       // al pulsar la direccion contraria (sin derrape ni giro instantaneo)
+        AIRE_DECELERACION: 400,  // al soltar (casi no frena)
         X_INICIAL: 7,
         Y_INICIAL: 9,
         PAUSA_MUERTE: 600, // ms de pausa antes/despues de la animacion de muerte

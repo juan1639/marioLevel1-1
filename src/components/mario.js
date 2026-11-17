@@ -170,8 +170,9 @@ export class Mario
 
             if (acelera !== Settings.MARIO.VEL_SCROLL)
             {
-                // Sin pulsar nada: frena hasta pararse
-                const restante = Math.max(0, Math.abs(acelera) - Settings.MARIO.DECELERACION * this.dt());
+                // Sin pulsar nada: frena hasta pararse (en el aire casi no frena)
+                const frenada = this.enSuelo() ? Settings.MARIO.DECELERACION : Settings.MARIO.AIRE_DECELERACION;
+                const restante = Math.max(0, Math.abs(acelera) - frenada * this.dt());
 
                 this.mario.setData('acelera', Math.sign(acelera) * restante);
                 this.mario.setVelocityX(this.mario.getData('acelera'));
@@ -209,9 +210,23 @@ export class Mario
         let vel = this.mario.getData('acelera') * sentido;
 
         const { ACELERACION, DECELERACION, FRENADO_DERRAPE, VEL_ARRANQUE, VEL_MIN_DERRAPE } = Settings.MARIO;
+        const { AIRE_ACELERACION, AIRE_FRENADO } = Settings.MARIO;
         const dt = this.dt();
 
-        if (vel < -VEL_MIN_DERRAPE)
+        if (!this.enSuelo())
+        {
+            // En el aire: se cambia de direccion y se acelera mas despacio, y se conserva
+            // la velocidad que llevaba (aunque se suelte 'correr' a mitad del salto)
+            if (vel < 0)
+            {
+                vel = Math.min(MAX, vel + AIRE_FRENADO * dt);
+            }
+            else if (vel < MAX)
+            {
+                vel = Math.min(MAX, vel + AIRE_ACELERACION * dt);
+            }
+        }
+        else if (vel < -VEL_MIN_DERRAPE)
         {
             // Aun va rapido hacia el otro lado: derrapa (frena mucho mas rapido que lo que acelera)
             vel += FRENADO_DERRAPE * dt;
@@ -239,8 +254,8 @@ export class Mario
 
         this.mario.setData('acelera', vel * sentido);
 
-        // Derrape: todavia se mueve en sentido contrario al pulsado, con cierta velocidad
-        this.derrapando = vel < -Settings.MARIO.VEL_MIN_DERRAPE;
+        // Derrape: en el suelo, todavia se mueve en sentido contrario al pulsado, con cierta velocidad
+        this.derrapando = this.enSuelo() && vel < -Settings.MARIO.VEL_MIN_DERRAPE;
 
         // Las piernas se mueven mas rapido cuanto mas rapido va
         this.mario.anims.timeScale = Math.max(1, Math.abs(vel) / Settings.MARIO.MAX_VEL_ANDAR);
