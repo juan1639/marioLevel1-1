@@ -42,6 +42,8 @@ export class Settings
         MAX_VEL_SALTO: 640,
         ACELERACION: 7,
         DECELERACION: 14,
+        FRENADO_DERRAPE: 16,  // frenada al pulsar la direccion contraria (derrape)
+        VEL_MIN_DERRAPE: 40,  // por debajo de esta velocidad se da la vuelta sin derrapar
         X_INICIAL: 7,
         Y_INICIAL: 9,
         PAUSA_MUERTE: 600, // ms de pausa antes/despues de la animacion de muerte

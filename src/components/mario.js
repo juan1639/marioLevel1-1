@@ -157,13 +157,13 @@ export class Mario
             this.gestionar_aceleracion(false);
             this.mario.setVelocityX(this.mario.getData('acelera'));
             this.selecc_anima_salto_anima_suelo();
-            this.mario.setFlipX(true);
+            this.orientar(true);
         } else if (CONTROLES_DIR.right.isDown)
         {
             this.gestionar_aceleracion(true);
             this.mario.setVelocityX(this.mario.getData('acelera'));
             this.selecc_anima_salto_anima_suelo();
-            this.mario.setFlipX(false);
+            this.orientar(false);
         } else
         {
             if (this.mario.getData('acelera') !== Settings.MARIO.VEL_SCROLL)
@@ -211,7 +211,12 @@ export class Mario
         // Velocidad en el sentido en que se pulsa (negativa si aun va hacia el otro lado)
         let vel = this.mario.getData('acelera') * sentido;
 
-        if (vel < MAX)
+        if (vel < 0)
+        {
+            // Aun va hacia el otro lado: derrapa (frena mas rapido que lo que acelera)
+            vel = Math.min(MAX, vel + Settings.MARIO.FRENADO_DERRAPE);
+        }
+        else if (vel < MAX)
         {
             vel = Math.min(MAX, vel + Settings.MARIO.ACELERACION);
         }
@@ -223,8 +228,19 @@ export class Mario
 
         this.mario.setData('acelera', vel * sentido);
 
+        // Derrape: todavia se mueve en sentido contrario al pulsado, con cierta velocidad
+        this.derrapando = vel < -Settings.MARIO.VEL_MIN_DERRAPE;
+
         // Las piernas se mueven mas rapido cuanto mas rapido va
         this.mario.anims.timeScale = Math.max(1, Math.abs(vel) / Settings.MARIO.MAX_VEL_ANDAR);
+    }
+
+    // Mira hacia la direccion pulsada. Todos los frames estan dibujados mirando a la derecha
+    // salvo el de derrape (frame 4), que mira a la izquierda: mientras derrapa se invierte.
+    orientar(izquierda)
+    {
+        const derrape = this.derrapando && this.enSuelo();
+        this.mario.setFlipX(derrape ? !izquierda : izquierda);
     }
 
     selecc_anima_salto_anima_suelo()
@@ -232,6 +248,10 @@ export class Mario
         if (!this.enSuelo())
         {
             this.playAnim('saltando');
+        }
+        else if (this.derrapando)
+        {
+            this.playAnim('derrape');
         }
         else
         {
@@ -541,6 +561,18 @@ export class Mario
         crear_animacion(this.relatedScene, {
             key: 'mario-grande-saltando',
             frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 5}],
+            frameRate: 10,
+        });
+
+        crear_animacion(this.relatedScene, {
+            key: 'mario-derrape',
+            frames: [{key: this.SPRITE_SHEET, frame: 4}],
+            frameRate: 10,
+        });
+
+        crear_animacion(this.relatedScene, {
+            key: 'mario-grande-derrape',
+            frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 4}],
             frameRate: 10,
         });
 
