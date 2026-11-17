@@ -13,9 +13,10 @@ export function hitBrick(player, tile, context)
     const CIELO_AZUL = 1;
 
     // Golpe desde abajo a un bloque: derrota a los goombas que tenga encima
+    // y hace saltar a las setas/estrella que esten encima
     if ((tile.index === BLOQUE_LADRILLO || tile.index === BLOQUE_INTERROGACION) && isBlockeUp)
     {
-        golpearEnemigosEncima(tile.getLeft(), tile.getRight(), tile.getTop(), context);
+        golpearLoQueHayEncima(tile.getLeft(), tile.getRight(), tile.getTop(), context);
     }
 
     // Ladrillo de varias monedas (no se rompe aunque Mario sea grande)
@@ -270,20 +271,40 @@ export function goombaDerrotado(goomba, context)
     });
 }
 
-// Al golpear un bloque desde abajo, los goombas que esten encima de el quedan derrotados
+// Al golpear un bloque desde abajo:
+//  - los goombas que esten encima quedan derrotados
+//  - las setas y la estrella que esten encima dan un salto y se van hacia el lado
+//    contrario al centro del bloque (si estaban en la mitad derecha, hacia la derecha)
 // (izq, der, top = bordes del bloque en pixeles del mundo)
-function golpearEnemigosEncima(izq, der, top, context)
+function golpearLoQueHayEncima(izq, der, top, context)
 {
     const MARGEN = 6;
+    const centro = (izq + der) / 2;
+
+    const estaEncima = (body) =>
+        body.enable && body.right > izq && body.left < der && Math.abs(body.bottom - top) <= MARGEN;
 
     context.goombas.get().getChildren().slice().forEach(goomba =>
     {
-        const body = goomba.body;
-
-        if (body.enable && body.right > izq && body.left < der && Math.abs(body.bottom - top) <= MARGEN)
+        if (estaEncima(goomba.body))
         {
             goombaDerrotado(goomba, context);
         }
+    });
+
+    context.setas.get().getChildren().forEach(seta =>
+    {
+        const body = seta.body;
+
+        if (!estaEncima(body))
+        {
+            return;
+        }
+
+        const velX = seta.getData('tipo') === 'estrella' ? Settings.ESTRELLA.VEL_X : Settings.SETA.VEL_X;
+        const sentido = seta.x >= centro ? 1 : -1;
+
+        body.setVelocity(sentido * velX, -Settings.SETA.SALTO_GOLPE);
     });
 }
 

@@ -103,7 +103,8 @@ export class Settings
     {
         VEL_X: 100,
         DURACION_SALIDA: 700, // ms que tarda en salir del bloque
-        PUNTOS: 1000
+        PUNTOS: 1000,
+        SALTO_GOLPE: 380      // salto de una seta/estrella al golpear desde abajo el bloque en el que esta
     };
 
     static ARRAY_GOOMBAS =
