@@ -24,6 +24,8 @@ export class Mario
         this.ANCHO_BODY = Math.round(Settings.screen.TILE_X / 1.4);
         this.ALTO_BODY = Settings.screen.TILE_Y;
         this.ALTO_BODY_GRANDE = Settings.screen.TILE_Y * 2;
+        this.ALTO_BODY_AGACHADO = Settings.screen.TILE_Y; // agachado cabe por huecos de 1 bloque
+        this.agachado = false;
 
         this.mario = this.relatedScene.physics.add.sprite(this.X_INICIAL, this.Y_INICIAL, this.SPRITE_SHEET);
 
@@ -60,7 +62,7 @@ export class Mario
             radius: 50,
             base: this.relatedScene.add.circle(0, 0, 64, 0x888888, 0.6),
             thumb: this.relatedScene.add.circle(0, 0, 28, 0xcccccc),
-            dir: 'left&right', // solo izquierda/derecha: para saltar esta el boton 'A'
+            dir: '8dir', // abajo = agacharse; arriba no hace nada (para saltar esta el boton 'A')
             fixed: true,
             enable: true
         });
@@ -113,6 +115,7 @@ export class Mario
             return;
         }
 
+        this.gestionar_agachado();
         this.salto();
         this.direccion();
         // (El fin de nivel, al tocar el mastil, lo comprueba FinNivel.update())
@@ -152,6 +155,14 @@ export class Mario
     {
         const CONTROLES_DIR = Settings.controls.MOBILE ? this.controlJoy : this.controles_mario;
 
+        // Agachado no puede andar: si iba rapido, se desliza agachado hasta pararse
+        if (this.agachado)
+        {
+            this.frenar();
+            this.playAnim('agachado');
+            return;
+        }
+
         if (CONTROLES_DIR.left.isDown)
         {
             this.gestionar_aceleracion(false);
@@ -166,28 +177,90 @@ export class Mario
             this.orientar(false);
         } else
         {
-            const acelera = this.mario.getData('acelera');
-
-            if (acelera !== Settings.MARIO.VEL_SCROLL)
+            // Sin pulsar nada: frena; una vez parado, quieto (o saltando si esta en el aire)
+            if (!this.frenar())
             {
-                // Sin pulsar nada: frena hasta pararse (en el aire casi no frena)
-                const frenada = this.enSuelo() ? Settings.MARIO.DECELERACION : Settings.MARIO.AIRE_DECELERACION;
-                const restante = Math.max(0, Math.abs(acelera) - frenada * this.dt());
-
-                this.mario.setData('acelera', Math.sign(acelera) * restante);
-                this.mario.setVelocityX(this.mario.getData('acelera'));
-            } else
-            {
-                if (this.enSuelo())
-                {
-                    this.playAnim('quieto');
-                }
-                else
-                {
-                    this.playAnim('saltando');
-                }
+                this.playAnim(this.enSuelo() ? 'quieto' : 'saltando');
             }
         }
+    }
+
+    // Frena hasta pararse (en el aire casi no frena). Devuelve false si ya estaba parado.
+    frenar()
+    {
+        const acelera = this.mario.getData('acelera');
+
+        if (acelera === Settings.MARIO.VEL_SCROLL)
+        {
+            return false;
+        }
+
+        const frenada = this.enSuelo() ? Settings.MARIO.DECELERACION : Settings.MARIO.AIRE_DECELERACION;
+        const restante = Math.max(0, Math.abs(acelera) - frenada * this.dt());
+
+        this.mario.setData('acelera', Math.sign(acelera) * restante);
+        this.mario.setVelocityX(this.mario.getData('acelera'));
+        return true;
+    }
+
+    // ¿Pide agacharse? Teclado: flecha abajo. Movil: joystick hacia abajo (sin inclinarlo a los lados).
+    pulsandoAbajo()
+    {
+        if (Settings.controls.MOBILE)
+        {
+            return this.controlJoy.down.isDown && !this.controlJoy.left.isDown && !this.controlJoy.right.isDown;
+        }
+
+        return this.controles_mario.down.isDown;
+    }
+
+    // Solo Mario grande se agacha, y solo desde el suelo. Si salta agachado sigue agachado en el aire,
+    // y solo se levanta al estar en el suelo y si hay sitio encima (si no, se quedaria metido en el techo).
+    gestionar_agachado()
+    {
+        const quiere = this.esGrande() && this.pulsandoAbajo();
+
+        if (!this.agachado)
+        {
+            if (quiere && this.enSuelo())
+            {
+                this.setAgachado(true);
+            }
+        }
+        else if (!quiere && this.enSuelo() && this.hayEspacioParaLevantarse())
+        {
+            this.setAgachado(false);
+        }
+    }
+
+    // Agachado: el cuerpo fisico mide la mitad y queda pegado abajo (los pies no se mueven)
+    setAgachado(agachado)
+    {
+        this.agachado = agachado;
+
+        if (agachado)
+        {
+            this.mario.body.setSize(this.ANCHO_BODY, this.ALTO_BODY_AGACHADO, false);
+            this.mario.body.setOffset((this.mario.width - this.ANCHO_BODY) / 2, this.mario.height - this.ALTO_BODY_AGACHADO);
+        }
+        else
+        {
+            this.mario.body.setSize(this.ANCHO_BODY, this.ALTO_BODY_GRANDE, true);
+        }
+    }
+
+    // ¿Hay algun tile solido justo encima de la cabeza (donde iria el cuerpo al ponerse de pie)?
+    hayEspacioParaLevantarse()
+    {
+        const body = this.mario.body;
+        const capa = this.relatedScene.layer1;
+        const yEncima = body.top - (this.ALTO_BODY_GRANDE - this.ALTO_BODY_AGACHADO) * Settings.getLayer1().scaleY / 2;
+
+        return [body.left + 2, body.right - 2].every(x =>
+        {
+            const tile = capa.getTileAtWorldXY(x, yEncima);
+            return !(tile && tile.collides);
+        });
     }
 
     // ¿Esta pulsado 'correr'? Teclado: SHIFT o Z. Movil: joystick empujado casi hasta el fondo.
@@ -331,6 +404,7 @@ export class Mario
         const AJUSTE_Y = (Settings.screen.TILE_Y * Settings.getLayer1().scaleY) / 2;
 
         this.mario.setData('grande', grande);
+        this.agachado = false;
         this.mario.anims.stop();
         this.mario.setTexture(grande ? this.SPRITE_SHEET_GRANDE : this.SPRITE_SHEET, 0);
         this.mario.y += grande ? -AJUSTE_Y : AJUSTE_Y;
@@ -576,7 +650,7 @@ export class Mario
 
         // --- Mario grande ---
         // Mismo orden de frames que el pequeño: 0 = quieto, 1-3 = andar, 4 = derrape,
-        // 5 = salto, 6 = bandera, 7 = de frente
+        // 5 = salto, 6 = bandera, 7 = agachado
         crear_animacion(this.relatedScene, {
             key: 'mario-grande-andar',
             frames: this.relatedScene.anims.generateFrameNumbers(this.SPRITE_SHEET_GRANDE, {frames: [1, 2, 3]}),
@@ -606,6 +680,12 @@ export class Mario
         crear_animacion(this.relatedScene, {
             key: 'mario-grande-derrape',
             frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 4}],
+            frameRate: 10,
+        });
+
+        crear_animacion(this.relatedScene, {
+            key: 'mario-grande-agachado',
+            frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 7}],
             frameRate: 10,
         });
 
