@@ -17,16 +17,16 @@ export class Marcadores
         // (y la que se pasa a update(clave, valor)).
         //
         // Posiciones X fijas, medidas para un canvas de 768 px de ancho (Arial Bold + borde de 8):
-        //   Score 9-243 | monedas 262-335 | vidas 356-430 | Hi 450-582
-        //   Time 592-710 | boton fullscreen 736-768
+        //   Score 9-183 | monedas 220-293 | vidas 330-403 | Hi 440-572
+        //   Time 610-728 | boton fullscreen 736-768   (huecos de ~37 px entre ellos)
         //
         // 'icono': [textura, frame, escala] dibujado justo a la izquierda del texto
         this.config = {
-            puntos:  { prefijo: ' Score: ', size: 32, color: '#ff7', borde: '#e91', x: 9 },
-            monedas: { prefijo: 'x', size: 24, color: '#ff7', borde: '#e91', x: 288, icono: ['moneda', 0, 0.75] },
-            vidas:   { prefijo: 'x', size: 24, color: '#ffb', borde: '#e61', x: 382, icono: ['mario-ss1', 0, 1.5] },
-            hi:      { prefijo: ' Hi: ', size: 24, color: '#ff7', borde: '#e91', x: 450 },
-            tiempo:  { prefijo: 'Time: ', size: 24, color: '#ffb', borde: '#e61', x: 592 }
+            puntos:  { prefijo: ' Score: ', size: 24, color: '#ff7', borde: '#e91', x: 9 },
+            monedas: { prefijo: 'x', size: 24, color: '#ff7', borde: '#e91', x: 246, icono: ['moneda', 0, 0.75] },
+            vidas:   { prefijo: 'x', size: 24, color: '#ffb', borde: '#e61', x: 356, icono: ['mario-ss1', 0, 1.5] },
+            hi:      { prefijo: ' Hi: ', size: 24, color: '#ff7', borde: '#e91', x: 440 },
+            tiempo:  { prefijo: 'Time: ', size: 24, color: '#ffb', borde: '#e61', x: 610 }
         };
 
         this.textos = {};

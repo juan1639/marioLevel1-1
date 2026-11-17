@@ -52,6 +52,7 @@ export class Preloader extends Scene
     {
         this.load.setPath('assets');
         this.load.spritesheet('boton-fullscreen', 'boton-fullscreen.png', {frameWidth: 64, frameHeight: 64});
+        this.load.image('boton-start', 'boton-start.png');
 
         this.load.image('brick-particle', 'particula-ladrillo-mario.png');
 
