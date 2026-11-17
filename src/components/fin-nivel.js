@@ -1,5 +1,6 @@
 import { Settings } from "../scenes/settings.js";
 import { play_sonidos, sumar_puntos, mostrar_puntos, ms_restantes } from "../utils/functions.js";
+import { FuegosArtificiales } from "./fuegos-artificiales.js";
 
 // Secuencia de fin de nivel:
 //  1. Mario toca el mastil -> se agarra (puntos segun la altura)
@@ -37,6 +38,9 @@ export class FinNivel
         layer.putTileAt(17, FIN.MASTIL_X, FIN.BANDERA_Y);
 
         const yBandera = (FIN.BANDERA_Y + 0.5) * TILE;
+
+        this.fuegos = new FuegosArtificiales(scene);
+        this.fuegos.create();
 
         this.bandera = [
             scene.add.sprite((FIN.MASTIL_X - 0.5) * TILE, yBandera, 'general-ssheet', 8).setScale(ESCALA),
@@ -164,6 +168,16 @@ export class FinNivel
 
         scene.mario.get().setVisible(false);
         play_sonidos(scene.sonido_fuegos, false, 0.7);
+
+        // Fuegos artificiales sobre el castillo (hasta que empieza el siguiente nivel)
+        const F = Settings.FUEGOS;
+        const PUERTA = Settings.FIN_NIVEL.PUERTA_X;
+
+        this.fuegos.empezar(
+            (PUERTA - F.ANCHO) * this.TILE, (PUERTA + F.ANCHO) * this.TILE,
+            F.ALTURA_MIN * this.TILE, F.ALTURA_MAX * this.TILE,
+            F.TEJADO_Y * this.TILE
+        );
 
         scene.add.text(ancho / 2, alto / 3, '¡Nivel superado!', {
             fontFamily: 'arial, sans-serif', fontStyle: 'bold', fontSize: 48, color: '#ff7',

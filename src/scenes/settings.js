@@ -74,6 +74,18 @@ export class Settings
         MS_RECUENTO: 10        // ms por unidad al convertir el tiempo sobrante en puntos
     };
 
+    // Fuegos artificiales al entrar en el castillo
+    static FUEGOS =
+    {
+        CADENCIA: 450,   // ms entre cohete y cohete
+        CHISPAS: 45,     // chispas por explosion
+        TEJADO_Y: 8,     // fila (tiles) desde la que salen los cohetes (tejado del castillo)
+        ALTURA_MIN: 1,   // filas (tiles) entre las que explotan
+        ALTURA_MAX: 5,
+        ANCHO: 5,        // columnas (tiles) a cada lado de la puerta del castillo
+        COLORES: [0xff4444, 0xffee44, 0x44ff66, 0x44ccff, 0xff66ff, 0xffffff]
+    };
+
     static MONEDA =
     {
         PUNTOS: 200,
