@@ -1,104 +1,71 @@
+# marioLevel1-1
+
 Proyecto recreando el nivel 1-1 del juego clásico Super Mario Bros, usando
 la librería Phaser.
 
-https://juan1639.github.io/marioLevel1-1
+**Jugar:** https://juan1639.github.io/marioLevel1-1
 
-# Phaser Vite Template
+## Controles
 
-This is a Phaser 3 project template that uses Vite for bundling. It supports hot-reloading for quick development workflow and includes scripts to generate production-ready builds.
+| Acción | Teclado | Móvil / táctil |
+|---|---|---|
+| Moverse | ← → | Joystick (izquierda) |
+| Correr | Mantener SHIFT o Z | Joystick empujado hasta el borde |
+| Saltar | ESPACIO (más tiempo pulsado = salto más alto) | Botón **A** (derecha) |
+| Pausa | P o ESC | Botón de pausa (arriba a la derecha) |
+| Empezar partida | ESPACIO o ENTER | Tocar "Nueva Partida" |
 
-### Versions
+Si la partida se empieza tocando la pantalla, los controles táctiles se activan solos. Durante el juego también se pueden activar tocando "Touch controls" (abajo a la izquierda).
 
-This template has been updated for:
+El juego se pausa automáticamente al cambiar de pestaña o de ventana.
 
-- [Phaser 3.80.1](https://github.com/phaserjs/phaser)
-- [Vite 5.1.4](https://github.com/vitejs/vite)
+## Qué incluye
 
-![screenshot](screenshot.png)
+- Mario pequeño y grande, con salto variable y botón de correr.
+- Bloques "?" con monedas, setas, seta de vida extra y estrella; ladrillos que se rompen (siendo grande) y un ladrillo de varias monedas.
+- Goombas: se aplastan saltando encima, golpeando desde abajo el bloque en el que están o con la estrella.
+- Vidas, contador de monedas (100 monedas = 1 vida), tiempo (400) y puntuación.
+- Punto de reaparición a mitad de nivel; los bloques ya usados siguen así al perder una vida.
+- Fin de nivel con bandera: puntos según la altura y el tiempo sobrante.
+- Récord guardado en el navegador, con nombre.
+- Menú principal, pausa y pantalla de Game Over.
 
-## Requirements
+## Desarrollo
 
-[Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
+Requisitos: [Node.js](https://nodejs.org) (18 o superior).
 
-## Available Commands
+| Comando | Descripción |
+|---|---|
+| `npm install` | Instala las dependencias |
+| `npm run dev` | Servidor de desarrollo con recarga automática en http://localhost:8080 |
+| `npm run dev -- --host` | Igual, pero accesible desde otros dispositivos de la red (para probar en el móvil) |
+| `npm run build` | Genera la versión de producción en la carpeta `dist` |
 
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install project dependencies |
-| `npm run dev` | Launch a development web server |
-| `npm run build` | Create a production build in the `dist` folder |
+Casi todos los valores ajustables del juego (velocidades, puntos, tiempos, posiciones de goombas, punto de reaparición...) están en `src/scenes/settings.js`.
 
-## Writing Code
+## Publicación
 
-After cloning the repo, run `npm install` from your project directory. Then, you can start the local development server by running `npm run dev`.
+El juego se publica en GitHub Pages automáticamente con GitHub Actions (`.github/workflows/deploy.yml`): cada push a la rama `main` compila el proyecto y publica la carpeta `dist`.
 
-The local development server runs on `http://localhost:8080` by default. Please see the Vite documentation if you wish to change this, or add SSL support.
+En el repositorio, **Settings → Pages → Source** debe estar en **GitHub Actions**.
 
-Once the server is running you can edit any of the files in the `src` folder. Vite will automatically recompile your code and then reload the browser.
+## Estructura
 
-## Template Project Structure
-
-We have provided a default project structure to get you started. This is as follows:
-
-- `index.html` - A basic HTML page to contain the game.
-- `src` - Contains the game source code.
-- `src/main.js` - The main entry point. This contains the game configuration and starts the game.
-- `src/scenes/` - The Phaser Scenes are in this folder.
-- `public/style.css` - Some simple CSS rules to help with page layout.
-- `public/assets` - Contains the static assets used by the game.
-
-## Handling Assets
-
-Vite supports loading assets via JavaScript module `import` statements.
-
-This template provides support for both embedding assets and also loading them from a static folder. To embed an asset, you can import it at the top of the JavaScript file you are using it in:
-
-```js
-import logoImg from './assets/logo.png'
+```
+src/
+  main.js          Configuración de Phaser y lista de escenas
+  scenes/          Escenas: Boot, Preloader, MainMenu, Game, Pausa, GameOver
+                   y settings.js (configuración y estado del juego)
+  components/      Objetos del juego: Mario, goombas, setas, monedas, marcadores, fin de nivel...
+  utils/           Colisiones y funciones comunes
+public/assets/     Mapa de Tiled, imágenes y sonidos
 ```
 
-To load static files such as audio files, videos, etc place them into the `public/assets` folder. Then you can use this path in the Loader calls within Phaser:
+## Tecnologías
 
-```js
-preload ()
-{
-    //  This is an example of an imported bundled image.
-    //  Remember to import it at the top of this file
-    this.load.image('logo', logoImg);
+- [Phaser 3](https://phaser.io) (físicas arcade)
+- [Vite](https://vitejs.dev)
+- [phaser3-rex-plugins](https://github.com/rexrainbow/phaser3-rex-notes) (joystick virtual)
+- Mapa del nivel creado con [Tiled](https://www.mapeditor.org)
 
-    //  This is an example of loading a static image
-    //  from the public/assets folder:
-    this.load.image('background', 'assets/bg.png');
-}
-```
-
-When you issue the `npm run build` command, all static assets are automatically copied to the `dist/assets` folder.
-
-## Deploying to Production
-
-After you run the `npm run build` command, your code will be built into a single bundle and saved to the `dist` folder, along with any other assets your project imported, or stored in the public assets folder.
-
-In order to deploy your game, you will need to upload *all* of the contents of the `dist` folder to a public facing web server.
-
-## Customizing the Template
-
-### Vite
-
-If you want to customize your build, such as adding plugin (i.e. for loading CSS or fonts), you can modify the `vite/config.*.mjs` file for cross-project changes, or you can modify and/or create new configuration files and target them in specific npm tasks inside of `package.json`. Please see the [Vite documentation](https://vitejs.dev/) for more information.
-
-## Join the Phaser Community!
-
-We love to see what developers like you create with Phaser! It really motivates us to keep improving. So please join our community and show-off your work 😄
-
-**Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
-**Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
-**Learn:** [API Docs](https://newdocs.phaser.io), [Support Forum](https://phaser.discourse.group/) and [StackOverflow](https://stackoverflow.com/questions/tagged/phaser-framework)<br />
-**Discord:** Join us on [Discord](https://discord.gg/phaser)<br />
-**Code:** 2000+ [Examples](https://labs.phaser.io)<br />
-**Read:** The [Phaser World](https://phaser.io/community/newsletter) Newsletter<br />
-
-Created by [Phaser Studio](mailto:support@phaser.io). Powered by coffee, anime, pixels and love.
-
-The Phaser logo and characters are &copy; 2011 - 2024 Phaser Studio Inc.
-
-All rights reserved.
+Basado en la plantilla oficial [Phaser + Vite](https://github.com/phaserjs/template-vite) (licencia MIT, ver `LICENSE`).

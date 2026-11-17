@@ -209,6 +209,9 @@ export function hitVsGoombas(mario, goomba, context)
 export function cogerSeta(mario, seta, context)
 {
     const tipo = seta.getData('tipo');
+    // Posicion de la parte de arriba de la seta (su origen esta abajo-centro), antes de destruirla
+    const x = seta.x;
+    const yArriba = seta.y - seta.displayHeight;
     seta.destroy();
 
     play_sonidos(context.sonido_powerup, false, 0.8);
@@ -216,6 +219,7 @@ export function cogerSeta(mario, seta, context)
     if (tipo === '1up')
     {
         sumar_vida(context);
+        mostrar_puntos(context, '1up', x, yArriba);
         return;
     }
 
