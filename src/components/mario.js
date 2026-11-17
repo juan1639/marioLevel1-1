@@ -522,11 +522,11 @@ export class Mario
         });
 
         // --- Mario grande ---
-        // El spritesheet grande solo tiene 3 frames dibujados (0 = quieto, 1-2 = andar),
-        // asi que 'saltando' y 'desliza-bandera' usan, de momento, frames provisionales:
+        // Mismo orden de frames que el pequeño: 0 = quieto, 1-3 = andar, 4 = derrape,
+        // 5 = salto, 6 = bandera, 7 = de frente
         crear_animacion(this.relatedScene, {
             key: 'mario-grande-andar',
-            frames: this.relatedScene.anims.generateFrameNumbers(this.SPRITE_SHEET_GRANDE, {frames: [0, 1, 2]}),
+            frames: this.relatedScene.anims.generateFrameNumbers(this.SPRITE_SHEET_GRANDE, {frames: [1, 2, 3]}),
             frameRate: 10,
             yoyo: true,
             repeat: -1
@@ -540,13 +540,13 @@ export class Mario
 
         crear_animacion(this.relatedScene, {
             key: 'mario-grande-saltando',
-            frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 1}],
+            frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 5}],
             frameRate: 10,
         });
 
         crear_animacion(this.relatedScene, {
             key: 'mario-grande-desliza-bandera',
-            frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 0}],
+            frames: [{key: this.SPRITE_SHEET_GRANDE, frame: 6}],
             frameRate: 10,
         });
     }
