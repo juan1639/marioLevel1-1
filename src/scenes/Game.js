@@ -75,7 +75,7 @@ export class Game extends Scene
 
         // Los sonidos son globales (no de la escena): hay que destruirlos al salir/reiniciar
         // la escena, o se acumularian (y la musica sonaria duplicada) en cada vida perdida.
-        const sonidos = [
+        const sonidos = this.sonidos = [
             this.sonido_jumpbros, this.bricks_fall, this.push_block, this.goomba_aplastado,
             this.musica_principal, this.sonido_muerte, this.sonido_powerup,
             this.sonido_moneda, this.sonido_level_up, this.sonido_fuegos, this.sonido_estrella,
@@ -129,6 +129,8 @@ export class Game extends Scene
         });
         this.botonfullscreen.create();
 
+        this.crear_pausa();
+
         // Click-event:
         this.input.on('pointerup', function (pointer)
         {
@@ -160,6 +162,70 @@ export class Game extends Scene
         this.setas.update();
         this.finNivel.update();
         this.comprobar_checkpoint();
+    }
+
+    // Pausa: tecla P / ESC, boton en pantalla, o automatica al cambiar de pestaña/ventana
+    crear_pausa()
+    {
+        this.input.keyboard.on('keydown-P', () => this.pausar());
+        this.input.keyboard.on('keydown-ESC', () => this.pausar());
+
+        // Boton de pausa (fijo en pantalla, debajo del marcador, a la derecha)
+        const x = this.sys.game.config.width - 40;
+        const y = 72;
+
+        const boton = this.add.circle(x, y, 22, 0x888888, 0.6)
+            .setStrokeStyle(3, 0xcccccc, 0.8)
+            .setScrollFactor(0).setDepth(30)
+            .setInteractive({ useHandCursor: true });
+
+        this.add.rectangle(x - 6, y, 6, 20, 0xeeeeee).setScrollFactor(0).setDepth(31);
+        this.add.rectangle(x + 6, y, 6, 20, 0xeeeeee).setScrollFactor(0).setDepth(31);
+
+        boton.on('pointerdown', () => this.pausar());
+
+        // Pausa automatica al perder el foco (los eventos del juego son globales:
+        // hay que quitar el listener al salir de la escena)
+        const alPerderFoco = () => this.pausar();
+        this.game.events.on(Phaser.Core.Events.BLUR, alPerderFoco);
+        this.game.events.on(Phaser.Core.Events.HIDDEN, alPerderFoco);
+
+        // Al pausar/reanudar la escena: solo se pausan los sonidos que estaban sonando
+        // (si se reanudaran todos, volveria a sonar p.ej. la musica que la estrella habia pausado)
+        const alPausar = () =>
+        {
+            this.sonidosPausados = this.sonidos.filter(sonido => sonido.isPlaying);
+            this.sonidosPausados.forEach(sonido => sonido.pause());
+        };
+
+        const alReanudar = () =>
+        {
+            this.sonidosPausados.forEach(sonido => sonido.resume());
+            this.sonidosPausados = [];
+        };
+
+        // 'this.events' se conserva entre reinicios de la escena: tambien hay que quitarlos
+        this.events.on('pause', alPausar);
+        this.events.on('resume', alReanudar);
+
+        this.events.once('shutdown', () =>
+        {
+            this.game.events.off(Phaser.Core.Events.BLUR, alPerderFoco);
+            this.game.events.off(Phaser.Core.Events.HIDDEN, alPerderFoco);
+            this.events.off('pause', alPausar);
+            this.events.off('resume', alReanudar);
+        });
+    }
+
+    pausar()
+    {
+        if (!this.scene.isActive())
+        {
+            return; // ya esta pausada (o saliendo de la escena)
+        }
+
+        this.scene.pause();
+        this.scene.launch('Pausa');
     }
 
     comprobar_checkpoint()

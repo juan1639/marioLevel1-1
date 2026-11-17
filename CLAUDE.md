@@ -17,7 +17,7 @@ There are no tests and no linter.
 
 ## Architecture
 
-**Scene flow** (`src/main.js`): `Boot` → `Preloader` → `MainMenu` → `Game` (→ `GameOver` → `MainMenu`). `MainMenu` resets the game state (`Settings.nuevaPartida()`), loads the saved record, and starts `Game` from the "Nueva Partida" button or SPACE/ENTER. Starting with a touch enables mobile controls straight away. The canvas is 768×480 with `Scale.FIT`, `pixelArt: true` and arcade gravity `y: 1100`.
+**Scene flow** (`src/main.js`): `Boot` → `Preloader` → `MainMenu` → `Game` (→ `GameOver` → `MainMenu`). `MainMenu` resets the game state (`Settings.nuevaPartida()`), loads the saved record, and starts `Game` from the "Nueva Partida" button or SPACE/ENTER. Starting with a touch enables mobile controls straight away. Pause (P/ESC, the on-screen button, or losing focus) pauses `Game` and launches the overlay scene `Pausa`, because a paused scene receives no input. `Pausa` resumes `Game`. Only the sounds that were playing are paused and resumed. Listeners added to `this.game.events` or `this.events` survive scene restarts, so remove them on `shutdown`. The canvas is 768×480 with `Scale.FIT`, `pixelArt: true` and arcade gravity `y: 1100`.
 
 **Asset loading**: everything is loaded in `src/scenes/Preloader.js` from `public/assets/`. That includes the Tiled map (`mario-level-1-1.json`, layer `World1`, tileset `SuperMarioBros-World1-1` → image `super_mario.png`), the spritesheets and the audio. The virtual joystick (`phaser3-rex-plugins`) is registered as a global plugin in `src/main.js` under the key `rexvirtualjoystickplugin`. `import 'phaser'` must stay before the plugin import, because the plugin uses the global `Phaser` when its module is evaluated.
 
