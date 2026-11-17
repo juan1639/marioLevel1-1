@@ -54,7 +54,9 @@ export class MainMenu extends Scene
         // Record
         const record = String(Settings.marcadores.hi).padStart(6, '0');
 
-        this.add.text(ancho / 2, 296, `Récord: ${record}`, {
+        const nombre = Settings.marcadores.hiNombre;
+
+        this.add.text(ancho / 2, 296, `Récord: ${record}` + (nombre ? `  ${nombre}` : ''), {
             fontFamily: 'arial, sans-serif', fontStyle: 'bold', fontSize: 26, color: '#ffb',
             stroke: '#e61', strokeThickness: 6
         }).setOrigin(0.5);

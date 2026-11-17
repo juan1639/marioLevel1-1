@@ -25,7 +25,7 @@ There are no tests and no linter.
 - The tile-index legend for the tilemap is in the header comment. Game logic hardcodes these indices, e.g. 14 = question block, 15 = brick, 16 = pyramid block, 21–22/27–28 = pipe, 40 = ground, 1 = sky.
 - `screen.TILE_X/Y` (16) and `layer1.scaleX/Y` (2). **World pixel coords = tile coords × 16 × 2.** All spawn positions (`ARRAY_GOOMBAS`, `COLLIDERS_INVISIBLES`, Mario's start) are given in tile units and converted with this formula.
 - `controls.MOBILE` toggles keyboard vs joystick input at runtime.
-- `marcadores` holds the score state.
+- `marcadores` holds the score state. The record (`hi`) and its owner's name (`hiNombre`) are saved in `localStorage` (`cargarRecord`, `actualizarRecord`, `guardarNombreRecord`). `GameOver` asks for the name with the on-screen keyboard `TecladoNombre` when the record was beaten during the game.
 
 **Component pattern** (`src/components/`): each game object is a plain class created with `new X(scene, args)` in `Game.init()`. It builds its Phaser objects in `create()` (called from `Game.create()`), may have an `update()` called from `Game.update()`, and exposes the underlying sprite/group via `get()`. Components keep the scene as `this.relatedScene` and reach other components through it (e.g. `Goombas` reads `this.relatedScene.mario.get()`). Sounds are created in `Game.init()` as scene properties (`this.sonido_jumpbros`, `this.bricks_fall`, ...) and played through `play_sonidos()`.
 

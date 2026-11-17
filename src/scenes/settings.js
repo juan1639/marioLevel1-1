@@ -140,6 +140,7 @@ export class Settings
     {
         puntos: 0,
         hi: 5000,
+        hiNombre: '', // nombre de quien tiene el record ('' = sin nombre)
         vidas: Settings.VIDAS_INICIALES,
         monedas: 0,
         tiempo: 400 // se reinicia a TIEMPO.INICIAL al empezar el nivel (y tras perder una vida)
@@ -149,6 +150,8 @@ export class Settings
     // (al reiniciar la escena tras perder una vida, los puntos SI se conservan)
     // Record (Hi) guardado en el navegador, para que no se pierda al recargar la pagina
     static CLAVE_RECORD = 'marioLevel1-1.hi';
+    static CLAVE_NOMBRE_RECORD = 'marioLevel1-1.hiNombre';
+    static MAX_NOMBRE = 6;
     static recordEnPartida = false; // ¿se ha batido el record en la partida actual?
 
     static cargarRecord()
@@ -160,6 +163,7 @@ export class Settings
             if (guardado > Settings.marcadores.hi)
             {
                 Settings.marcadores.hi = guardado;
+                Settings.marcadores.hiNombre = localStorage.getItem(Settings.CLAVE_NOMBRE_RECORD) || '';
             }
         }
         catch (e) {} // localStorage no disponible (p.ej. modo privado): se usa el valor por defecto
@@ -176,13 +180,29 @@ export class Settings
         Settings.marcadores.hi = Settings.marcadores.puntos;
         Settings.recordEnPartida = true;
 
+        // El nombre se pide en el Game Over; hasta entonces el record queda sin nombre
+        // (para que no se quede con el nombre de quien tenia el record anterior)
+        Settings.marcadores.hiNombre = '';
+
         try
         {
             localStorage.setItem(Settings.CLAVE_RECORD, String(Settings.marcadores.hi));
+            localStorage.setItem(Settings.CLAVE_NOMBRE_RECORD, '');
         }
         catch (e) {}
 
         return true;
+    }
+
+    static guardarNombreRecord(nombre)
+    {
+        Settings.marcadores.hiNombre = nombre;
+
+        try
+        {
+            localStorage.setItem(Settings.CLAVE_NOMBRE_RECORD, nombre);
+        }
+        catch (e) {}
     }
 
     static nuevaPartida()
