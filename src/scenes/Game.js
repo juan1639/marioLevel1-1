@@ -27,7 +27,12 @@ export class Game extends Scene
 
     init()
     {
-        this.mario = new Mario(this, {iniPosX: Settings.MARIO.X_INICIAL, iniPosY: Settings.MARIO.Y_INICIAL});
+        // Reaparece en el checkpoint si ya habia pasado por el (tras perder una vida)
+        const ini = Settings.nivel.checkpoint
+            ? { iniPosX: Settings.CHECKPOINT.X, iniPosY: Settings.CHECKPOINT.Y }
+            : { iniPosX: Settings.MARIO.X_INICIAL, iniPosY: Settings.MARIO.Y_INICIAL };
+
+        this.mario = new Mario(this, ini);
 
         this.goombas = new Goombas(this);
         this.setas = new Setas(this);
@@ -154,6 +159,22 @@ export class Game extends Scene
         this.goombas.update();
         this.setas.update();
         this.finNivel.update();
+        this.comprobar_checkpoint();
+    }
+
+    comprobar_checkpoint()
+    {
+        if (Settings.nivel.checkpoint)
+        {
+            return;
+        }
+
+        const TILE = Settings.screen.TILE_X * Settings.getLayer1().scaleX;
+
+        if (this.mario.get().x >= Settings.CHECKPOINT.X * TILE)
+        {
+            Settings.nivel.checkpoint = true;
+        }
     }
 
     tick_tiempo()
@@ -273,13 +294,32 @@ export class Game extends Scene
 
         // Ladrillos de varias monedas: se pone un ladrillo (aunque en el mapa sea un '?')
         // y se quita el contenido que tuviera. Estado: monedas dadas y fin del tiempo.
-        this.ladrillosMonedas = new Map();
+        // El estado vive en Settings.nivel para conservarse al perder una vida.
+        const nuevoEstado = !Settings.nivel.ladrillosMonedas;
+
+        if (nuevoEstado)
+        {
+            Settings.nivel.ladrillosMonedas = new Map();
+        }
+
+        this.ladrillosMonedas = Settings.nivel.ladrillosMonedas;
 
         Settings.LADRILLOS_MONEDAS.POSICIONES.forEach(([x, y]) =>
         {
             this.layer1.putTileAt(15, x, y);
             this.contenidoBloques.delete(`${x},${y}`);
-            this.ladrillosMonedas.set(`${x},${y}`, { monedas: 0, fin: null, ultimoGolpe: 0 });
+
+            if (nuevoEstado)
+            {
+                this.ladrillosMonedas.set(`${x},${y}`, { monedas: 0, fin: null, ultimoGolpe: 0 });
+            }
+        });
+
+        // Bloques que ya se habian golpeado/roto antes de perder la vida: siguen igual
+        Settings.nivel.tilesCambiados.forEach((indice, clave) =>
+        {
+            const [x, y] = clave.split(',').map(Number);
+            this.layer1.putTileAt(indice, x, y);
         });
 
         // Reemplazar MONEDAS por cielo-azul:

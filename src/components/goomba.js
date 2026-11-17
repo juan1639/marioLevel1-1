@@ -15,7 +15,10 @@ export class Goombas
 
         this.goombas = this.relatedScene.physics.add.group();
 
-        Settings.ARRAY_GOOMBAS.forEach(pos =>
+        // Si Mario reaparece en el checkpoint, los goombas que quedan por detras no se crean
+        const xMinima = Settings.nivel.checkpoint ? Settings.CHECKPOINT.X : -Infinity;
+
+        Settings.ARRAY_GOOMBAS.filter(pos => pos[0] >= xMinima).forEach(pos =>
         {
             const goomba = this.relatedScene.physics.add.sprite(
                 pos[0] * (Settings.screen.TILE_X * Settings.getLayer1().scaleX),

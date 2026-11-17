@@ -191,6 +191,32 @@ export class Settings
         Settings.marcadores.vidas = Settings.VIDAS_INICIALES;
         Settings.marcadores.monedas = 0;
         Settings.recordEnPartida = false;
+        Settings.reiniciarNivel();
+    }
+
+    // Segundo punto de reaparicion (en TILES): al pasar por aqui, tras perder una vida
+    // Mario reaparece aqui en vez de al principio del nivel.
+    static CHECKPOINT =
+    {
+        X: 103,
+        Y: 9
+    };
+
+    // Estado del nivel que se CONSERVA al perder una vida (la escena se reinicia, pero los bloques
+    // ya golpeados siguen igual). Se borra al empezar una partida nueva o al completar el nivel.
+    //  - tilesCambiados: 'x,y' -> indice de tile (ladrillos rotos, bloques '?' usados...)
+    //  - ladrillosMonedas: estado de los ladrillos de varias monedas (null = aun sin crear)
+    //  - checkpoint: true si Mario ya ha pasado por el CHECKPOINT
+    static nivel = Settings.estadoNivelInicial();
+
+    static estadoNivelInicial()
+    {
+        return { tilesCambiados: new Map(), ladrillosMonedas: null, checkpoint: false };
+    }
+
+    static reiniciarNivel()
+    {
+        Settings.nivel = Settings.estadoNivelInicial();
     }
 
     static cameraScores =

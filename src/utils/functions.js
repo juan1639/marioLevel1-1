@@ -33,7 +33,7 @@ export function hitBrick(player, tile, context)
         if (context.mario.esGrande())
         {
             // Mario grande: rompe el ladrillo
-            context.layer1.putTileAt(CIELO_AZUL, tile.x, tile.y);
+            cambiar_tile(context, CIELO_AZUL, tile.x, tile.y);
 
             // Lanza partículas desde el centro del tile
             context.emisor.explotar(tile.getCenterX(), tile.getCenterY());
@@ -60,7 +60,7 @@ export function hitBrick(player, tile, context)
         const contenido = context.contenidoBloques.get(`${tileX},${tileY}`);
 
         // El bloque pasa a ser un bloque 'usado' (solido, ya no se puede volver a golpear):
-        const bloqueUsado = context.layer1.putTileAt(BLOQUE_USADO, tileX, tileY);
+        const bloqueUsado = cambiar_tile(context, BLOQUE_USADO, tileX, tileY);
 
         // La moneda sale al momento; las setas, al terminar el rebote del bloque
         if (contenido === 'moneda')
@@ -115,7 +115,7 @@ function golpearLadrilloMonedas(tile, clave, bloqueUsado, context)
     {
         // Ultima moneda: queda como bloque usado
         context.ladrillosMonedas.delete(clave);
-        const usado = context.layer1.putTileAt(bloqueUsado, tile.x, tile.y);
+        const usado = cambiar_tile(context, bloqueUsado, tile.x, tile.y);
         rebotarBloque(usado, bloqueUsado, context);
     }
     else
@@ -124,6 +124,14 @@ function golpearLadrilloMonedas(tile, clave, bloqueUsado, context)
     }
 
     play_sonidos(context.push_block, false, 0.8);
+}
+
+// Cambia un tile del mapa por culpa del juego (ladrillo roto, bloque usado...) y lo apunta en
+// Settings.nivel para volver a aplicarlo si se pierde una vida y se reinicia la escena.
+function cambiar_tile(context, indice, x, y)
+{
+    Settings.nivel.tilesCambiados.set(`${x},${y}`, indice);
+    return context.layer1.putTileAt(indice, x, y);
 }
 
 // Animacion de 'rebote' de un bloque golpeado desde abajo. El tile se oculta mientras dura

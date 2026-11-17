@@ -204,6 +204,7 @@ export class FinNivel
 
             scene.time.delayedCall(espera, () =>
             {
+                Settings.reiniciarNivel();
                 scene.scene.restart();
             });
         });
