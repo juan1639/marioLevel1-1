@@ -51,6 +51,7 @@ Requisitos: [Node.js](https://nodejs.org) (18 o superior).
 | `npm run dev` | Servidor de desarrollo con recarga automática en http://localhost:8080 |
 | `npm run dev -- --host` | Igual, pero accesible desde otros dispositivos de la red (para probar en el móvil) |
 | `npm run build` | Genera la versión de producción en la carpeta `dist` |
+| `npm run preview` | Sirve la versión de producción de `dist` en http://localhost:4173 (hay que ejecutar antes `npm run build`) |
 
 Casi todos los valores ajustables del juego (velocidades, puntos, tiempos, posiciones de goombas, punto de reaparición...) están en `src/scenes/settings.js`.
 

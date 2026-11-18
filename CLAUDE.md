@@ -11,6 +11,7 @@ A Phaser 3 (arcade physics) + Vite browser platformer, built on the official Pha
 - `npm install`: install dependencies
 - `npm run dev`: dev server with hot reload at http://localhost:8080 (`vite/config.dev.mjs`)
 - `npm run build`: production build to `dist/` (`vite/config.prod.mjs`)
+- `npm run preview`: serves the production build from `dist/` at http://localhost:4173 (run `npm run build` first)
 - Deployment: every push to `main` runs `.github/workflows/deploy.yml`, which builds and publishes `dist/` to GitHub Pages. There is no deploy script.
 
 There are no tests and no linter.
