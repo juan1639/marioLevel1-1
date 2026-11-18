@@ -16,6 +16,28 @@ A Phaser 3 (arcade physics) + Vite browser platformer, built on the official Pha
 
 There are no tests and no linter.
 
+## Verificación en navegador
+
+With no tests, verify changes in a real browser with `agent-browser`. Run `agent-browser skills get core` first. Headless Chrome's `--screenshot` doesn't work here: it stays on the loading screen.
+
+1. **Start the dev server** in the background: `npm run dev -- --strictPort`. The game is at **http://localhost:8080/**.
+2. **Use your own session**: get a name with `agent-browser session id --scope worktree --prefix task` and pass `--session <name>` on every command.
+3. **Open and wait**: `agent-browser open http://localhost:8080/`, then clear the logs with `console --clear` and `errors --clear`. Phaser 3.80 doesn't expose the game instance (`Phaser.GAMES` doesn't exist), so you can't wait for a scene. Wait for the canvas plus about 5 s while `Preloader` loads the assets. The game is a canvas, so check it with `screenshot`, not `snapshot`.
+4. **Controls** (from `MainMenu` press `Enter` or `Space` to start):
+   - Move: `keydown ArrowRight` / `keyup ArrowRight` (or `ArrowLeft`).
+   - Jump: `Space`. Hold it for a full jump, or tap it for a short one.
+   - Run: hold `Shift`. Crouch, as big Mario: `ArrowDown`. Pause: `P`.
+   - In `GameOver`, `Space` returns to the menu.
+   - A key held across a scene restart (for example after a death) isn't seen by the new scene, so send a new `keydown`.
+5. **Inspect game state**: in dev, Vite serves the same module instance by URL, so `eval` can read it. For example, `import('/src/scenes/settings.js').then(m => m.Settings.marcadores)` returns lives, points, time and so on. To measure timings (deaths, timers), record them inside the page with `performance.now()`. Each CLI command adds its own latency, so shell timestamps mislead.
+6. **Check**:
+   - `agent-browser console` and `agent-browser errors`. The only expected messages are Vite's `connecting`/`connected` and the Phaser version banner.
+   - The menu renders, a game starts (HUD shows, time counts down), and the flow you touched works: death → restart with one life fewer → `GameOver` → menu.
+   - The feature you changed works, checked with screenshots and/or state read through `eval`.
+7. **Clean up**: run `agent-browser --session <name> close` and stop the server. On Windows, stopping the background task can leave Vite's `node.exe` listening on port 8080. Find it with `Get-NetTCPConnection -LocalPort 8080`, check that its command line is this project's `vite`, stop it, and confirm the port is free.
+
+**Don't consider a task finished if the console or `errors` shows any error.** Fix it first, or report it explicitly with its message.
+
 ## Architecture
 
 **Scene flow** (`src/main.js`): `Boot` → `Preloader` → `MainMenu` → `Game` (→ `GameOver` → `MainMenu`). `MainMenu` resets the game state (`Settings.nuevaPartida()`), loads the saved record, and starts `Game` from the "Nueva Partida" button or SPACE/ENTER. Starting with a touch enables mobile controls straight away. Pause (P/ESC, the on-screen button, or losing focus) pauses `Game` and launches the overlay scene `Pausa`, because a paused scene receives no input. `Pausa` resumes `Game`. Only the sounds that were playing are paused and resumed. Listeners added to `this.game.events` or `this.events` survive scene restarts, so remove them on `shutdown`. The canvas is 768×480 with `Scale.FIT`, `pixelArt: true` and arcade gravity `y: 1100`.
