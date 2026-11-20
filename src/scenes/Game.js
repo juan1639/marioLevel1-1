@@ -168,6 +168,8 @@ export class Game extends Scene
     // Pausa: tecla P / ESC, boton en pantalla, o automatica al cambiar de pestaña/ventana
     crear_pausa()
     {
+        this.pausaPedida = false;
+
         this.input.keyboard.on('keydown-P', () => this.pausar());
         this.input.keyboard.on('keydown-ESC', () => this.pausar());
 
@@ -201,6 +203,7 @@ export class Game extends Scene
 
         const alReanudar = () =>
         {
+            this.pausaPedida = false;
             this.sonidosPausados.forEach(sonido => sonido.resume());
             this.sonidosPausados = [];
         };
@@ -220,11 +223,15 @@ export class Game extends Scene
 
     pausar()
     {
-        if (!this.scene.isActive())
+        // this.scene.pause() no pausa al momento: queda en cola hasta el siguiente frame, y mientras
+        // tanto isActive() sigue siendo true. Al ocultar la pestaña llegan 'blur' y 'hidden' en el
+        // mismo frame: sin esta marca se pedirian dos pausas y se lanzaria 'Pausa' dos veces.
+        if (this.pausaPedida || !this.scene.isActive())
         {
-            return; // ya esta pausada (o saliendo de la escena)
+            return; // ya pausada, pausa ya pedida, o saliendo de la escena
         }
 
+        this.pausaPedida = true;
         this.scene.pause();
         this.scene.launch('Pausa');
     }

@@ -22,13 +22,17 @@ With no tests, verify changes in a real browser with `agent-browser`. Run `agent
 
 1. **Start the dev server** in the background: `npm run dev -- --strictPort`. The game is at **http://localhost:8080/**.
 2. **Use your own session**: get a name with `agent-browser session id --scope worktree --prefix task` and pass `--session <name>` on every command.
-3. **Open and wait**: `agent-browser open http://localhost:8080/`, then clear the logs with `console --clear` and `errors --clear`. Phaser 3.80 doesn't expose the game instance (`Phaser.GAMES` doesn't exist), so you can't wait for a scene. Wait for the canvas plus about 5 s while `Preloader` loads the assets. The game is a canvas, so check it with `screenshot`, not `snapshot`.
+3. **Open and wait**: `agent-browser open http://localhost:8080/`, then clear the logs with `console --clear` and `errors --clear`. The game is a canvas, so check it with `screenshot`, not `snapshot`.
+   - **The game instance**: `(await import('/src/main.js')).default` returns the running `Phaser.Game`, because `main.js` exports it and Vite serves the same module instance. `Phaser.GAMES` doesn't exist. With it you can wait for a scene (`juego.scene.getScenes(true)`) and read components (`juego.scene.getScene('Game').mario.get()`).
+   - **Visible window**: to let the user watch, launch with `--headed --args "--disable-backgrounding-occluded-windows,--disable-renderer-backgrounding,--disable-background-timer-throttling"`. Without those flags, Windows treats a covered window as hidden: `requestAnimationFrame` stops and the game freezes (it can even get stuck in `Boot`). If something looks frozen, check `document.visibilityState`.
 4. **Controls** (from `MainMenu` press `Enter` or `Space` to start):
    - Move: `keydown ArrowRight` / `keyup ArrowRight` (or `ArrowLeft`).
    - Jump: `Space`. Hold it for a full jump, or tap it for a short one.
    - Run: hold `Shift`. Crouch, as big Mario: `ArrowDown`. Pause: `P`.
    - In `GameOver`, `Space` returns to the menu.
    - A key held across a scene restart (for example after a death) isn't seen by the new scene, so send a new `keydown`.
+   - For precise play (standing under a block, jumping onto a goomba), drive the game from inside the page. Dispatch `new KeyboardEvent('keydown', { key, code, keyCode })` on `window`; Phaser reads `keyCode`. Read Mario's position on every `requestAnimationFrame`. Commands sent from the shell arrive too late to aim.
+   - `eval` gives up waiting after about 30 s. Run long routines without awaiting them, then read the state with a later `eval`.
 5. **Inspect game state**: in dev, Vite serves the same module instance by URL, so `eval` can read it. For example, `import('/src/scenes/settings.js').then(m => m.Settings.marcadores)` returns lives, points, time and so on. To measure timings (deaths, timers), record them inside the page with `performance.now()`. Each CLI command adds its own latency, so shell timestamps mislead.
 6. **Check**:
    - `agent-browser console` and `agent-browser errors`. The only expected messages are Vite's `connecting`/`connected` and the Phaser version banner.
